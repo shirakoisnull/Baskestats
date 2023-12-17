@@ -1,0 +1,13 @@
+Links για όσα αρχεία είναι διαθέσιμα και online:
+
+- Διάγραμμα Gantt:
+https://docs.google.com/spreadsheets/d/1TnTg-iEyVXlFUV6sW5mJmp5SEz3QgI7mV9nir4TJqcA/edit?usp=sharing
+
+- Λειτουργικές και μη-λειτουργικές απαιτήσεις:
+https://docs.google.com/document/d/1eykodKYap5zixidWPJfF8_l3han2_kkiOirVNUbSR_4/edit?usp=sharing
+
+- Προδιαγραφές Περιπτώσεων Χρήσης:
+https://docs.google.com/document/d/1vxY-e1vNjTCH-ZxgbdU3CyxYtzLnSEEpMfXQ32D5u84/edit?usp=sharing
+
+- Διαγράμματα Ακολουθίας:
+https://docs.google.com/document/d/1xCV-4hv6EvQ5tq3wT2lbdFZRaL-K8qSndl7ZKiYR91M/edit?usp=sharing
