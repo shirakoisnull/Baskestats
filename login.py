@@ -1,8 +1,8 @@
-from flask import Flask, request, session, url_for, redirect, render_template, jsonify
+from flask import Flask, request, url_for, redirect, jsonify
 from dotenv import load_dotenv
 import pymysql
 import os
-from flask_jwt_extended import JWTManager
+from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 
 
 #Install requirements with pip install --upgrade -r requirements.txt 
@@ -27,18 +27,7 @@ jwt = JWTManager(app)
 db = pymysql.connect(host=db_host, user=db_user, password=db_password, database=db_name)
   
 
-# Checks if user is logged in or not
-def secretary():
-    if 'username' in session:
-       return jsonify(logged_in=True, username=session['username'])
-    else:
-        # User is not logged in
-        return jsonify(logged_in=False)
 
-# Reloads page and passes secretary value thats either True or False
-@app.route('/')
-def index():
-    return render_template('index.html', secretary=secretary())
 
 # Logging in
 @app.route('/login',methods=['POST'])
@@ -56,25 +45,23 @@ def login():
         cursor.close
         # Checking if result exists and is equal to my password
         if result and result[0] == password:
-            # Adds user to session
-            session['username']=username
-            #access_token = create_access_token(identity=username)
-            #return jsonify(access_token, username)
+            access_token = create_access_token(identity=username)
+            return jsonify(access_token, username)
             return redirect(url_for('index'))
         else:
             return redirect(url_for('error'))
 
-# Logging out
-@app.route('/logout')
-def logout():
+#Gettng current user
+@app.route('/protected', methods=['GET'])
+@jwt_required()
+def protected():
+     current = get_jwt_identity()
+     return jsonify(user=current), 200
 
-    session.pop('username', None)
-    return redirect(url_for('index'))
-
+ 
 
 if __name__ == '__main__':
     app.run()
 
 
-# Kai meta sto index elegxei ean einai admin me {% if secretary %} {% endif %}
     
