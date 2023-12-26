@@ -2,6 +2,10 @@ from flask import Flask, request, session, url_for, redirect, render_template, j
 from dotenv import load_dotenv
 import pymysql
 import os
+from flask_jwt_extended import JWTManager
+
+
+#Install requirements with pip install --upgrade -r requirements.txt 
 
 app = Flask(__name__)
 
@@ -11,6 +15,11 @@ db_host = os.environ['DB_HOST']
 db_user = os.environ['DB_USER']
 db_password = os.environ['DB_PASSWORD']
 db_name=os.environ['DB_NAME']
+
+app.config["JWT_SECRET_KEY"] = os.environ['JWT_SECRET_KEY']
+jwt = JWTManager(app)
+
+
 
  
 
@@ -32,12 +41,11 @@ def index():
     return render_template('index.html', secretary=secretary())
 
 # Logging in
-@app.route('/login',methods=['GET','POST'])
+@app.route('/login',methods=['POST'])
 def login():
-    if request.method == 'POST':
         # Gets the username and password from the input form of the frontend
-        username = request.form.get['username'] 
-        password = request.form.get['password']
+        username = request.json.get['username'] 
+        password = request.json.get['password']
         
         # Making a cursor/pointer object for interacting with the database
         cursor = db.connection.cursor()
@@ -50,6 +58,8 @@ def login():
         if result and result[0] == password:
             # Adds user to session
             session['username']=username
+            #access_token = create_access_token(identity=username)
+            #return jsonify(access_token, username)
             return redirect(url_for('index'))
         else:
             return redirect(url_for('error'))
