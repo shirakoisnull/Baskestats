@@ -20,20 +20,18 @@ db = pymysql.connect(host=db_host, user=db_user, password=db_password, database=
 # Get list of all championship or just the searched one
 @app.route('/championships', methods=['GET'])
 def getChamps():
-    search = request.json.get['search']
+  
     cursor = db.cursor()
-    if search is None or search.strip() == '':
-        cursor.execute('SELECT * FROM championship')
-    else:
-        cursor.execute('SELECT * FROM championship WHERE year = %s', ('%' + search + '%',))
+ 
+    cursor.execute('SELECT * FROM championship')
     results=cursor.fetchall()
     cursor.close
     return jsonify(results)
 
 # Create new championship
 @app.route('/championships', methods=['POST'])
-def createChamp(champ_year):
-
+def createChamp():
+    champ_year=2023
     cursor = db.cursor()
     function = 'CreateChampionship(%s)'
     cursor.execute(f"SELECT {function}", (champ_year))
@@ -64,7 +62,7 @@ def viewChampionsip(cId):
 # Delete selected championship
 @app.route('/championships/<int:cId>', methods=['DELETE'])
 def deletePlayer(cId):
-    cursor = db.connection.cursor()
+    cursor = db.cursor()
     function = 'DeleteChampionship(%s)'
     cursor.execute(f"SELECT {function}", (cId))
     db.commit()
