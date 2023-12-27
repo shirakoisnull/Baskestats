@@ -1,4 +1,4 @@
-from flask import Flask, request, url_for, redirect, jsonify, render_template
+from flask import Flask, jsonify 
 from dotenv import load_dotenv
 import pymysql
 import os
@@ -37,7 +37,7 @@ def createTeam(team_name, team_city, team_wins, team_losses):
     db.commit()
     cursor.close()
     # Updates page with all teams
-    return redirect(url_for('getTeams'))
+    return 'Success'
 
 # Update selected team
 @app.route('/teams/<int:tId>', methods=['PUT'])
@@ -47,13 +47,13 @@ def updateTeam(tId, team_name, team_city, team_wins, team_losses):
     cursor.execute(f"SELECT {function}", (tId, team_name, team_city, team_wins, team_losses))
     db.commit()
     cursor.close()
-    return redirect(url_for('getTeams'))
+    return  'Success'
 
 # View team's page
 @app.route('/teams/<int:tId>', methods=['GET'])
 def viewTeam(tId):
     cursor = db.cursor()
-    cursor.execute('SELECT * FROM teams WHERE TID LIKE %s', (tId))
+    cursor.execute('SELECT * FROM teams WHERE TID = %s', (tId))
     result=cursor.fetchone()
     cursor.close()
     return jsonify(result)
@@ -66,7 +66,7 @@ def deleteTeam(tId):
     cursor.execute(f"SELECT {function}", (tId))
     db.commit()
     cursor.close()
-    return redirect(url_for('getTeams'))
+    return 'Success'
        
 if __name__ == '__main__':
     app.run(port=5003)

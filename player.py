@@ -1,4 +1,4 @@
-from flask import Flask, request, url_for, redirect, jsonify, render_template
+from flask import Flask,  jsonify
 from dotenv import load_dotenv
 import pymysql
 import os
@@ -20,9 +20,11 @@ db = pymysql.connect(host=db_host, user=db_user, password=db_password, database=
 @app.route('/players', methods=['GET'])
 def getPlayers():
     cursor = db.cursor()
-    cursor.execute('''SELECT * 
-                   FROM player
-                   INNER JOIN team ON player.TID = team.TID WHERE player.TID IS NOT NULL
+    cursor.execute('''
+                    SELECT player.*, team.name
+                    FROM player
+                    LEFT JOIN team ON player.TID = team.TID
+                    WHERE player.TID IS NOT NULL OR team.TID IS NULL;
                    ''')
     results=cursor.fetchall()
    
@@ -32,19 +34,14 @@ def getPlayers():
 # Create new player
 @app.route('/players', methods=['POST'])
 def createPlayer(pName, pAge, pHeight, pWeight, pPoints):
-    #pName='Walter White'
-    #pAge='52'
-    #pHeight='180' 
-    #pWeight='75'
-    #pPoints='300'
     cursor = db.cursor()
     function = 'CreatePlayer(%s, %s, %s, %s, %s)'
     cursor.execute(f"SELECT {function}", (pName, pAge, pHeight, pWeight, pPoints))
     db.commit()
 
     cursor.close()
-    # Updates page with all players
-    return redirect(url_for('getPlayers'))
+
+    return 'Success'
 
 # Associate player with team
 @app.route('/players', methods=['POST'])
@@ -54,6 +51,7 @@ def associatePlayerTeam(pId, teamId):
     cursor.execute(f"SELECT {function}", (pId, teamId))
     db.commit()
     cursor.close()
+    return 'Success'
 
 # Update selected player
 @app.route('/players/<int:pId>', methods=['PUT'])
@@ -63,13 +61,13 @@ def updatePlayer(pId, pName, pAge, pHeight, pWeight, pPoints):
     cursor.execute(f"CALL {function}", (pId, pName, pAge, pHeight, pWeight, pPoints))
     db.commit()
     cursor.close()
-    return redirect(url_for('getPlayers'))
+    return 'Success'
 
 # View player's page
 @app.route('/players/<int:pId>', methods=['GET'])
 def viewPlayer(pId):
     cursor = db.cursor()
-    cursor.execute('SELECT * FROM players WHERE PID LIKE %s', (pId))
+    cursor.execute('SELECT * FROM players WHERE PID = %s', (pId))
     result=cursor.fetchone()
     cursor.close()
     return jsonify(result)
@@ -82,7 +80,7 @@ def deletePlayer(pId):
     cursor.execute(f"SELECT {function}", ({pId}))
     db.commit()
     cursor.close()
-    return redirect(url_for('getPlayers'))
+    return 'Success'
        
  
  

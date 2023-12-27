@@ -1,4 +1,4 @@
-from flask import Flask, request, url_for, redirect, jsonify, render_template
+from flask import Flask, request,  jsonify 
 from dotenv import load_dotenv
 import pymysql
 import os
@@ -25,13 +25,13 @@ def getChamps():
     if search is None or search.strip() == '':
         cursor.execute('SELECT * FROM championship')
     else:
-        cursor.execute('SELECT * FROM championship WHERE year LIKE %s', ('%' + search + '%',))
+        cursor.execute('SELECT * FROM championship WHERE year = %s', ('%' + search + '%',))
     results=cursor.fetchall()
     cursor.close
     return jsonify(results)
 
 # Create new championship
-@app.route('/championship', methods=['POST'])
+@app.route('/championships', methods=['POST'])
 def createChamp(champ_year):
 
     cursor = db.cursor()
@@ -40,7 +40,7 @@ def createChamp(champ_year):
     db.commit()
     cursor.close()
     # Updates page with all championships
-    return redirect(url_for('getChamps'))
+    return 'Success'
 
 # Update selected championship
 @app.route('/championships/<int:cId>', methods=['PUT'])
@@ -50,13 +50,13 @@ def updateChampionship(champ_year):
     cursor.execute(f"SELECT {function}", (champ_year))
     db.commit()
     cursor.close()
-    return redirect(url_for('getChamps'))
+    return 'Success'
 
 # View championship's page
 @app.route('/championships/<int:cId>', methods=['GET'])
 def viewChampionsip(cId):
     cursor = db.cursor()
-    cursor.execute('SELECT * FROM championship WHERE CID LIKE %s', (cId))
+    cursor.execute('SELECT * FROM championship WHERE CID = %s', (cId))
     result=cursor.fetchone()
     cursor.close()
     return jsonify(result)
@@ -69,7 +69,7 @@ def deletePlayer(cId):
     cursor.execute(f"SELECT {function}", (cId))
     db.commit()
     cursor.close()
-    return jsonify("Success!")
+    return 'Success'
        
 if __name__ == '__main__':
     app.run(port=5004)
