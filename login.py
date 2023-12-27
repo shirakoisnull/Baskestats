@@ -19,11 +19,6 @@ db_name=os.environ['DB_NAME']
 app.config["JWT_SECRET_KEY"] = os.environ['JWT_SECRET_KEY']
 jwt = JWTManager(app)
 
-
-
- 
-
-
 db = pymysql.connect(host=db_host, user=db_user, password=db_password, database=db_name)
   
 
@@ -47,7 +42,7 @@ def login():
         if result and result[0] == password:
             access_token = create_access_token(identity=username)
             return jsonify(access_token, username)
-            return redirect(url_for('index'))
+           
         else:
             return redirect(url_for('error'))
 
@@ -61,7 +56,7 @@ def protected():
  
 
 if __name__ == '__main__':
-    app.run()
+    app.run(port=5001)
 
 
     
