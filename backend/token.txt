@@ -1,1 +1,0 @@
-git remote set-url origin https://konLiogka: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@github.com/shirakoisnull/SE_Assignment
