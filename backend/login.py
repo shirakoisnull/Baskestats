@@ -21,7 +21,16 @@ jwt = JWTManager(app)
 
 db = pymysql.connect(host=db_host, user=db_user, password=db_password, database=db_name)
   
-
+@app.route('/login',methods=['GET'])
+def getLogin():
+    cursor = db.cursor()
+    cursor.execute('''
+                    SELECT * FROM secretary
+                   ''')
+    results=cursor.fetchall()
+   
+    cursor.close
+    return jsonify(results)
 
 
 # Logging in
@@ -32,7 +41,7 @@ def login():
         password = request.json.get['password']
         
         # Making a cursor/pointer object for interacting with the database
-        cursor = db.connection.cursor()
+        cursor = db.cursor()
         # Executing the query using parametirised variables using the %s placeholder for preventing SQL injections
         cursor.execute('SELECT password FROM secretary WHERE username = %s',(username,))
         # Fetching one instance
@@ -42,9 +51,8 @@ def login():
         if result and result[0] == password:
             access_token = create_access_token(identity=username)
             return jsonify(access_token, username)
-           
         else:
-            return redirect(url_for('error'))
+            return 'Error'
 
 #Gettng current user
 @app.route('/protected', methods=['GET'])

@@ -1,4 +1,4 @@
-from flask import Flask,  jsonify
+from flask import Flask,  jsonify, request
 from dotenv import load_dotenv
 import pymysql
 import os
@@ -33,7 +33,20 @@ def getPlayers():
     
 # Create new player
 @app.route('/players', methods=['POST'])
-def createPlayer(pName, pAge, pHeight, pWeight, pPoints):
+def createPlayer():
+    # Requesting variables
+    pName = request.json.get['pName'] 
+    pAge = request.json.get['pAge']
+    pHeight = request.json.get['pHeight']
+    pWeight = request.json.get['pWeight']
+    pPoints = request.json.get['pPoints']
+    
+    #Checking for @ and ! symbols for SQL injection
+    symbols_present = any('@' in var or '!' in var for var in [pName, str(pAge), str(pHeight), str(pWeight), str(pPoints)])
+    if symbols_present:
+        return 'Error'
+    
+
     cursor = db.cursor()
     function = 'CreatePlayer(%s, %s, %s, %s, %s)'
     cursor.execute(f"SELECT {function}", (pName, pAge, pHeight, pWeight, pPoints))
@@ -44,8 +57,15 @@ def createPlayer(pName, pAge, pHeight, pWeight, pPoints):
     return 'Success'
 
 # Associate player with team
-@app.route('/players', methods=['POST'])
-def associatePlayerTeam(pId, teamId):
+@app.route('/associate', methods=['POST'])
+def associatePlayerTeam():
+    # Requesting variables
+    pId = request.json.get['pId']
+    teamId = request.json.get['teamId']
+    #Checking for @ and ! symbols for SQL injection
+    symbols_present = any('@' in var or '!' in var for var in [ str(pId), str(teamId)])
+    if symbols_present:
+        return 'Error'
     cursor = db.cursor()
     function = 'AssociatePlayerTeam(%s, %s)'
     cursor.execute(f"SELECT {function}", (pId, teamId))
@@ -55,7 +75,19 @@ def associatePlayerTeam(pId, teamId):
 
 # Update selected player
 @app.route('/players/<int:pId>', methods=['PUT'])
-def updatePlayer(pId, pName, pAge, pHeight, pWeight, pPoints):
+def updatePlayer():
+
+    # Requesting variables
+    pName = request.json.get['pName'] 
+    pAge = request.json.get['pAge']
+    pHeight = request.json.get['pHeight']
+    pWeight = request.json.get['pWeight']
+    pPoints = request.json.get['pPoints']
+    pId = request.json.get['pId']
+    # Checking for @ and ! symbols for SQL injection
+    symbols_present = any('@' in var or '!' in var for var in [pName,str(pId), str(pAge), str(pHeight), str(pWeight), str(pPoints)])
+    if symbols_present:
+        return 'Error'
     cursor = db.cursor()
     function = 'UpdatePlayer(%s, %s, %s, %s, %s)'
     cursor.execute(f"CALL {function}", (pId, pName, pAge, pHeight, pWeight, pPoints))
@@ -65,7 +97,11 @@ def updatePlayer(pId, pName, pAge, pHeight, pWeight, pPoints):
 
 # View player's page
 @app.route('/players/<int:pId>', methods=['GET'])
-def viewPlayer(pId):
+def viewPlayer():
+    pId = request.json.get['pId']
+    symbols_present = any('@' in var or '!' in var for var in [str(pId)])
+    if symbols_present:
+        return 'Error'
     cursor = db.cursor()
     cursor.execute('SELECT * FROM players WHERE PID = %s', (pId))
     result=cursor.fetchone()
@@ -74,7 +110,11 @@ def viewPlayer(pId):
 
 # Delete selected player
 @app.route('/players/<int:pId>', methods=['DELETE'])
-def deletePlayer(pId):
+def deletePlayer():
+    pId = request.json.get['pId']
+    symbols_present = any('@' in var or '!' in var for var in [str(pId)])
+    if symbols_present:
+        return 'Error'
     cursor = db.cursor()
     function = 'DeletePlayer(%s)'
     cursor.execute(f"SELECT {function}", ({pId}))

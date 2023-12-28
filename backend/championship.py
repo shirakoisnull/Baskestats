@@ -31,10 +31,14 @@ def getChamps():
 # Create new championship
 @app.route('/championships', methods=['POST'])
 def createChamp():
-    champ_year=2023
+    # Requesting variables
+    cYear = request.json.get['cYear'] 
+    symbols_present = any('@' in var or '!' in var for var in [  str(cYear) ])
+    if symbols_present:
+        return 'Error'
     cursor = db.cursor()
     function = 'CreateChampionship(%s)'
-    cursor.execute(f"SELECT {function}", (champ_year))
+    cursor.execute(f"SELECT {function}", (cYear))
     db.commit()
     cursor.close()
     # Updates page with all championships
@@ -42,17 +46,27 @@ def createChamp():
 
 # Update selected championship
 @app.route('/championships/<int:cId>', methods=['PUT'])
-def updateChampionship(champ_year):
+def updateChampionship():
+     # Requesting variables
+    cYear = request.json.get['cYear'] 
+    symbols_present = any('@' in var or '!' in var for var in [  str(cYear) ])
+    if symbols_present:
+        return 'Error'
     cursor = db.cursor()
     function = 'UpdateChampionship(%s, %s, %s, %s, %s)'
-    cursor.execute(f"SELECT {function}", (champ_year))
+    cursor.execute(f"SELECT {function}", (cYear))
     db.commit()
     cursor.close()
     return 'Success'
 
 # View championship's page
 @app.route('/championships/<int:cId>', methods=['GET'])
-def viewChampionsip(cId):
+def viewChampionsip():
+    # Requesting variables
+    cId = request.json.get['cId'] 
+    symbols_present = any('@' in var or '!' in var for var in [  str(cId) ])
+    if symbols_present:
+        return 'Error'
     cursor = db.cursor()
     cursor.execute('SELECT * FROM championship WHERE CID = %s', (cId))
     result=cursor.fetchone()
@@ -61,7 +75,12 @@ def viewChampionsip(cId):
 
 # Delete selected championship
 @app.route('/championships/<int:cId>', methods=['DELETE'])
-def deletePlayer(cId):
+def deletePlayer():
+    # Requesting variables
+    cId = request.json.get['cId'] 
+    symbols_present = any('@' in var or '!' in var for var in [  str(cId) ])
+    if symbols_present:
+        return 'Error'
     cursor = db.cursor()
     function = 'DeleteChampionship(%s)'
     cursor.execute(f"SELECT {function}", (cId))
