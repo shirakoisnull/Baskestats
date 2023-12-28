@@ -37,8 +37,8 @@ def getLogin():
 @app.route('/login',methods=['POST'])
 def login():
         # Gets the username and password from the input form of the frontend
-        username = request.json.get['username'] 
-        password = request.json.get['password']
+        username = request.json.get('username')
+        password = request.json.get('password')
         
         # Making a cursor/pointer object for interacting with the database
         cursor = db.cursor()
