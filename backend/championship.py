@@ -32,7 +32,7 @@ def getChamps():
 @app.route('/championships', methods=['POST'])
 def createChamp():
     # Requesting variables
-    cYear = request.json.get['cYear'] 
+    cYear = request.json.get('cYear')
     symbols_present = any('@' in var or '!' in var for var in [  str(cYear) ])
     if symbols_present:
         return 'Error'
@@ -48,7 +48,7 @@ def createChamp():
 @app.route('/championships/<int:cId>', methods=['PUT'])
 def updateChampionship():
      # Requesting variables
-    cYear = request.json.get['cYear'] 
+    cYear = request.json.get('cYear')
     symbols_present = any('@' in var or '!' in var for var in [  str(cYear) ])
     if symbols_present:
         return 'Error'
@@ -63,7 +63,7 @@ def updateChampionship():
 @app.route('/championships/<int:cId>', methods=['GET'])
 def viewChampionsip():
     # Requesting variables
-    cId = request.json.get['cId'] 
+    cId = request.json.get('cId')
     symbols_present = any('@' in var or '!' in var for var in [  str(cId) ])
     if symbols_present:
         return 'Error'
@@ -77,7 +77,7 @@ def viewChampionsip():
 @app.route('/championships/<int:cId>', methods=['DELETE'])
 def deletePlayer():
     # Requesting variables
-    cId = request.json.get['cId'] 
+    cId = request.json.get('cId')
     symbols_present = any('@' in var or '!' in var for var in [  str(cId) ])
     if symbols_present:
         return 'Error'

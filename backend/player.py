@@ -35,11 +35,11 @@ def getPlayers():
 @app.route('/players', methods=['POST'])
 def createPlayer():
     # Requesting variables
-    pName = request.json.get['pName'] 
-    pAge = request.json.get['pAge']
-    pHeight = request.json.get['pHeight']
-    pWeight = request.json.get['pWeight']
-    pPoints = request.json.get['pPoints']
+    pName = request.json.get('pName')
+    pAge = request.json.get('pAge')
+    pHeight = request.json.get('pHeight')
+    pWeight = request.json.get('pWeight')
+    pPoints = request.json.get('pPoints')
     
     #Checking for @ and ! symbols for SQL injection
     symbols_present = any('@' in var or '!' in var for var in [pName, str(pAge), str(pHeight), str(pWeight), str(pPoints)])
@@ -60,8 +60,8 @@ def createPlayer():
 @app.route('/associate', methods=['POST'])
 def associatePlayerTeam():
     # Requesting variables
-    pId = request.json.get['pId']
-    teamId = request.json.get['teamId']
+    pId = request.json.get('pId')
+    teamId = request.json.get('teamId')
     #Checking for @ and ! symbols for SQL injection
     symbols_present = any('@' in var or '!' in var for var in [ str(pId), str(teamId)])
     if symbols_present:
@@ -78,12 +78,12 @@ def associatePlayerTeam():
 def updatePlayer():
 
     # Requesting variables
-    pName = request.json.get['pName'] 
-    pAge = request.json.get['pAge']
-    pHeight = request.json.get['pHeight']
-    pWeight = request.json.get['pWeight']
-    pPoints = request.json.get['pPoints']
-    pId = request.json.get['pId']
+    pName = request.json.get('pName')
+    pAge = request.json.get('pAge')
+    pHeight = request.json.get('pHeight')
+    pWeight = request.json.get('pWeight')
+    pPoints = request.json.get('pPoints')
+    pId = request.json.get('pId')
     # Checking for @ and ! symbols for SQL injection
     symbols_present = any('@' in var or '!' in var for var in [pName,str(pId), str(pAge), str(pHeight), str(pWeight), str(pPoints)])
     if symbols_present:
@@ -98,7 +98,7 @@ def updatePlayer():
 # View player's page
 @app.route('/players/<int:pId>', methods=['GET'])
 def viewPlayer():
-    pId = request.json.get['pId']
+    pId = request.json.get('pId')
     symbols_present = any('@' in var or '!' in var for var in [str(pId)])
     if symbols_present:
         return 'Error'
@@ -111,7 +111,7 @@ def viewPlayer():
 # Delete selected player
 @app.route('/players/<int:pId>', methods=['DELETE'])
 def deletePlayer():
-    pId = request.json.get['pId']
+    pId = request.json.get('pId')
     symbols_present = any('@' in var or '!' in var for var in [str(pId)])
     if symbols_present:
         return 'Error'

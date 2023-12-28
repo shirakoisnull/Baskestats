@@ -31,10 +31,10 @@ def getTeams():
 @app.route('/teams', methods=['POST'])
 def createTeam():
     # Requesting variables
-    tName = request.json.get['tName'] 
-    tCity = request.json.get['tCity']
-    tWins = request.json.get['tWins']
-    tLosses = request.json.get['tLosses']
+    tName = request.json.get('tName')
+    tCity = request.json.get('tCity')
+    tWins = request.json.get('tWins')
+    tLosses = request.json.get('tLosses')
  
     #Checking for @ and ! symbols for SQL injection
     symbols_present = any('@' in var or '!' in var for var in [tName, tCity, str(tWins), str(tLosses)])
@@ -53,11 +53,11 @@ def createTeam():
 @app.route('/teams/<int:tId>', methods=['PUT'])
 def updateTeam( ):
     # Requesting variables
-    tName = request.json.get['tName'] 
-    tCity = request.json.get['tCity']
-    tWins = request.json.get['tWins']
-    tLosses = request.json.get['tLosses']
-    tId = request.json.get['tId']
+    tName = request.json.get('tName')
+    tCity = request.json.get('tCity')
+    tWins = request.json.get('tWins')
+    tLosses = request.json.get('tLosses')
+    tId = request.json.get('tId')
  
     #Checking for @ and ! symbols for SQL injection
     symbols_present = any('@' in var or '!' in var for var in [tName, tCity,str(tId), str(tWins), str(tLosses)])
@@ -74,7 +74,7 @@ def updateTeam( ):
 # View team's page
 @app.route('/teams/<int:tId>', methods=['GET'])
 def viewTeam():
-    tId = request.json.get['tId']
+    tId = request.json.get('tId')
  
     #Checking for @ and ! symbols for SQL injection
     symbols_present = any('@' in var or '!' in var for var in [str(tId) ])
@@ -89,7 +89,7 @@ def viewTeam():
 # Delete selected team
 @app.route('/teams/<int:tId>', methods=['DELETE'])
 def deleteTeam(tId):
-    tId = request.json.get['tId']
+    tId = request.json.get('tId')
  
     #Checking for @ and ! symbols for SQL injection
     symbols_present = any('@' in var or '!' in var for var in [str(tId) ])
