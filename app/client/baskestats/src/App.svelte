@@ -1,12 +1,12 @@
 <script>
-  import Login from "./Login.svelte";
+  import Login from './Login.svelte';
 </script>
 
 <h1>Baskestats</h1>
 <main>
-  <div class="card">
+  <!-- <div class="card"> -->
     <Login />
-  </div>
+  <!-- </div> -->
 </main>
 
 <style>
@@ -22,6 +22,8 @@
     text-transform: uppercase;
     font-size: 4em;
     font-weight: 100;
+    will-change: filter;
+    transition: filter 300ms;
   }
 
   /* @media (min-width: 640px) {
@@ -35,10 +37,8 @@
     will-change: filter;
     transition: filter 300ms;
   }
-  .logo:hover {
-    filter: drop-shadow(0 0 2em #646cffaa);
-  }
-  .logo.svelte:hover {
+
+  h1:hover {
     filter: drop-shadow(0 0 2em #ff3e00aa);
   }
 </style>
