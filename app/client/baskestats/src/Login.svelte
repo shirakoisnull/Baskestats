@@ -1,4 +1,5 @@
 <script>
+  // @ts-ignore
   import { onMount } from 'svelte';
   import SecretaryPanel from './SecretaryPanel.svelte';
 
@@ -34,6 +35,7 @@
       isAuthenticated = true;
     }
   });
+
 </script>
 
 {#if isAuthenticated}
