@@ -75,7 +75,7 @@ def viewChampionsip():
 
 # Delete selected championship
 @app.route('/championships/<int:cId>', methods=['DELETE'])
-def deletePlayer():
+def deleteChampionship():
     # Requesting variables
     cId = request.json.get('cId')
     symbols_present = any('@' in var or '!' in var for var in [  str(cId) ])
