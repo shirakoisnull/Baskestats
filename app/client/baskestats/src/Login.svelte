@@ -1,6 +1,6 @@
 <script>
   // @ts-ignore
-  import axios from 'axios';
+  // import axios from 'axios';
   import { onMount } from 'svelte';
   import SecretaryPanel from './SecretaryPanel.svelte';
 
@@ -9,26 +9,6 @@
   let isAuthenticated = false; // Track user authentication status
   let storedUsername = '';
 
-  // async function handleSubmit() {
-  //   try {
-  //     const response = await axios.post('http://127.0.0.1:5001/login', {
-  //       username,
-  //       password,
-  //     });
-
-  //     if (response.status === 200) {
-  //       const { token, username } = response.data; // Assuming the API returns both token and username
-  //       localStorage.setItem('jwtToken', token); // Store token in localStorage
-  //       localStorage.setItem('username', username); // Store username in localStorage
-  //       isAuthenticated = true;
-  //       storedUsername = username; // Store the username in the component's state
-  //     } else {
-  //       alert('Invalid credentials');
-  //     }
-  //   } catch (error) {
-  //     console.error('Error:', error);
-  //   }
-  // }
   async function handleSubmit() {
     try {
       const response = await fetch('http://127.0.0.1:5001/login', {
@@ -38,9 +18,11 @@
         },
         body: JSON.stringify({ username, password }),
       });
+      
 
       if (response.ok) {
-        const { token, username } = await response.json();
+        const data = await response.json(); //PAIRNEI TA DATA ALLA DEN KANEI DIAXWRISMO EPEITA
+        const { token, username } = data; // Assuming the API returns both token and username
         localStorage.setItem('jwtToken', token); // Store token in localStorage
         localStorage.setItem('username', username); // Store username in localStorage
         isAuthenticated = true;
@@ -49,16 +31,17 @@
         alert('Invalid credentials');
       }
     } catch (error) {
+      alert('Invalid credentials'); // To back epestrepse error
       console.error('Error:', error);
     }
   }
 
-/*   onMount(() => {
+  onMount(() => {
     const token = localStorage.getItem('jwtToken');
     if (token) {
       isAuthenticated = true;
     }
-  }); */
+  });
 
 </script>
 
