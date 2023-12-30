@@ -54,7 +54,7 @@ def login():
         # Checking if result exists and is equal to my password
         if result and result[0] == password:
             access_token = create_access_token(identity=username)
-            return jsonify(access_token, username)
+            return jsonify(token=access_token, username=username)
         else:
             return 'Error'
 
