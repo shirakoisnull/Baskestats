@@ -47,6 +47,7 @@ def login():
         cursor.execute('SELECT password FROM secretary WHERE username = %s',(username,))
         # Fetching one instance
         result=cursor.fetchone()
+        cursor.close()
       
         # Checking if result exists and is equal to my password
         if result and result[0] == password:
@@ -54,7 +55,7 @@ def login():
             return jsonify(access_token, username)
         else:
             return 'Error'
-        cursor.close
+        
 #Gettng current user
 @app.route('/protected', methods=['GET'])
 @jwt_required()

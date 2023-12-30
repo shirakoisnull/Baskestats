@@ -35,9 +35,7 @@ def getChamps():
         results=cursor.fetchall()
  
         return jsonify(results)
-    except db.connector.Error as e:
-        return jsonify({'error': f'Database error: {str(e)}'}), 500
-
+ 
     except Exception as e:
         return jsonify({'error': f'Error get championships: {str(e)}'}), 500
 
@@ -60,9 +58,7 @@ def createChamp():
     
         # Updates page with all championships
         return 'Success'
-    except db.connector.Error as e:
-        return jsonify({'error': f'Database error: {str(e)}'}), 500
-
+ 
     except Exception as e:
         return jsonify({'error': f'Error creating championship: {str(e)}'}), 500
 
@@ -85,9 +81,7 @@ def updateChampionship():
         db.commit()
      
         return 'Success'
-    except db.connector.Error as e:
-        return jsonify({'error': f'Database error: {str(e)}'}), 500
-
+ 
     except Exception as e:
         return jsonify({'error': f'Error updating championship: {str(e)}'}), 500
 
@@ -108,9 +102,7 @@ def viewChampionsip():
         result=cursor.fetchone()
       
         return jsonify(result)
-    except db.connector.Error as e:
-        return jsonify({'error': f'Database error: {str(e)}'}), 500
-
+ 
     except Exception as e:
         return jsonify({'error': f'Error viewing championship: {str(e)}'}), 500
 

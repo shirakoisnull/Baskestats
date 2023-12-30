@@ -39,9 +39,7 @@ def getPlayers():
     
         cursor.close
         return jsonify(results)
-    except db.connector.Error as e:
-        return jsonify({'error': f'Database error: {str(e)}'}), 500
-
+ 
     except Exception as e:
         return jsonify({'error': f'Error viewing players: {str(e)}'}), 500
 
@@ -73,9 +71,7 @@ def createPlayer():
  
 
         return 'Success'
-    except db.connector.Error as e:
-        return jsonify({'error': f'Database error: {str(e)}'}), 500
-
+ 
     except Exception as e:
         return jsonify({'error': f'Error creating player: {str(e)}'}), 500
 
@@ -99,9 +95,7 @@ def associatePlayerTeam():
         db.commit()
      
         return 'Success'
-    except db.connector.Error as e:
-        return jsonify({'error': f'Database error: {str(e)}'}), 500
-
+ 
     except Exception as e:
         return jsonify({'error': f'Error associating player: {str(e)}'}), 500
 
@@ -129,9 +123,7 @@ def updatePlayer():
         db.commit()
       
         return 'Success'
-    except db.connector.Error as e:
-        return jsonify({'error': f'Database error: {str(e)}'}), 500
-
+ 
     except Exception as e:
         return jsonify({'error': f'Error updating player: {str(e)}'}), 500
 
@@ -151,9 +143,7 @@ def viewPlayer():
         result=cursor.fetchone()
      
         return jsonify(result)
-    except db.connector.Error as e:
-        return jsonify({'error': f'Database error: {str(e)}'}), 500
-
+  
     except Exception as e:
         return jsonify({'error': f'Error viewing player: {str(e)}'}), 500
 
@@ -175,9 +165,7 @@ def deletePlayer():
         db.commit()
          
         return 'Success'
-    except db.connector.Error as e:
-        return jsonify({'error': f'Database error: {str(e)}'}), 500
-
+  
     except Exception as e:
         return jsonify({'error': f'Error deleting player: {str(e)}'}), 500
 

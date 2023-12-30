@@ -33,9 +33,7 @@ def getTeams():
         results=cursor.fetchall()
      
         return jsonify(results)
-    except db.connector.Error as e:
-        return jsonify({'error': f'Database error: {str(e)}'}), 500
-
+  
     except Exception as e:
         return jsonify({'error': f'Error getting teams: {str(e)}'}), 500
 
@@ -60,9 +58,7 @@ def createTeam():
         function = 'CreateTeam(%s, %s, %s, %s)'
         cursor.execute(f"SELECT {function}", (tName, tCity, tWins, tLosses))
         db.commit()
-    except db.connector.Error as e:
-        return jsonify({'error': f'Database error: {str(e)}'}), 500
-
+ 
     except Exception as e:
         return jsonify({'error': f'Error creating team: {str(e)}'}), 500
 
@@ -91,9 +87,7 @@ def updateTeam( ):
         function = 'UpdateTeam(%s, %s, %s, %s, %s)'
         cursor.execute(f"SELECT {function}", (tId, tName, tCity, tWins, tLosses))
         db.commit()
-    except db.connector.Error as e:
-        return jsonify({'error': f'Database error: {str(e)}'}), 500
-
+  
     except Exception as e:
         return jsonify({'error': f'Error updating team: {str(e)}'}), 500
 
@@ -117,9 +111,7 @@ def viewTeam():
         result=cursor.fetchone()
         
         return jsonify(result)
-    except db.connector.Error as e:
-        return jsonify({'error': f'Database error: {str(e)}'}), 500
-
+ 
     except Exception as e:
         return jsonify({'error': f'Error viewing team: {str(e)}'}), 500
 
@@ -141,9 +133,7 @@ def deleteTeam(tId):
 
         return jsonify({'message': 'Team deleted successfully'}), 200
 
-    except db.connector.Error as e:
-        return jsonify({'error': f'Database error: {str(e)}'}), 500
-
+ 
     except Exception as e:
         return jsonify({'error': f'Error deleting team: {str(e)}'}), 500
 

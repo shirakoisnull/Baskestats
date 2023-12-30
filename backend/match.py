@@ -2,13 +2,23 @@ from flask import Flask, jsonify , request
 from dotenv import load_dotenv
 import pymysql
 import os
-import random
+ 
 
 #Install requirements with pip install --upgrade -r requirements.txt 
 
 app = Flask(__name__)
 
 load_dotenv()
+
+
+# (╯°□°)╯︵ ┻━┻
+# (╯°□°)╯︵ ┻━┻
+# (╯°□°)╯︵ ┻━┻
+# (╯°□°)╯︵ ┻━┻
+# (╯°□°)╯︵ ┻━┻
+
+ 
+
 
 db_host = os.environ['DB_HOST'] 
 db_user = os.environ['DB_USER']
@@ -74,14 +84,12 @@ def drawChamp(cId):
         results = matchResult(cId, teams)
 
         return jsonify(results), 200
-    except db.connector.Error as e:
-        return jsonify({'error': f'Database error: {str(e)}'}), 500
-
+ 
     except Exception as e:
         return jsonify({'error': f'Error creating drawing champ: {str(e)}'}), 500
 
     finally:
-        cursor.close()
+        db.close()
 
 
 
