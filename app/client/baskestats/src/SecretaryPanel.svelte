@@ -1,6 +1,8 @@
 <script>
+  import { Link } from "svelte-routing";
+
   import { onMount } from "svelte";
-  let usr = localStorage.getItem('username');
+  let usr = localStorage.getItem("username");
   // export let url = "";
   let isAuthenticated = false;
 
@@ -13,17 +15,22 @@
       window.location.href = "/login"; // Redirect to your login route
     }
   });
-
 </script>
 
-{#if isAuthenticated}
+<!-- {#if isAuthenticated} -->
   <h1>Welcome, {usr}!</h1>
+  <button>
+    <Link to="/teams" class="button-link">Team Management</Link>
+  </button>
+  <button>
+    <Link to="/players" class="button-link">Player Management</Link>
+  </button>
+  <button>
+    <Link to="/champ" class="button-link">Champ Management</Link>
+  </button>
+<!-- {/if} -->
+
+<style>
+  /* Style the links inside the buttons */
   
-<div class="card">
-  <button on:click={console.log("Clicked")}>Team Management</button>
-  <button on:click={console.log("Clicked")}>Player Management</button>
-  <button on:click={console.log("Clicked")}>Championship Management</button>
-</div>
-{:else}
-  <!-- Redirecting to login, no content to display here -->
-{/if}
+</style>
