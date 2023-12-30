@@ -1,9 +1,11 @@
 <script>
   import Login from './Login.svelte';
+  import TeamManagement from './routes/TeamManagement.svelte';
 </script>
 
 <h1>Baskestats</h1> <!-- TODO: Replace with BaskeStats Logo/Splash -->
 
+    <TeamManagement />
 <main>
   <!-- <div class="card"> -->
     <Login />
