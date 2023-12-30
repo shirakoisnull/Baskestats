@@ -16,91 +16,140 @@ db_name=os.environ['DB_NAME']
 
 db = pymysql.connect(host=db_host, user=db_user, password=db_password, database=db_name)
 
+def sqlInj(*values):
+    forbidden_symbols = ['@', '!']
+    for value in values:
+        if any(symbol in str(value) for symbol in forbidden_symbols):
+            return True
+    return False
 
-# Get list of all teams or just the searched one
+
+# Get list of all teams 
 @app.route('/teams', methods=['GET'])
 def getTeams():
-  
-    cursor = db.cursor()
-    cursor.execute('SELECT * FROM team')
-    results=cursor.fetchall()
-    cursor.close
-    return jsonify(results)
+    try:
+        cursor = db.cursor()
+        cursor.execute('SELECT * FROM team')
+        results=cursor.fetchall()
+     
+        return jsonify(results)
+    except db.connector.Error as e:
+        return jsonify({'error': f'Database error: {str(e)}'}), 500
+
+    except Exception as e:
+        return jsonify({'error': f'Error getting teams: {str(e)}'}), 500
+
+    finally:
+        cursor.close()
 
 # Create new team
 @app.route('/teams', methods=['POST'])
 def createTeam():
-    # Requesting variables
-    tName = request.json.get('tName')
-    tCity = request.json.get('tCity')
-    tWins = request.json.get('tWins')
-    tLosses = request.json.get('tLosses')
- 
-    #Checking for @ and ! symbols for SQL injection
-    symbols_present = any('@' in var or '!' in var for var in [tName, tCity, str(tWins), str(tLosses)])
-    if symbols_present:
-        return 'Error'
+    try:
+        # Requesting variables
+        tName = request.json.get('tName')
+        tCity = request.json.get('tCity')
+        tWins = request.json.get('tWins')
+        tLosses = request.json.get('tLosses')
     
-    cursor = db.cursor()
-    function = 'CreateTeam(%s, %s, %s, %s)'
-    cursor.execute(f"SELECT {function}", (tName, tCity, tWins, tLosses))
-    db.commit()
-    cursor.close()
-   
-    return 'Success'
+        if sqlInj( tName, tCity,  tWins,  tLosses):
+            return jsonify({'error': 'Invalid input detected. SQL injection attempt detected.'}), 400
+
+        
+        cursor = db.cursor()
+        function = 'CreateTeam(%s, %s, %s, %s)'
+        cursor.execute(f"SELECT {function}", (tName, tCity, tWins, tLosses))
+        db.commit()
+    except db.connector.Error as e:
+        return jsonify({'error': f'Database error: {str(e)}'}), 500
+
+    except Exception as e:
+        return jsonify({'error': f'Error creating team: {str(e)}'}), 500
+
+    finally:
+        cursor.close()
+    
+        
 
 # Update selected team
 @app.route('/teams/<int:tId>', methods=['PUT'])
 def updateTeam( ):
-    # Requesting variables
-    tName = request.json.get('tName')
-    tCity = request.json.get('tCity')
-    tWins = request.json.get('tWins')
-    tLosses = request.json.get('tLosses')
-    tId = request.json.get('tId')
- 
-    #Checking for @ and ! symbols for SQL injection
-    symbols_present = any('@' in var or '!' in var for var in [tName, tCity,str(tId), str(tWins), str(tLosses)])
-    if symbols_present:
-        return 'Error'
+    try:
+        # Requesting variables
+        tName = request.json.get('tName')
+        tCity = request.json.get('tCity')
+        tWins = request.json.get('tWins')
+        tLosses = request.json.get('tLosses')
+        tId = request.json.get('tId')
     
-    cursor = db.cursor()
-    function = 'UpdateTeam(%s, %s, %s, %s, %s)'
-    cursor.execute(f"SELECT {function}", (tId, tName, tCity, tWins, tLosses))
-    db.commit()
-    cursor.close()
-    return  'Success'
+    
+        if sqlInj(  tName, tCity,  tWins,  tLosses,tId):
+           return jsonify({'error': 'Invalid input detected. SQL injection attempt detected.'}), 400
+
+        
+        cursor = db.cursor()
+        function = 'UpdateTeam(%s, %s, %s, %s, %s)'
+        cursor.execute(f"SELECT {function}", (tId, tName, tCity, tWins, tLosses))
+        db.commit()
+    except db.connector.Error as e:
+        return jsonify({'error': f'Database error: {str(e)}'}), 500
+
+    except Exception as e:
+        return jsonify({'error': f'Error updating team: {str(e)}'}), 500
+
+    finally:
+        cursor.close()
+ 
 
 # View team's page
 @app.route('/teams/<int:tId>', methods=['GET'])
 def viewTeam():
-    tId = request.json.get('tId')
- 
-    #Checking for @ and ! symbols for SQL injection
-    symbols_present = any('@' in var or '!' in var for var in [str(tId) ])
-    if symbols_present:
-        return 'Error'
-    cursor = db.cursor()
-    cursor.execute('SELECT * FROM teams WHERE TID = %s', (tId))
-    result=cursor.fetchone()
-    cursor.close()
-    return jsonify(result)
+    try:
+        tId = request.json.get('tId')
+    
+
+        if sqlInj(tId):
+          return jsonify({'error': 'Invalid input detected. SQL injection attempt detected.'}), 400
+
+        
+        cursor = db.cursor()
+        cursor.execute('SELECT * FROM teams WHERE TID = %s', (tId))
+        result=cursor.fetchone()
+        
+        return jsonify(result)
+    except db.connector.Error as e:
+        return jsonify({'error': f'Database error: {str(e)}'}), 500
+
+    except Exception as e:
+        return jsonify({'error': f'Error viewing team: {str(e)}'}), 500
+
+    finally:
+        cursor.close()
 
 # Delete selected team
 @app.route('/teams/<int:tId>', methods=['DELETE'])
 def deleteTeam(tId):
-    tId = request.json.get('tId')
- 
-    #Checking for @ and ! symbols for SQL injection
-    symbols_present = any('@' in var or '!' in var for var in [str(tId) ])
-    if symbols_present:
-        return 'Error'
-    cursor = db.cursor()
-    function = 'DeleteTeam(%s)'
-    cursor.execute(f"SELECT {function}", (tId))
-    db.commit()
-    cursor.close()
-    return 'Success'
+    try:
+        # Checking for SQL injection symbols
+        if sqlInj( tId):
+            return jsonify({'error': 'Invalid input detected. SQL injection attempt detected.'}), 400
+
+        with db.cursor() as cursor:
+            function = 'DeleteTeam(%s)'
+            cursor.execute(f"SELECT {function}", (tId,))
+            db.commit()
+
+        return jsonify({'message': 'Team deleted successfully'}), 200
+
+    except db.connector.Error as e:
+        return jsonify({'error': f'Database error: {str(e)}'}), 500
+
+    except Exception as e:
+        return jsonify({'error': f'Error deleting team: {str(e)}'}), 500
+
+    finally:
+        db.close()
+
        
 if __name__ == '__main__':
     app.run(port=5003)

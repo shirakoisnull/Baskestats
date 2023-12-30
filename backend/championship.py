@@ -16,77 +16,133 @@ db_name=os.environ['DB_NAME']
 
 db = pymysql.connect(host=db_host, user=db_user, password=db_password, database=db_name)
 
+def sqlInj(*values):
+    forbidden_symbols = ['@', '!']
+    for value in values:
+        if any(symbol in str(value) for symbol in forbidden_symbols):
+            return True
+    return False
 
-# Get list of all championship or just the searched one
+
+# Get list of all championship 
 @app.route('/championships', methods=['GET'])
 def getChamps():
-  
-    cursor = db.cursor()
+    try:
+    
+        cursor = db.cursor()
+    
+        cursor.execute('SELECT * FROM championship')
+        results=cursor.fetchall()
  
-    cursor.execute('SELECT * FROM championship')
-    results=cursor.fetchall()
-    cursor.close
-    return jsonify(results)
+        return jsonify(results)
+    except db.connector.Error as e:
+        return jsonify({'error': f'Database error: {str(e)}'}), 500
+
+    except Exception as e:
+        return jsonify({'error': f'Error get championships: {str(e)}'}), 500
+
+    finally:
+        cursor.close()
 
 # Create new championship
 @app.route('/championships', methods=['POST'])
 def createChamp():
-    # Requesting variables
-    cYear = request.json.get('cYear')
-    symbols_present = any('@' in var or '!' in var for var in [  str(cYear) ])
-    if symbols_present:
-        return 'Error'
-    cursor = db.cursor()
-    function = 'CreateChampionship(%s)'
-    cursor.execute(f"SELECT {function}", (cYear))
-    db.commit()
-    cursor.close()
-    # Updates page with all championships
-    return 'Success'
+    try:
+        # Requesting variables
+        cYear = request.json.get('cYear')
+        if sqlInj(cYear):
+            return jsonify({'error': 'Invalid input detected. SQL injection attempt detected.'}), 400
+
+        cursor = db.cursor()
+        function = 'CreateChampionship(%s)'
+        cursor.execute(f"SELECT {function}", (cYear))
+        db.commit()
+    
+        # Updates page with all championships
+        return 'Success'
+    except db.connector.Error as e:
+        return jsonify({'error': f'Database error: {str(e)}'}), 500
+
+    except Exception as e:
+        return jsonify({'error': f'Error creating championship: {str(e)}'}), 500
+
+    finally:
+        cursor.close()
 
 # Update selected championship
 @app.route('/championships/<int:cId>', methods=['PUT'])
 def updateChampionship():
-     # Requesting variables
-    cYear = request.json.get('cYear')
-    symbols_present = any('@' in var or '!' in var for var in [  str(cYear) ])
-    if symbols_present:
-        return 'Error'
-    cursor = db.cursor()
-    function = 'UpdateChampionship(%s, %s, %s, %s, %s)'
-    cursor.execute(f"SELECT {function}", (cYear))
-    db.commit()
-    cursor.close()
-    return 'Success'
+    try:
+        # Requesting variables
+        cYear = request.json.get('cYear')
+        cId = request.json.get('cId')
+        if sqlInj(cYear):
+            return jsonify({'error': 'Invalid input detected. SQL injection attempt detected.'}), 400
+
+        cursor = db.cursor()
+        function = 'UpdateChampionship(%s, %s)'
+        cursor.execute(f"SELECT {function}", (cId,cYear))
+        db.commit()
+     
+        return 'Success'
+    except db.connector.Error as e:
+        return jsonify({'error': f'Database error: {str(e)}'}), 500
+
+    except Exception as e:
+        return jsonify({'error': f'Error updating championship: {str(e)}'}), 500
+
+    finally:
+        cursor.close()
 
 # View championship's page
 @app.route('/championships/<int:cId>', methods=['GET'])
 def viewChampionsip():
-    # Requesting variables
-    cId = request.json.get('cId')
-    symbols_present = any('@' in var or '!' in var for var in [  str(cId) ])
-    if symbols_present:
-        return 'Error'
-    cursor = db.cursor()
-    cursor.execute('SELECT * FROM championship WHERE CID = %s', (cId))
-    result=cursor.fetchone()
-    cursor.close()
-    return jsonify(result)
+    try:
+        # Requesting variables
+        cId = request.json.get('cId')
+        if sqlInj(cId):
+            return jsonify({'error': 'Invalid input detected. SQL injection attempt detected.'}), 400
 
-# Delete selected championship
+        cursor = db.cursor()
+        cursor.execute('SELECT * FROM championship WHERE CID = %s', (cId))
+        result=cursor.fetchone()
+      
+        return jsonify(result)
+    except db.connector.Error as e:
+        return jsonify({'error': f'Database error: {str(e)}'}), 500
+
+    except Exception as e:
+        return jsonify({'error': f'Error viewing championship: {str(e)}'}), 500
+
+    finally:
+        cursor.close()
+
+ 
 @app.route('/championships/<int:cId>', methods=['DELETE'])
-def deletePlayer():
-    # Requesting variables
-    cId = request.json.get('cId')
-    symbols_present = any('@' in var or '!' in var for var in [  str(cId) ])
-    if symbols_present:
-        return 'Error'
-    cursor = db.cursor()
-    function = 'DeleteChampionship(%s)'
-    cursor.execute(f"SELECT {function}", (cId))
-    db.commit()
-    cursor.close()
-    return 'Success'
+def deleteChampionship():
+    try:
+            cId = request.json.get('cId')
+            if sqlInj(cId):
+                return jsonify({'error': 'Invalid input detected. SQL injection attempt detected.'}), 400
+
+            with db.cursor() as cursor:
+                # Delete match results
+                cursor.execute('DELETE FROM matchresult WHERE MID IN (SELECT MID FROM matches WHERE CID = %s)', (cId,))
+                
+                # Delete matches
+                cursor.execute('DELETE FROM match WHERE CID = %s', (cId,))
+                
+                # Delete championship
+                cursor.execute('DELETE FROM championship WHERE CID = %s', (cId,))
+
+                db.commit()
+
+            return jsonify({'message': 'Success'}), 200
+    except Exception as e:
+        return jsonify({'error': f'Error: {str(e)}'}), 500
+    finally:
+        db.close()
+
        
 if __name__ == '__main__':
     app.run(port=5004)

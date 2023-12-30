@@ -16,112 +16,174 @@ db_name=os.environ['DB_NAME']
 
 db = pymysql.connect(host=db_host, user=db_user, password=db_password, database=db_name)
 
-# Get list of all players or just the searched one
+def sqlInj(*values):
+    forbidden_symbols = ['@', '!']
+    for value in values:
+        if any(symbol in str(value) for symbol in forbidden_symbols):
+            return True
+    return False
+
+
+# Get list of all players  
 @app.route('/players', methods=['GET'])
 def getPlayers():
-    cursor = db.cursor()
-    cursor.execute('''
-                    SELECT player.*, team.name
-                    FROM player
-                    LEFT JOIN team ON player.TID = team.TID
-                    WHERE player.TID IS NOT NULL OR team.TID IS NULL;
-                   ''')
-    results=cursor.fetchall()
-   
-    cursor.close
-    return jsonify(results)
+    try:
+        cursor = db.cursor()
+        cursor.execute('''
+                        SELECT player.*, team.name
+                        FROM player
+                        LEFT JOIN team ON player.TID = team.TID
+                        WHERE player.TID IS NOT NULL OR team.TID IS NULL;
+                    ''')
+        results=cursor.fetchall()
+    
+        cursor.close
+        return jsonify(results)
+    except db.connector.Error as e:
+        return jsonify({'error': f'Database error: {str(e)}'}), 500
+
+    except Exception as e:
+        return jsonify({'error': f'Error viewing players: {str(e)}'}), 500
+
+    finally:
+        cursor.close()
+    
     
 # Create new player
 @app.route('/players', methods=['POST'])
 def createPlayer():
-    # Requesting variables
-    pName = request.json.get('pName')
-    pAge = request.json.get('pAge')
-    pHeight = request.json.get('pHeight')
-    pWeight = request.json.get('pWeight')
-    pPoints = request.json.get('pPoints')
-    
-    #Checking for @ and ! symbols for SQL injection
-    symbols_present = any('@' in var or '!' in var for var in [pName, str(pAge), str(pHeight), str(pWeight), str(pPoints)])
-    if symbols_present:
-        return 'Error'
-    
+    try:
+        # Requesting variables
+        pName = request.json.get('pName')
+        pAge = request.json.get('pAge')
+        pHeight = request.json.get('pHeight')
+        pWeight = request.json.get('pWeight')
+        pPoints = request.json.get('pPoints')
+        
+        #Checking for @ and ! symbols for SQL injection
+        if sqlInj(pName, pAge, pHeight, pWeight, pPoints):
+            return jsonify({'error': 'Invalid input detected. SQL injection attempt detected.'}), 400
 
-    cursor = db.cursor()
-    function = 'CreatePlayer(%s, %s, %s, %s, %s)'
-    cursor.execute(f"SELECT {function}", (pName, pAge, pHeight, pWeight, pPoints))
-    db.commit()
+        
 
-    cursor.close()
+        cursor = db.cursor()
+        function = 'CreatePlayer(%s, %s, %s, %s, %s)'
+        cursor.execute(f"SELECT {function}", (pName, pAge, pHeight, pWeight, pPoints))
+        db.commit()
+ 
 
-    return 'Success'
+        return 'Success'
+    except db.connector.Error as e:
+        return jsonify({'error': f'Database error: {str(e)}'}), 500
+
+    except Exception as e:
+        return jsonify({'error': f'Error creating player: {str(e)}'}), 500
+
+    finally:
+        cursor.close()
 
 # Associate player with team
 @app.route('/associate', methods=['POST'])
 def associatePlayerTeam():
-    # Requesting variables
-    pId = request.json.get('pId')
-    teamId = request.json.get('teamId')
-    #Checking for @ and ! symbols for SQL injection
-    symbols_present = any('@' in var or '!' in var for var in [ str(pId), str(teamId)])
-    if symbols_present:
-        return 'Error'
-    cursor = db.cursor()
-    function = 'AssociatePlayerTeam(%s, %s)'
-    cursor.execute(f"SELECT {function}", (pId, teamId))
-    db.commit()
-    cursor.close()
-    return 'Success'
+    try:
+        # Requesting variables
+        pId = request.json.get('pId')
+        teamId = request.json.get('teamId')
+        #Checking for @ and ! symbols for SQL injection
+        if sqlInj(pId, teamId ):
+            return jsonify({'error': 'Invalid input detected. SQL injection attempt detected.'}), 400
+
+        cursor = db.cursor()
+        function = 'AssociatePlayerTeam(%s, %s)'
+        cursor.execute(f"SELECT {function}", (pId, teamId))
+        db.commit()
+     
+        return 'Success'
+    except db.connector.Error as e:
+        return jsonify({'error': f'Database error: {str(e)}'}), 500
+
+    except Exception as e:
+        return jsonify({'error': f'Error associating player: {str(e)}'}), 500
+
+    finally:
+       cursor.close()
 
 # Update selected player
 @app.route('/players/<int:pId>', methods=['PUT'])
 def updatePlayer():
+    try:
+        # Requesting variables
+        pName = request.json.get('pName')
+        pAge = request.json.get('pAge')
+        pHeight = request.json.get('pHeight')
+        pWeight = request.json.get('pWeight')
+        pPoints = request.json.get('pPoints')
+        pId = request.json.get('pId')
+        # Checking for @ and ! symbols for SQL injection
+        if sqlInj(pName, pAge, pHeight, pWeight, pPoints, pId):
+            return jsonify({'error': 'Invalid input detected. SQL injection attempt detected.'}), 400
 
-    # Requesting variables
-    pName = request.json.get('pName')
-    pAge = request.json.get('pAge')
-    pHeight = request.json.get('pHeight')
-    pWeight = request.json.get('pWeight')
-    pPoints = request.json.get('pPoints')
-    pId = request.json.get('pId')
-    # Checking for @ and ! symbols for SQL injection
-    symbols_present = any('@' in var or '!' in var for var in [pName,str(pId), str(pAge), str(pHeight), str(pWeight), str(pPoints)])
-    if symbols_present:
-        return 'Error'
-    cursor = db.cursor()
-    function = 'UpdatePlayer(%s, %s, %s, %s, %s)'
-    cursor.execute(f"CALL {function}", (pId, pName, pAge, pHeight, pWeight, pPoints))
-    db.commit()
-    cursor.close()
-    return 'Success'
+        cursor = db.cursor()
+        function = 'UpdatePlayer(%s, %s, %s, %s, %s)'
+        cursor.execute(f"CALL {function}", (pId, pName, pAge, pHeight, pWeight, pPoints))
+        db.commit()
+      
+        return 'Success'
+    except db.connector.Error as e:
+        return jsonify({'error': f'Database error: {str(e)}'}), 500
+
+    except Exception as e:
+        return jsonify({'error': f'Error updating player: {str(e)}'}), 500
+
+    finally:
+        cursor.close()
 
 # View player's page
 @app.route('/players/<int:pId>', methods=['GET'])
 def viewPlayer():
-    pId = request.json.get('pId')
-    symbols_present = any('@' in var or '!' in var for var in [str(pId)])
-    if symbols_present:
-        return 'Error'
-    cursor = db.cursor()
-    cursor.execute('SELECT * FROM players WHERE PID = %s', (pId))
-    result=cursor.fetchone()
-    cursor.close()
-    return jsonify(result)
+    try:
+        pId = request.json.get('pId')
+        if sqlInj(pId):
+            return jsonify({'error': 'Invalid input detected. SQL injection attempt detected.'}), 400
+
+        cursor = db.cursor()
+        cursor.execute('SELECT * FROM players WHERE PID = %s', (pId))
+        result=cursor.fetchone()
+     
+        return jsonify(result)
+    except db.connector.Error as e:
+        return jsonify({'error': f'Database error: {str(e)}'}), 500
+
+    except Exception as e:
+        return jsonify({'error': f'Error viewing player: {str(e)}'}), 500
+
+    finally:
+        cursor.close()
+
 
 # Delete selected player
 @app.route('/players/<int:pId>', methods=['DELETE'])
 def deletePlayer():
-    pId = request.json.get('pId')
-    symbols_present = any('@' in var or '!' in var for var in [str(pId)])
-    if symbols_present:
-        return 'Error'
-    cursor = db.cursor()
-    function = 'DeletePlayer(%s)'
-    cursor.execute(f"SELECT {function}", ({pId}))
-    db.commit()
-    cursor.close()
-    return 'Success'
-       
+    try:
+        pId = request.json.get('pId')
+        if sqlInj(pId):
+            return jsonify({'error': 'Invalid input detected. SQL injection attempt detected.'}), 400
+
+        cursor = db.cursor()
+        function = 'DeletePlayer(%s)'
+        cursor.execute(f"SELECT {function}", ({pId}))
+        db.commit()
+         
+        return 'Success'
+    except db.connector.Error as e:
+        return jsonify({'error': f'Database error: {str(e)}'}), 500
+
+    except Exception as e:
+        return jsonify({'error': f'Error deleting player: {str(e)}'}), 500
+
+    finally:
+        cursor.close()
+        
  
  
         
