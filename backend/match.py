@@ -131,8 +131,7 @@ def updateMatch():
 
 
         return 'Success'
-    except db.connector.Error as e:
-        return jsonify({'error': f'Database error: {str(e)}'}), 500
+ 
 
     except Exception as e:
         return jsonify({'error': f'Error updating matches: {str(e)}'}), 500
@@ -153,9 +152,7 @@ def updateMR(mId, mrId):
         db.commit()
 
         return 'Success'
-    except db.connector.Error as e:
-        return jsonify({'error': f'Database error: {str(e)}'}), 500
-
+ 
     except Exception as e:
         return jsonify({'error': f'Error updating matches: {str(e)}'}), 500
 
