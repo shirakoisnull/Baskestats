@@ -87,9 +87,9 @@ def drawChamp(cId):
         
         num_comb =  math.comb(len(teams), 2)
         for _ in range(num_comb):
-            function1 = 'CreateMatch(%s,%s,%s,%s)'
+            function1 = 'CreateMatch(%s,%s,%s)'
             #Edw thelei allagi to match table gia na dexetai to cid
-            cursor.execute(f"SELECT {function1}", (cId, '', '',''))
+            cursor.execute(f"SELECT {function1}", ('', '',''))
             db.commit()
  
         results = matchResult(cId, teams)
