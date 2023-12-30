@@ -28,20 +28,20 @@ def sqlInj(*values):
 def matchResult(cId, teams):
     try:
         cursor = db.cursor()
-        cursor.execute('SELECT MID FROM matches WHERE CID = %s', (cId))
+        cursor.execute('SELECT MID FROM matches WHERE CID = %s', (cId,))
         mIds = cursor.fetchall()
-        for mId in mIds:
-            mId=mIds[0]
-            for i in range(0, len(teams), 2):
-                team1 = teams[i]
-                team2 = teams[i + 1]
 
-                function = 'CreateMatchResult(%s,%s,%s)'
-                cursor.execute(f"SELECT {function}", (mId, team1, 0))
-                cursor.execute(f"SELECT {function}", (mId, team2, 0))
-                db.commit()
-              
-            
+        for mId in mIds:
+            for i in range(len(teams)):
+                team1 = teams[i]
+                for j in range(i + 1, len(teams)):
+                    team2 = teams[j]
+
+                    function = 'CreateMatchResult(%s,%s,%s)'
+                    cursor.execute(f"SELECT {function}", (mId, team1, 0))
+                    cursor.execute(f"SELECT {function}", (mId, team2, 0))
+                    db.commit()
+
         return 'Success'
     except db.connector.Error as e:
         return jsonify({'error': f'Database error: {str(e)}'}), 500
@@ -60,14 +60,17 @@ def drawChamp(cId):
         if not teams:
             return jsonify({'error': 'Teams are NULL'}), 400
 
-        random.shuffle(teams)
+      
 
         function = 'CreateMatch(%s,%s,%s,%s)'
 
         with db.cursor() as cursor:
-            for i in range(0, len(teams), 2):
-                cursor.execute(f"SELECT {function}", (cId, '', '', ''))
-                db.commit()
+            for i in range(len(teams)):
+                team1 = teams[i]
+                for j in range(i + 1, len(teams)):
+                    team2 = teams[j]
+                    cursor.execute(f"SELECT {function}", (cId, team1, team2, ''))
+                    db.commit()
 
         results = matchResult(cId, teams)
 
