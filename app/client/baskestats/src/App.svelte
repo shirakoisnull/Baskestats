@@ -1,15 +1,25 @@
 <script>
-  import Login from './Login.svelte';
-  import TeamManagement from './routes/TeamManagement.svelte';
+  import Login from "./Login.svelte";
+  import { Router, Link,Route } from "svelte-routing";
+  import TeamManagement from "./routes/TeamManagement.svelte";
+  import PlayerManagement from "./routes/PlayerManagement.svelte";
+  import ChampManagement from "./routes/ChampManagement.svelte";
+  import SecretaryPanel from "./SecretaryPanel.svelte";
 </script>
+<!-- <Router>
+  <Route path="/team-management" component={TeamManagement} />
+  <Route path="/player-management" component={PlayerManagement} />
+  <Route path="/championship-management" component={ChampManagement} />
+</Router> -->
+<SecretaryPanel />
+<h1>Baskestats</h1>
+<!-- TODO: Replace with BaskeStats Logo/Splash -->
 
-<h1>Baskestats</h1> <!-- TODO: Replace with BaskeStats Logo/Splash -->
-
-    <TeamManagement />
+<!-- <TeamManagement /> -->
 <main>
-  <!-- <div class="card"> -->
-    <Login />
-  <!-- </div> -->
+  <div class="card">
+  <Login />
+  </div>
 </main>
 
 <style>
@@ -29,11 +39,11 @@
     transition: filter 300ms;
   }
 
-  /* @media (min-width: 640px) {
+  @media (min-width: 640px) {
     main {
       max-width: none;
     }
-  } */
+  }
   /* .logo {
     height: 6em;
     padding: 1.5em;
