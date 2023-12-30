@@ -55,8 +55,7 @@ def matchResult(cId, teams):
                     db.commit()
 
         return 'Success'
-    except db.connector.Error as e:
-        return jsonify({'error': f'Database error: {str(e)}'}), 500
+ 
 
     except Exception as e:
         return jsonify({'error': f'Error creating match results: {str(e)}'}), 500
