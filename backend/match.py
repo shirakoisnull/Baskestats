@@ -40,16 +40,16 @@ def matchResult(cId, teams):
         cursor = db.cursor()
         cursor.execute('SELECT MID FROM matches WHERE CID = %s', (cId,))
         mIds = cursor.fetchall()
-
+        function1 = 'CreateMatch(%s,%s,%s,%s)'
         for mId in mIds:
             for i in range(len(teams)):
                 team1 = teams[i]
                 for j in range(i + 1, len(teams)):
                     team2 = teams[j]
-
-                    function = 'CreateMatchResult(%s,%s,%s)'
-                    cursor.execute(f"SELECT {function}", (mId, team1, 0))
-                    cursor.execute(f"SELECT {function}", (mId, team2, 0))
+                    cursor.execute(f"SELECT {function1}", (cId, '', '',''))
+                    function2 = 'CreateMatchResult(%s,%s,%s)'
+                    cursor.execute(f"SELECT {function2}", (mId, team1, 0))
+                    cursor.execute(f"SELECT {function2}", (mId, team2, 0))
                     db.commit()
 
         return 'Success'
@@ -69,15 +69,7 @@ def drawChamp(cId):
 
         if not teams:
             return jsonify({'error': 'Teams are NULL'}), 400
-
  
-        function = 'CreateMatch(%s,%s,%s,%s)'
-
-        with db.cursor() as cursor:
-            for _ in range(len(teams)/2):
-                cursor.execute(f"SELECT {function}", (cId, '', '', ''))
-                db.commit()
-
         results = matchResult(cId, teams)
 
         return jsonify(results), 200
