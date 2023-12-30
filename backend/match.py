@@ -2,6 +2,7 @@ from flask import Flask, jsonify , request
 from dotenv import load_dotenv
 from flask_cors import CORS
 import pymysql
+import math
 import os
  
 
@@ -40,15 +41,18 @@ def sqlInj(*values):
 def matchResult(cId, teams):
     try:
         cursor = db.cursor()
+        
+
+
         cursor.execute('SELECT MID FROM matches WHERE CID = %s', (cId,))
         mIds = cursor.fetchall()
-        function1 = 'CreateMatch(%s,%s,%s,%s)'
+
         for mId in mIds:
             for i in range(len(teams)):
                 team1 = teams[i]
                 for j in range(i + 1, len(teams)):
                     team2 = teams[j]
-                    cursor.execute(f"SELECT {function1}", (cId, '', '',''))
+                   
                     function2 = 'CreateMatchResult(%s,%s,%s)'
                     cursor.execute(f"SELECT {function2}", (mId, team1, 0))
                     cursor.execute(f"SELECT {function2}", (mId, team2, 0))
@@ -63,13 +67,29 @@ def matchResult(cId, teams):
     finally:
         cursor.close()
 
-@app.route('/draw/<int:cId>', methods=['POST'])
+@app.route('/championship/<int:cId>/draw', methods=['POST'])
 def drawChamp(cId):
     try:
         teams = request.json.get('teams', [])
 
         if not teams:
             return jsonify({'error': 'Teams are NULL'}), 400
+        
+        cursor = db.cursor()
+               
+ 
+        cursor.execute('SELECT COUNT(*) FROM matches WHERE CID = %s', (cId,))
+        count = cursor.fetchone()[0]
+
+        if count > 0:
+            cursor.execute('DELETE FROM matches WHERE CID = %s', (cId,))
+            db.commit()
+        
+        num_comb =  math.comb(len(teams), 2)
+        for _ in range(num_comb):
+            function1 = 'CreateMatch(%s,%s,%s,%s)'
+            cursor.execute(f"SELECT {function1}", (cId, '', '',''))
+            db.commit()
  
         results = matchResult(cId, teams)
 
@@ -79,7 +99,7 @@ def drawChamp(cId):
         return jsonify({'error': f'Error creating drawing champ: {str(e)}'}), 500
 
     finally:
-        db.close()
+        cursor.close()
 
 
 
