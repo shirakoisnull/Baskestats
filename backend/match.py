@@ -1,12 +1,14 @@
 from flask import Flask, jsonify , request
+from flask_cors import CORS
 from dotenv import load_dotenv
 import pymysql
 import os
- 
 
-#Install requirements with pip install --upgrade -r requirements.txt 
+
+#Install requirements with pip install --upgrade -r requirements.txt
 
 app = Flask(__name__)
+CORS(app)
 
 load_dotenv()
 
@@ -17,10 +19,10 @@ load_dotenv()
 # (╯°□°)╯︵ ┻━┻
 # (╯°□°)╯︵ ┻━┻
 
- 
 
 
-db_host = os.environ['DB_HOST'] 
+
+db_host = os.environ['DB_HOST']
 db_user = os.environ['DB_USER']
 db_password = os.environ['DB_PASSWORD']
 db_name=os.environ['DB_NAME']
@@ -34,7 +36,7 @@ def sqlInj(*values):
             return True
     return False
 
- 
+
 def matchResult(cId, teams):
     try:
         cursor = db.cursor()
@@ -70,7 +72,7 @@ def drawChamp(cId):
         if not teams:
             return jsonify({'error': 'Teams are NULL'}), 400
 
- 
+
         function = 'CreateMatch(%s,%s,%s,%s)'
 
         with db.cursor() as cursor:
@@ -84,7 +86,7 @@ def drawChamp(cId):
         results = matchResult(cId, teams)
 
         return jsonify(results), 200
- 
+
     except Exception as e:
         return jsonify({'error': f'Error creating drawing champ: {str(e)}'}), 500
 
@@ -94,24 +96,24 @@ def drawChamp(cId):
 
 
 
-# Get list of all matches and match results 
+# Get list of all matches and match results
 @app.route('/championship/<int:cId>/matches', methods=['GET'])
 def getMatches(cId):
     try:
-  
+
         cursor = db.cursor()
-    
+
         if sqlInj(cId):
             return jsonify({'error': 'Invalid input detected. SQL injection attempt detected.'}), 400
 
-        
+
         cursor.execute('''
                         SELECT *
                         FROM matches
                         JOIN matchresult ON matches.MID = matchresult.MID
                         WHERE matches.CID = %s;''',(cId,))
         results=cursor.fetchall()
-      
+
         return jsonify(results)
     except db.connector.Error as e:
         return jsonify({'error': f'Database error: {str(e)}'}), 500

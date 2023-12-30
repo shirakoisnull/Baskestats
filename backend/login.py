@@ -1,17 +1,19 @@
 from flask import Flask, request, url_for, redirect, jsonify
+from flask_cors import CORS
 from dotenv import load_dotenv
 import pymysql
 import os
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 
 
-#Install requirements with pip install --upgrade -r requirements.txt 
+#Install requirements with pip install --upgrade -r requirements.txt
 
 app = Flask(__name__)
+CORS(app)
 
 load_dotenv()
 
-db_host = os.environ['DB_HOST'] 
+db_host = os.environ['DB_HOST']
 db_user = os.environ['DB_USER']
 db_password = os.environ['DB_PASSWORD']
 db_name=os.environ['DB_NAME']
@@ -28,7 +30,7 @@ def sqlInj(*values):
             return True
     return False
 
- 
+
 
 # Logging in
 @app.route('/login',methods=['POST'])
@@ -40,7 +42,7 @@ def login():
         if sqlInj(username,password ):
             return jsonify({'error': 'Invalid input detected. SQL injection attempt detected.'}), 400
 
-        
+
         # Making a cursor/pointer object for interacting with the database
         cursor = db.cursor()
         # Executing the query using parametirised variables using the %s placeholder for preventing SQL injections
@@ -48,14 +50,14 @@ def login():
         # Fetching one instance
         result=cursor.fetchone()
         cursor.close()
-      
+
         # Checking if result exists and is equal to my password
         if result and result[0] == password:
             access_token = create_access_token(identity=username)
             return jsonify(access_token, username)
         else:
             return 'Error'
-        
+
 #Gettng current user
 @app.route('/protected', methods=['GET'])
 @jwt_required()
@@ -63,10 +65,7 @@ def protected():
      current = get_jwt_identity()
      return jsonify(user=current), 200
 
- 
+
 
 if __name__ == '__main__':
     app.run(port=5001)
-
-
-    

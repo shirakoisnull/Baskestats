@@ -1,15 +1,17 @@
 from flask import Flask,  jsonify, request
+from flask_cors import CORS
 from dotenv import load_dotenv
 import pymysql
 import os
 
-#Install requirements with pip install --upgrade -r requirements.txt 
+#Install requirements with pip install --upgrade -r requirements.txt
 
 app = Flask(__name__)
+CORS(app)
 
 load_dotenv()
 
-db_host = os.environ['DB_HOST'] 
+db_host = os.environ['DB_HOST']
 db_user = os.environ['DB_USER']
 db_password = os.environ['DB_PASSWORD']
 db_name=os.environ['DB_NAME']
@@ -24,7 +26,7 @@ def sqlInj(*values):
     return False
 
 
-# Get list of all players  
+# Get list of all players
 @app.route('/players', methods=['GET'])
 def getPlayers():
     try:
@@ -36,17 +38,17 @@ def getPlayers():
                         WHERE player.TID IS NOT NULL OR team.TID IS NULL;
                     ''')
         results=cursor.fetchall()
-    
+
         cursor.close
         return jsonify(results)
- 
+
     except Exception as e:
         return jsonify({'error': f'Error viewing players: {str(e)}'}), 500
 
     finally:
         cursor.close()
-    
-    
+
+
 # Create new player
 @app.route('/players', methods=['POST'])
 def createPlayer():
@@ -57,21 +59,21 @@ def createPlayer():
         pHeight = request.json.get('pHeight')
         pWeight = request.json.get('pWeight')
         pPoints = request.json.get('pPoints')
-        
+
         #Checking for @ and ! symbols for SQL injection
         if sqlInj(pName, pAge, pHeight, pWeight, pPoints):
             return jsonify({'error': 'Invalid input detected. SQL injection attempt detected.'}), 400
 
-        
+
 
         cursor = db.cursor()
         function = 'CreatePlayer(%s, %s, %s, %s, %s)'
         cursor.execute(f"SELECT {function}", (pName, pAge, pHeight, pWeight, pPoints))
         db.commit()
- 
+
 
         return 'Success'
- 
+
     except Exception as e:
         return jsonify({'error': f'Error creating player: {str(e)}'}), 500
 
@@ -93,9 +95,9 @@ def associatePlayerTeam():
         function = 'AssociatePlayerTeam(%s, %s)'
         cursor.execute(f"SELECT {function}", (pId, teamId))
         db.commit()
-     
+
         return 'Success'
- 
+
     except Exception as e:
         return jsonify({'error': f'Error associating player: {str(e)}'}), 500
 
@@ -121,9 +123,9 @@ def updatePlayer():
         function = 'UpdatePlayer(%s, %s, %s, %s, %s)'
         cursor.execute(f"CALL {function}", (pId, pName, pAge, pHeight, pWeight, pPoints))
         db.commit()
-      
+
         return 'Success'
- 
+
     except Exception as e:
         return jsonify({'error': f'Error updating player: {str(e)}'}), 500
 
@@ -141,9 +143,9 @@ def viewPlayer():
         cursor = db.cursor()
         cursor.execute('SELECT * FROM players WHERE PID = %s', (pId))
         result=cursor.fetchone()
-     
+
         return jsonify(result)
-  
+
     except Exception as e:
         return jsonify({'error': f'Error viewing player: {str(e)}'}), 500
 
@@ -163,20 +165,17 @@ def deletePlayer():
         function = 'DeletePlayer(%s)'
         cursor.execute(f"SELECT {function}", ({pId}))
         db.commit()
-         
+
         return 'Success'
-  
+
     except Exception as e:
         return jsonify({'error': f'Error deleting player: {str(e)}'}), 500
 
     finally:
         cursor.close()
-        
- 
- 
-        
+
+
+
+
 if __name__ == '__main__':
     app.run(port=5002)
-
-
-    
