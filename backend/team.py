@@ -34,13 +34,14 @@ def getTeams():
         cursor.execute('SELECT * FROM team')
         results=cursor.fetchall()
      
-        return jsonify(results)
+
   
     except Exception as e:
         return jsonify({'error': f'Error getting teams: {str(e)}'}), 500
 
     finally:
         cursor.close()
+    return jsonify(results)
 
 # Create new team
 @app.route('/teams', methods=['POST'])
@@ -66,6 +67,7 @@ def createTeam():
 
     finally:
         cursor.close()
+    return 'Success', 200 
     
         
 
@@ -95,6 +97,7 @@ def updateTeam( ):
 
     finally:
         cursor.close()
+    return 'Success', 200 
  
 
 # View team's page
@@ -112,13 +115,15 @@ def viewTeam():
         cursor.execute('SELECT * FROM teams WHERE TID = %s', (tId))
         result=cursor.fetchone()
         
-        return jsonify(result)
+
  
     except Exception as e:
         return jsonify({'error': f'Error viewing team: {str(e)}'}), 500
 
     finally:
         cursor.close()
+    return jsonify(result)
+  
 
 # Delete selected team
 @app.route('/teams/<int:tId>', methods=['DELETE'])
@@ -133,7 +138,7 @@ def deleteTeam(tId):
             cursor.execute(f"SELECT {function}", (tId,))
             db.commit()
 
-        return jsonify({'message': 'Team deleted successfully'}), 200
+
 
  
     except Exception as e:
@@ -141,6 +146,7 @@ def deleteTeam(tId):
 
     finally:
         db.close()
+    return 'Success', 200
 
        
 if __name__ == '__main__':

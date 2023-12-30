@@ -40,13 +40,14 @@ def getPlayers():
         results=cursor.fetchall()
     
         cursor.close
-        return jsonify(results)
+
  
     except Exception as e:
         return jsonify({'error': f'Error viewing players: {str(e)}'}), 500
 
     finally:
         cursor.close()
+    return jsonify(results)
     
     
 # Create new player
@@ -72,13 +73,14 @@ def createPlayer():
         db.commit()
  
 
-        return 'Success'
+ 
  
     except Exception as e:
         return jsonify({'error': f'Error creating player: {str(e)}'}), 500
 
     finally:
         cursor.close()
+    return 'Success', 200 
 
 # Associate player with team
 @app.route('/associate', methods=['POST'])
@@ -95,14 +97,14 @@ def associatePlayerTeam():
         function = 'AssociatePlayerTeam(%s, %s)'
         cursor.execute(f"SELECT {function}", (pId, teamId))
         db.commit()
-     
-        return 'Success'
+ 
  
     except Exception as e:
         return jsonify({'error': f'Error associating player: {str(e)}'}), 500
 
     finally:
        cursor.close()
+    return 'Success', 200 
 
 # Update selected player
 @app.route('/players/<int:pId>', methods=['PUT'])
@@ -123,14 +125,14 @@ def updatePlayer():
         function = 'UpdatePlayer(%s, %s, %s, %s, %s)'
         cursor.execute(f"CALL {function}", (pId, pName, pAge, pHeight, pWeight, pPoints))
         db.commit()
-      
-        return 'Success'
+ 
  
     except Exception as e:
         return jsonify({'error': f'Error updating player: {str(e)}'}), 500
 
     finally:
         cursor.close()
+    return 'Success', 200 
 
 # View player's page
 @app.route('/players/<int:pId>', methods=['GET'])
@@ -144,13 +146,14 @@ def viewPlayer():
         cursor.execute('SELECT * FROM players WHERE PID = %s', (pId))
         result=cursor.fetchone()
      
-        return jsonify(result)
+
   
     except Exception as e:
         return jsonify({'error': f'Error viewing player: {str(e)}'}), 500
 
     finally:
         cursor.close()
+    return jsonify(result)  
 
 
 # Delete selected player
@@ -165,14 +168,14 @@ def deletePlayer():
         function = 'DeletePlayer(%s)'
         cursor.execute(f"SELECT {function}", ({pId}))
         db.commit()
-         
-        return 'Success'
+  
   
     except Exception as e:
         return jsonify({'error': f'Error deleting player: {str(e)}'}), 500
 
     finally:
         cursor.close()
+    return 'Success', 200 
         
  
  

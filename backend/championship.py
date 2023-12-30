@@ -36,13 +36,14 @@ def getChamps():
         cursor.execute('SELECT * FROM championship')
         results=cursor.fetchall()
  
-        return jsonify(results)
+
  
     except Exception as e:
         return jsonify({'error': f'Error get championships: {str(e)}'}), 500
 
     finally:
         cursor.close()
+    return jsonify(results)
 
 # Create new championship
 @app.route('/championships', methods=['POST'])
@@ -58,14 +59,15 @@ def createChamp():
         cursor.execute(f"SELECT {function}", (cYear))
         db.commit()
     
-        # Updates page with all championships
-        return 'Success'
+       
+
  
     except Exception as e:
         return jsonify({'error': f'Error creating championship: {str(e)}'}), 500
 
     finally:
         cursor.close()
+    return 'Success'
 
 # Update selected championship
 @app.route('/championships/<int:cId>', methods=['PUT'])
@@ -82,13 +84,14 @@ def updateChampionship():
         cursor.execute(f"SELECT {function}", (cId,cYear))
         db.commit()
      
-        return 'Success'
+
  
     except Exception as e:
         return jsonify({'error': f'Error updating championship: {str(e)}'}), 500
 
     finally:
         cursor.close()
+    return 'Success', 200
 
 # View championship's page
 @app.route('/championships/<int:cId>', methods=['GET'])
@@ -103,13 +106,14 @@ def viewChampionsip():
         cursor.execute('SELECT * FROM championship WHERE CID = %s', (cId))
         result=cursor.fetchone()
       
-        return jsonify(result)
+
  
     except Exception as e:
         return jsonify({'error': f'Error viewing championship: {str(e)}'}), 500
 
     finally:
         cursor.close()
+    return jsonify(result)
 
  
 @app.route('/championships/<int:cId>', methods=['DELETE'])
@@ -133,11 +137,12 @@ def deleteChampionship():
 
                 db.commit()
 
-            return jsonify({'message': 'Success'}), 200
+  
     except Exception as e:
         return jsonify({'error': f'Error: {str(e)}'}), 500
     finally:
         db.close()
+    return 'Success', 200
 
        
 if __name__ == '__main__':

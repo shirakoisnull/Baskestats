@@ -46,19 +46,30 @@ def matchResult(cId, teams):
 
         cursor.execute('SELECT MID FROM matches WHERE CID = %s', (cId,))
         mIds = cursor.fetchall()
+        created_matches = []
 
         for mId in mIds:
             for i in range(len(teams)):
                 team1 = teams[i]
                 for j in range(i + 1, len(teams)):
                     team2 = teams[j]
-                   
+
                     function2 = 'CreateMatchResult(%s,%s,%s)'
                     cursor.execute(f"SELECT {function2}", (mId, team1, 0))
                     cursor.execute(f"SELECT {function2}", (mId, team2, 0))
                     db.commit()
 
-        return 'Success'
+                    # Fetch the created match results
+                    cursor.execute('SELECT * FROM match_results WHERE MID = %s AND TeamID = %s', (mId, team1))
+                    result_team1 = cursor.fetchone()
+                    created_matches.append(result_team1)
+
+                    cursor.execute('SELECT * FROM match_results WHERE MID = %s AND TeamID = %s', (mId, team2))
+                    result_team2 = cursor.fetchone()
+                    created_matches.append(result_team2)
+
+        return created_matches
+
  
 
     except Exception as e:
@@ -88,20 +99,20 @@ def drawChamp(cId):
         num_comb =  math.comb(len(teams), 2)
         for _ in range(num_comb):
             function1 = 'CreateMatch(%s,%s,%s)'
-            #Edw thelei allagi to match table gia na dexetai to cid
-            cursor.execute(f"SELECT {function1}", ('', '',''))
+ 
+            cursor.execute(f"SELECT {function1}", ('2023-01-01',    '00:00:00' ,'Location'  ))
             db.commit()
  
         results = matchResult(cId, teams)
 
-        return jsonify(results), 200
+
  
     except Exception as e:
         return jsonify({'error': f'Error creating drawing champ: {str(e)}'}), 500
 
     finally:
-        cursor.close()
-
+        db.close()
+    return jsonify(results), 200
 
 
 
@@ -119,19 +130,17 @@ def getMatches(cId):
         cursor.execute('''
                         SELECT *
                         FROM matches
-                        JOIN matchresult ON matches.MID = matchresult.MID
-                        WHERE matches.CID = %s;''',(cId,))
+                       ''')
         results=cursor.fetchall()
       
-        return jsonify(results)
-    except db.connector.Error as e:
-        return jsonify({'error': f'Database error: {str(e)}'}), 500
 
+ 
     except Exception as e:
         return jsonify({'error': f'Error getting matches: {str(e)}'}), 500
 
     finally:
         cursor.close()
+    return jsonify(results)
 
 
 @app.route('/championship/<int:cId>/matches/<int:mId>', methods=['PUT'])
@@ -151,7 +160,7 @@ def updateMatch():
         db.commit()
 
 
-        return 'Success'
+
  
 
     except Exception as e:
@@ -159,6 +168,7 @@ def updateMatch():
 
     finally:
         cursor.close()
+    return 'Success',200
 
 @app.route('/championship/<int:cId>/matches/<int:mId>/matchresults/<int:mrId>', methods=['PUT'])
 def updateMR(mId, mrId):
@@ -171,14 +181,14 @@ def updateMR(mId, mrId):
         function = 'UpdateMR(%s,%s,%s)'
         cursor.execute(f"SELECT {function}", (mrId, mId, mrScore))
         db.commit()
-
-        return 'Success'
+ 
  
     except Exception as e:
         return jsonify({'error': f'Error updating matches: {str(e)}'}), 500
 
     finally:
         cursor.close()
+    return 'Success',200
 
 
 if __name__ == '__main__':
