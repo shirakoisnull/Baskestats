@@ -1,11 +1,11 @@
 <script>
-  import { Router, Link, Route } from "svelte-routing";
-  import TeamManagement from "./routes/TeamManagement.svelte";
-  import PlayerManagement from "./routes/PlayerManagement.svelte";
-  import ChampManagement from "./routes/ChampManagement.svelte";
+  // import { Router, Link, Route } from "svelte-routing";
+  // import TeamManagement from "./routes/TeamManagement.svelte";
+  // import PlayerManagement from "./routes/PlayerManagement.svelte";
+  // import ChampManagement from "./routes/ChampManagement.svelte";
   import { onMount } from "svelte";
-  export let storedUsername; // Receive the username as a prop
-  export let url = "";
+  let usr = localStorage.getItem('username');
+  // export let url = "";
   let isAuthenticated = false;
 
   onMount(() => {
@@ -34,7 +34,7 @@
 
 
 {#if isAuthenticated}
-  <h1>Welcome, {storedUsername}!</h1>
+  <h1>Welcome, {usr}!</h1>
   <!-- Your authenticated page content -->
   <!-- <Router {url}>
     <nav>
