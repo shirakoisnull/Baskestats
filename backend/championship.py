@@ -126,6 +126,8 @@ def deleteChampionship():
                 return jsonify({'error': 'Invalid input detected. SQL injection attempt detected.'}), 400
 
             with db.cursor() as cursor:
+
+                #Edw mporei aplws na alajei to db na mpei CID ON DELETE CASCADE
                 # Delete match results
                 cursor.execute('DELETE FROM matchresult WHERE MID IN (SELECT MID FROM matches WHERE CID = %s)', (cId,))
                 

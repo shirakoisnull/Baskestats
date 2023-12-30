@@ -60,8 +60,7 @@ def drawChamp(cId):
         if not teams:
             return jsonify({'error': 'Teams are NULL'}), 400
 
-      
-
+ 
         function = 'CreateMatch(%s,%s,%s,%s)'
 
         with db.cursor() as cursor:
@@ -85,7 +84,9 @@ def drawChamp(cId):
         cursor.close()
 
 
-# Get list of all championship 
+
+
+# Get list of all matches and match results 
 @app.route('/championship/<int:cId>/matches', methods=['GET'])
 def getMatches(cId):
     try:
@@ -96,7 +97,11 @@ def getMatches(cId):
             return jsonify({'error': 'Invalid input detected. SQL injection attempt detected.'}), 400
 
         
-        cursor.execute('SELECT * FROM matches WHERE CID = {%s}',(cId,))
+        cursor.execute('''
+                        SELECT *
+                        FROM matches
+                        JOIN matchresult ON matches.MID = matchresult.MID
+                        WHERE matches.CID = %s;''',(cId,))
         results=cursor.fetchall()
       
         return jsonify(results)
@@ -126,6 +131,28 @@ def updateMatch():
         cursor.execute(f"SELECT {function}", (mDate, mTime, mLocation))
         db.commit()
 
+
+        return 'Success'
+    except db.connector.Error as e:
+        return jsonify({'error': f'Database error: {str(e)}'}), 500
+
+    except Exception as e:
+        return jsonify({'error': f'Error updating matches: {str(e)}'}), 500
+
+    finally:
+        cursor.close()
+
+@app.route('/championship/<int:cId>/matches/<int:mId>/matchresults/<int:mrId>', methods=['PUT'])
+def updateMR(mId, mrId):
+    try:
+        mrScore = request.json.get('mrScore')
+        if sqlInj(mrId, mId, mrScore):
+            return jsonify({'error': 'Invalid input detected. SQL injection attempt detected.'}), 400
+
+        cursor = db.cursor()
+        function = 'UpdateMR(%s,%s,%s)'
+        cursor.execute(f"SELECT {function}", (mrId, mId, mrScore))
+        db.commit()
 
         return 'Success'
     except db.connector.Error as e:
