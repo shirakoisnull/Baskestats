@@ -1,6 +1,7 @@
-from flask import Flask, request, url_for, redirect, jsonify
+from flask import Flask, request, jsonify
 from dotenv import load_dotenv
 import pymysql
+from flask_cors import CORS
 import os
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 
@@ -8,6 +9,7 @@ from flask_jwt_extended import JWTManager, create_access_token, jwt_required, ge
 #Install requirements with pip install --upgrade -r requirements.txt 
 
 app = Flask(__name__)
+CORS(app)
 
 load_dotenv()
 

@@ -1,11 +1,13 @@
 from flask import Flask,  jsonify, request
 from dotenv import load_dotenv
+from flask_cors import CORS
 import pymysql
 import os
 
 #Install requirements with pip install --upgrade -r requirements.txt 
 
 app = Flask(__name__)
+CORS(app)
 
 load_dotenv()
 
