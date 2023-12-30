@@ -74,12 +74,9 @@ def drawChamp(cId):
         function = 'CreateMatch(%s,%s,%s,%s)'
 
         with db.cursor() as cursor:
-            for i in range(len(teams)):
-                team1 = teams[i]
-                for j in range(i + 1, len(teams)):
-                    team2 = teams[j]
-                    cursor.execute(f"SELECT {function}", (cId, team1, team2, ''))
-                    db.commit()
+            for _ in range(len(teams)/2):
+                cursor.execute(f"SELECT {function}", (cId, '', '', ''))
+                db.commit()
 
         results = matchResult(cId, teams)
 
