@@ -2,7 +2,8 @@
   import Login from './Login.svelte';
 </script>
 
-<h1>Baskestats</h1>
+<h1>Baskestats</h1> <!-- TODO: Replace with BaskeStats Logo/Splash -->
+
 <main>
   <!-- <div class="card"> -->
     <Login />
@@ -31,12 +32,12 @@
       max-width: none;
     }
   } */
-  .logo {
+  /* .logo {
     height: 6em;
     padding: 1.5em;
     will-change: filter;
     transition: filter 300ms;
-  }
+  } */
 
   h1:hover {
     filter: drop-shadow(0 0 2em #ff3e00aa);

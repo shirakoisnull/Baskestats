@@ -58,6 +58,7 @@
 
 </script>
 
+
 {#if isAuthenticated}
   <!-- If authenticated, render the authenticated page -->
   <!-- TODO: add routing -->
