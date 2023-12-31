@@ -117,9 +117,9 @@ def viewChampionsip():
 
  
 @app.route('/championships/<int:cId>', methods=['DELETE'])
-def deleteChampionship():
+def deleteChampionship(cId):
     try:
-            cId = request.json.get('cId')
+            
             if sqlInj(cId):
                 return jsonify({'error': 'Invalid input detected. SQL injection attempt detected.'}), 400
 
@@ -130,7 +130,7 @@ def deleteChampionship():
                 cursor.execute('DELETE FROM matchresult WHERE MID IN (SELECT MID FROM matches WHERE CID = %s)', (cId,))
                 
                 # Delete matches
-                cursor.execute('DELETE FROM match WHERE CID = %s', (cId,))
+                cursor.execute('DELETE FROM matches WHERE CID = %s', (cId,))
                 
                 # Delete championship
                 cursor.execute('DELETE FROM championship WHERE CID = %s', (cId,))

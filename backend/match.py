@@ -39,54 +39,47 @@ def sqlInj(*values):
 
  
 def matchResult(cId, teams):
+    cursor = db.cursor()
     try:
-        cursor = db.cursor()
-        
-
-
         cursor.execute('SELECT MID FROM matches WHERE CID = %s', (cId,))
         mIds = cursor.fetchall()
-        created_matches = []
-
-        for mId in mIds:
-            for i in range(len(teams)):
-                team1 = teams[i]
-                for j in range(i + 1, len(teams)):
-                    team2 = teams[j]
-
-                    function2 = 'CreateMatchResult(%s,%s,%s)'
-                    cursor.execute(f"SELECT {function2}", (mId, team1, 0))
-                    cursor.execute(f"SELECT {function2}", (mId, team2, 0))
-                    db.commit()
-
-                    # Fetch the created match results
-                    cursor.execute('SELECT * FROM match_results WHERE MID = %s AND TeamID = %s', (mId, team1))
-                    result_team1 = cursor.fetchone()
-                    created_matches.append(result_team1)
-
-                    cursor.execute('SELECT * FROM match_results WHERE MID = %s AND TeamID = %s', (mId, team2))
-                    result_team2 = cursor.fetchone()
-                    created_matches.append(result_team2)
-
-        return created_matches
-
  
+        team_pairs = [(teams[i], teams[j]) for i in range(len(teams)) for j in range(i + 1, len(teams))]
+        i=0
+
+        for team1, team2 in team_pairs:
+                function = 'CreateMatchResult(%s,%s,%s)'
+                cursor.execute(f"SELECT {function}", (mIds[i], team1, 0))
+                db.commit()
+                cursor.execute(f"SELECT {function}", (mIds[i], team2, 0))
+                db.commit()
+
+                i+=1
+
+         
+        cursor.execute('SELECT * FROM matchresult')
+        match_results = cursor.fetchall()
+        return    match_results 
 
     except Exception as e:
-        return jsonify({'error': f'Error creating match results: {str(e)}'}), 500
+        print(f"Error: {str(e)}")
+        return 'Error'
 
     finally:
         cursor.close()
 
+ 
+ 
 @app.route('/championship/<int:cId>/draw', methods=['POST'])
 def drawChamp(cId):
+    cursor = db.cursor()
     try:
         teams = request.json.get('teams', [])
 
         if not teams:
             return jsonify({'error': 'Teams are NULL'}), 400
         
-        cursor = db.cursor()
+
                
  
         cursor.execute('SELECT COUNT(*) FROM matches WHERE CID = %s', (cId,))
@@ -94,6 +87,8 @@ def drawChamp(cId):
 
         if count > 0:
             cursor.execute('DELETE FROM matches WHERE CID = %s', (cId,))
+
+            cursor.execute('DELETE FROM matchresult WHERE MID IN (SELECT MID FROM matches WHERE CID = %s)', (cId,))
             db.commit()
         
         num_comb =  math.comb(len(teams), 2)
@@ -101,17 +96,18 @@ def drawChamp(cId):
             function1 = 'CreateMatch(%s,%s,%s)'
  
             cursor.execute(f"SELECT {function1}", ('2023-01-01',    '00:00:00' ,'Location'  ))
+         
             db.commit()
  
         results = matchResult(cId, teams)
-
+     
 
  
     except Exception as e:
         return jsonify({'error': f'Error creating drawing champ: {str(e)}'}), 500
 
     finally:
-        db.close()
+        cursor.close()
     return jsonify(results), 200
 
 
@@ -128,9 +124,15 @@ def getMatches(cId):
 
         
         cursor.execute('''
-                        SELECT *
+                        SELECT matches.MID, location,
+                        CAST(matchdate AS CHAR) AS matchdate,
+                        CAST(matchtime AS CHAR) AS matchtime
+                      
                         FROM matches
-                       ''')
+                        JOIN matchresult ON matches.MID = matchresult.MID
+                        WHERE matches.CID = %s;
+                       ''',(cId,))
+                       
         results=cursor.fetchall()
       
 
@@ -143,8 +145,8 @@ def getMatches(cId):
     return jsonify(results)
 
 
-@app.route('/championship/<int:cId>/matches/<int:mId>', methods=['PUT'])
-def updateMatch():
+@app.route('/championships/<int:cId>/matches/<int:mId>', methods=['PUT'])
+def updateMatch(cId, mId):
     try:
         mDate = request.json.get('mDate')
         mTime = request.json.get('mTime')
@@ -155,8 +157,8 @@ def updateMatch():
 
 
         cursor = db.cursor()
-        function = 'CreateMatch(%s,%s,%s)'
-        cursor.execute(f"SELECT {function}", (mDate, mTime, mLocation))
+        function = 'UpdateMatches(%s,%s,%s,%s)'
+        cursor.execute(f"SELECT {function}", (mId,mDate, mTime, mLocation))
         db.commit()
 
 
@@ -170,16 +172,42 @@ def updateMatch():
         cursor.close()
     return 'Success',200
 
-@app.route('/championship/<int:cId>/matches/<int:mId>/matchresults/<int:mrId>', methods=['PUT'])
-def updateMR(mId, mrId):
+
+@app.route('/matches', methods=['DELETE'])
+def deleteMathch():
+    try:
+        cursor = db.cursor()
+  
+        cursor.execute('DELETE FROM matchresult')
+
+        # Delete all matches
+        cursor.execute('DELETE FROM matches')
+    
+ 
+        db.commit()
+
+
+
+ 
+
+    except Exception as e:
+        return jsonify({'error': f'Error updating matches: {str(e)}'}), 500
+
+    finally:
+        cursor.close()
+    return 'Success',200
+
+@app.route('/championships/<int:cId>/matches/<int:mId>/matchresults/<int:mrId>/<int:tId>', methods=['PUT'])
+def updateMR(cId,mId, mrId,tId):
     try:
         mrScore = request.json.get('mrScore')
+ 
         if sqlInj(mrId, mId, mrScore):
             return jsonify({'error': 'Invalid input detected. SQL injection attempt detected.'}), 400
 
         cursor = db.cursor()
-        function = 'UpdateMR(%s,%s,%s)'
-        cursor.execute(f"SELECT {function}", (mrId, mId, mrScore))
+        function = 'UpdateMR(%s,%s,%s,%s)'
+        cursor.execute(f"SELECT {function}", (mrId, mId,tId, mrScore))
         db.commit()
  
  
@@ -189,6 +217,8 @@ def updateMR(mId, mrId):
     finally:
         cursor.close()
     return 'Success',200
+
+
 
 
 if __name__ == '__main__':
