@@ -40,7 +40,7 @@ def getTeams():
 
     finally:
         cursor.close()
-    return jsonify(results)
+    return jsonify(results), 200
 
 
 # Create new team
@@ -71,7 +71,7 @@ def createTeam():
 
     finally:
         cursor.close()
-    return "Success", 200
+    return "Success\n", 201
 
 
 # Update selected team
@@ -103,7 +103,7 @@ def updateTeam():
 
     finally:
         cursor.close()
-    return "Success", 200
+    return "Success\n", 200
 
 
 # View team's page
@@ -129,7 +129,7 @@ def viewTeam():
 
     finally:
         cursor.close()
-    return jsonify(result)
+    return jsonify(result), 200
 
 
 # Delete selected team
@@ -155,7 +155,7 @@ def deleteTeam(tId):
 
     finally:
         db.close()
-    return "Success", 200
+    return "Success\n", 200
 
 
 if __name__ == "__main__":

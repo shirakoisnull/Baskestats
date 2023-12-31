@@ -67,14 +67,14 @@ def login():
     else:
         return "Error"
 
-
+"""
 # Getting current user
 @app.route("/protected", methods=["GET"])
 @jwt_required()
 def protected():
     current = get_jwt_identity()
     return jsonify(user=current), 200
-
+"""
 
 if __name__ == "__main__":
     app.run(port=5001)

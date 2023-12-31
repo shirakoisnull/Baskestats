@@ -68,7 +68,7 @@ def createChamp():
 
     finally:
         cursor.close()
-    return "Success"
+    return "Success\n",201
 
 
 # Update selected championship
@@ -96,7 +96,7 @@ def updateChampionship():
 
     finally:
         cursor.close()
-    return "Success", 200
+    return "Success\n", 200
 
 
 # View championship's page
@@ -122,7 +122,7 @@ def viewChampionsip():
 
     finally:
         cursor.close()
-    return jsonify(result)
+    return jsonify(result), 200
 
 
 @app.route("/championships/<int:cId>", methods=["DELETE"])
@@ -145,7 +145,7 @@ def deleteChampionship(cId):
         return jsonify({"error": f"Error: {str(e)}"}), 500
     finally:
         db.close()
-    return "Success", 200
+    return "Success\n", 200
 
 
 if __name__ == "__main__":

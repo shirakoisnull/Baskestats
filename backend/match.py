@@ -88,7 +88,7 @@ def drawChamp(cId):
 
             cursor.execute(
                 "DELETE FROM matchresult WHERE MID IN (SELECT MID FROM matches WHERE CID = %s)",
-                (cId,),
+                (cId,)
             )
             db.commit()
 
@@ -109,7 +109,7 @@ def drawChamp(cId):
 
     finally:
         cursor.close()
-    return jsonify(results), 200
+    return jsonify(results), 201
 
 
 # Get list of all matches and match results
@@ -149,7 +149,7 @@ def getMatches(cId):
 
     finally:
         cursor.close()
-    return jsonify(results)
+    return jsonify(results),200
 
 
 @app.route("/championships/<int:cId>/matches/<int:mId>", methods=["PUT"])
@@ -177,7 +177,7 @@ def updateMatch(cId, mId):
 
     finally:
         cursor.close()
-    return "Success", 200
+    return "Success\n", 200
 
 
 @app.route(
@@ -206,7 +206,7 @@ def updateMR(cId, mId, mrId, tId):
 
     finally:
         cursor.close()
-    return "Success", 200
+    return "Success\n", 200
 
 
 if __name__ == "__main__":

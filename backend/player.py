@@ -49,7 +49,7 @@ def getPlayers():
 
     finally:
         cursor.close()
-    return jsonify(results)
+    return jsonify(results), 200
 
 
 # Create new player
@@ -82,7 +82,7 @@ def createPlayer():
 
     finally:
         cursor.close()
-    return "Success", 200
+    return "Success\n", 201
 
 
 # Associate player with team
@@ -111,7 +111,7 @@ def associatePlayerTeam():
 
     finally:
         cursor.close()
-    return "Success", 200
+    return "Success\n", 201
 
 
 # Update selected player
@@ -146,7 +146,7 @@ def updatePlayer():
 
     finally:
         cursor.close()
-    return "Success", 200
+    return "Success\n", 200
 
 
 # View player's page
@@ -171,7 +171,7 @@ def viewPlayer():
 
     finally:
         cursor.close()
-    return jsonify(result)
+    return jsonify(result), 200
 
 
 # Delete selected player
@@ -197,7 +197,7 @@ def deletePlayer():
 
     finally:
         cursor.close()
-    return "Success", 200
+    return "Success\n", 200
 
 
 if __name__ == "__main__":
