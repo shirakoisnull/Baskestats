@@ -87,3 +87,10 @@ button:focus-visible {
   height: 100%; */
   padding: 8px 16px; /* Adjust padding to fit within the button */
 }
+
+.submit-button {
+  background-color: #ff4000;
+}
+.delete-button:hover {
+  background-color: crimson;
+}
