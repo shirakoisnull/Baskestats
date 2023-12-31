@@ -42,7 +42,7 @@
     Team Losses:
     <input type="number" bind:value={teamLosses} />
   </label>
-  <button type="submit">Submit</button>
+  <button type="submit" class="submit-button">Submit</button>
   <button type="button" on:click={handleCancel}>Cancel</button>
 </form>
 
@@ -77,5 +77,8 @@
 
   button {
     margin-top: 5px; /* Adjust top margin of the buttons */
+  }
+  .submit-button{
+    background-color: #ff4000;
   }
 </style>

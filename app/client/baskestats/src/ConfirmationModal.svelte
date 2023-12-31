@@ -1,14 +1,16 @@
 <!-- ConfirmationModal.svelte -->
 <script>
-  import { createEventDispatcher } from 'svelte';
-  
-  export let teamName = '';
+
+import { createEventDispatcher } from 'svelte';
+
+  export let teamName = ''; // Exporting teamName
 
   const dispatch = createEventDispatcher();
 
-  function confirmAction(action) {
-    dispatch('confirm', action);
+  function confirmAction(choice) {
+    dispatch('confirm', choice === 'yes'); // Dispatch true/false based on choice
   }
+
 </script>
 
 <style>
@@ -38,10 +40,10 @@
   }
 </style>
 
-<div class="modal-overlay" on:click={() => confirmAction(false)}></div>
+<div class="modal-overlay" on:click={() => confirmAction('no')}></div>
 
 <div class="modal">
   <p>Are you sure you want to delete {teamName}?</p>
-  <button on:click={() => confirmAction(true)}>Yes</button>
-  <button on:click={() => confirmAction(false)}>No</button>
+  <button on:click={() => confirmAction('yes')}>Yes</button>
+  <button on:click={() => confirmAction('no')}>No</button>
 </div>
