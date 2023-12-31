@@ -67,6 +67,7 @@
 <!-- <SecretaryPanel /> -->
 <!-- {:else} -->
 <!-- If not authenticated, render the login form -->
+<div class="card">
 <form on:submit|preventDefault={handleSubmit}>
   <label>
     Username:
@@ -78,4 +79,5 @@
   </label>
   <button type="submit">Login</button>
 </form>
+</div>
 <!-- {/if} -->
