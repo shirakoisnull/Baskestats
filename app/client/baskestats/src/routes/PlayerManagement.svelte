@@ -4,8 +4,8 @@
   import { navigate } from "svelte-routing";
 
   // TODO: add player to team association logic
-  let showModal = false;
-  let selectedPlayer = null;
+  // let showModal = false;
+  // let selectedPlayer = null;
   // Assuming teamsData contains your team entries, fetched from somewhere
   let playerData = [
     {

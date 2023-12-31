@@ -78,7 +78,5 @@
   button {
     margin-top: 5px; /* Adjust top margin of the buttons */
   }
-  .submit-button{
-    background-color: #ff4000;
-  }
+ 
 </style>

@@ -3,10 +3,10 @@
   import { navigate } from "svelte-routing";
   
   let playerName = "";
-  let playerAge = 0;
-  let playerHeight = 0.0;
-  let playerWeight = 0;
-  let playerPoints = 0; 
+  let playerAge = '';
+  let playerHeight = '';
+  let playerWeight = '';
+  let playerPoints = ''; 
 
   function handleSubmit() {
     // Logic for handling form submission (to be implemented)
@@ -47,7 +47,7 @@
     Points Scored:
     <input type="number" bind:value={playerPoints} />
   </label>
-  <button type="submit">Submit</button>
+  <button class="submit-button" type="submit">Submit</button>
   <button type="button" on:click={handleCancel}>Cancel</button>
 </form>
 

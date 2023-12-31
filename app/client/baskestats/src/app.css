@@ -88,6 +88,24 @@ button:focus-visible {
   padding: 8px 16px; /* Adjust padding to fit within the button */
 }
 
+  .back-button {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    padding: 10px;
+    background-color: #ff4000;
+    color: white;
+    border:none;
+    border-radius: 4px;
+    cursor: pointer;
+    will-change: filter;
+    transition: filter 300ms;
+  }
+  .back-button:hover{
+    filter: drop-shadow(0 0 0.7em #fc4001d2);
+
+  }
+
 .submit-button {
   background-color: #ff4000;
 }

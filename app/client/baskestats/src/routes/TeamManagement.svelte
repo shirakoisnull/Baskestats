@@ -12,7 +12,7 @@
     { id: 2, name: "Team B", city: "City B", wins: 3, losses: 4 },
     // Add more entries as needed
   ];
-  
+
   // BEGIN REQUEST FROM API
   // Initialize teams as an empty array
   // let teams = [];
@@ -50,34 +50,32 @@
   function handleClick(event) {
     navigate("/teamcreate");
   }
-
-function deleteTeam(team) {
-    const confirmation = window.confirm(`Are you sure you want to delete ${team.name}?`);
+  function deleteTeam(team) {
+    const confirmation = window.confirm(
+      `Are you sure you want to delete ${team.name}?`
+    );
     if (confirmation) {
-      teamsData = teamsData.filter(t => t.id !== team.id);
+      teamsData = teamsData.filter((t) => t.id !== team.id);
     }
   }
 
   // THE CURSED CONFIRMATION MODAL THAT NEVER WORKS
-// function deleteTeam(steam) {
-//     selectedTeam = steam;
-//     showModal = true;
-//   }
-
-// function handleConfirmDelete(confirm) {
-//     confirmed = confirm; // Receive confirmation status
-//     if (confirmed) {
-//       teamsData = teamsData.filter(team => team.id !== selectedTeam.id);
-//       showModal = false;
-//     }
-//     showModal = false;
-//   }
-
+  // function deleteTeam(team) {
+  //     selectedTeam = team;
+  //     showModal = true;
+  //   }
+  // function handleConfirmDelete(confirm) {
+  //     confirmed = confirm; // Receive confirmation status
+  //     if (confirmed) {
+  //       teamsData = teamsData.filter(team => team.id !== selectedTeam.id);
+  //       showModal = false;
+  //     }
+  //     showModal = false;
+  //   }
 
   function handleUpdate(team) {
     navigate(`/teamupdate`, { state: { team } });
   }
-
 </script>
 
 <!-- {#if showModal}
@@ -111,7 +109,7 @@ function deleteTeam(team) {
         <td>{team.losses}</td>
         <td>
           <button on:click={() => handleUpdate(team)}>Update</button>
-          <button on:click={() => deleteTeam(team)}>Delete</button>
+          <button class="delete-button" on:click={() => deleteTeam(team)}>Delete</button>
           <!-- <button on:click={() => deleteTeam(team)} class="delete-button">Delete</button> -->
         </td>
       </tr>
@@ -119,8 +117,9 @@ function deleteTeam(team) {
   </tbody>
 </table>
 
-
-<button class="back-button" on:click={() => navigate("/secretary")}>Go Back</button>
+<button class="back-button" on:click={() => navigate("/secretary")}
+  >Go Back</button
+>
 
 <style>
   table {
@@ -153,20 +152,5 @@ function deleteTeam(team) {
     color: white;
     /* border: none; */
     border-radius: 4px;
-  }
-   /* Style the back button */
-   .back-button {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    padding: 10px;
-    background-color: #ff4000;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  .delete-button:hover{
-    background-color:crimson;
   }
 </style>
