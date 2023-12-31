@@ -1,128 +1,147 @@
 <script>
-  import ConfirmationModal from "../ConfirmationModal.svelte";
+ // import ConfirmationModal from "../ConfirmationModal.svelte";
   import { onMount } from "svelte";
   import { navigate } from "svelte-routing";
 
+  // TODO: add player to team association logic
   let showModal = false;
-  let selectedTeam = null;
+  let selectedPlayer = null;
   // Assuming teamsData contains your team entries, fetched from somewhere
-  let playerData= [
-    { id: 1, name: "Team A", city: "City A", wins: 5, losses: 2 },
-    { id: 2, name: "Team B", city: "City B", wins: 3, losses: 4 },
+  let playerData = [
+    {
+      pid: 1,
+      tid: 1,
+      name: "Manos Kabines",
+      age: 19,
+      height: 1.85,
+      weight: 69,
+      pointsScored: 200,
+    },
+    {
+      pid: 2,
+      tid: 1,
+      name: "Giorgos Kabines",
+      age: 19,
+      height: 1.86,
+      weight: 69,
+      pointsScored: 150,
+    },
     // Add more entries as needed
   ];
   // Initialize teams as an empty array
-  let teams = [];
+  let players = [];
 
   // Fetch teams data from the backend
-  async function fetchTeams() {
+  async function fetchPlayers() {
     try {
-      const response = await fetch("http://127.0.0.1:5003/teams"); // Replace with your API endpoint
+      const response = await fetch("http://127.0.0.1:5002/players"); // Replace with your API endpoint
       if (response.ok) {
-        const teamData = await response.json();
+        const playerData = await response.json();
 
         // Assuming the structure is [[team_id, team_name, team_city, team_wins, team_losses], ...]
-        teams = teamData.map((team) => ({
-          id: team[0],
-          name: team[1],
-          city: team[2],
-          wins: team[3],
-          losses: team[4],
+        players = playerData.map((player) => ({
+          pid: player[0],
+          tid: player[1],
+          name: player[2],
+          age: player[3],
+          height: player[4],
+          weight: player[5],
+          pointsScored: player[6],
         }));
 
         // teams array assumed to be an array of objects with specific properties for each team
       } else {
-        console.error("Failed to fetch teams:", response.status);
+        console.error("Failed to fetch players:", response.status);
         // Handle error
       }
     } catch (error) {
-      console.error("Error fetching teams:", error);
+      console.error("Error fetching players:", error);
       // Handle error
     }
   }
 
-  // Fetch teams data on component mount
-  onMount(fetchTeams);
+  // Fetch player data on component mount
+  onMount(fetchPlayers);
 
   function handleClick(event) {
-    // Handle the click event here
-    console.log("Button clicked!");
-    // window.location.href = "/teamcreate";
-    navigate("/teamcreate");
+    navigate("/newplayer");
   }
-  function deleteTeam(team) {
-    selectedTeam = team;
-    showModal = true;
-  }
-  // Function to handle delete confirmation
-  // function confirmDelete(id) {
-  //   const confirmation = confirm("Are you sure you want to delete this entry?");
-  //   if (confirmation) {
-  //     // Implement logic to delete the entry with the given ID
-  //     teamsData = teamsData.filter((team) => team.id !== id);
-  //   }
-  // }
-  function handleConfirmDelete(confirm) {
-    if (confirm) {
-      // Implement deletion logic
-      // teamsData = teamsData.filter((team) => team.id !== id);
-      console.log("Deleted:", selectedTeam);
-      // Perform actual deletion operation here
 
-      // After deletion or on cancel, hide the modal
-      showModal = false;
-    } else {
-      // On cancel, hide the modal
-      showModal = false;
+  function deletePlayer(player) {
+    const confirmation = window.confirm(`Are you sure you want to delete ${player.name}?`);
+    if (confirmation) {
+      playerData = playerData.filter(s => s.pid !== player.pid);
     }
   }
-  function handleUpdate(team) {
-    navigate(`/teamupdate`, { state: { team } });
+  // CURSED STUFF
+  // function deleteTeam(player) {
+  //   selectedPlayer = player;
+  //   showModal = true;
+  // }
+
+  // function handleConfirmDelete(confirm) {
+  //   if (confirm) {
+  //     // Implement deletion logic
+  //     playerData = playerData.filter(player => player.id !== selectedPlayer.id);
+  //     // After deletion or on cancel, hide the modal
+  //     showModal = false;
+  //   } else {
+  //     // On cancel, hide the modal
+  //     showModal = false;
+  //   }
+  // }
+  function handleUpdate(player) {
+    navigate(`/editplayer`, { state: { player } });
   }
 </script>
 
-{#if showModal}
-  <ConfirmationModal teamName={selectedTeam.name} on:confirm={handleConfirmDelete} />
-{/if}
+<!-- CURSED -->
+<!-- {#if showModal}
+  <ConfirmationModal
+    displayName={selectedPlayer.name}
+    on:confirm={handleConfirmDelete}
+  />
+{/if} -->
 
-<h1>Team Management</h1>
+<h1>Player Management</h1>
 
 <div>
-  <button on:click={handleClick}>Create New Team</button>
+  <button on:click={handleClick}>Create New Player</button>
 </div>
 
 <table>
   <thead>
     <tr>
-      <th>ID</th>
+      <th>PlayerID</th>
+      <th>TeamID</th>
       <th>Name</th>
-      <th>City</th>
-      <th>Wins</th>
-      <th>Losses</th>
+      <th>Age</th>
+      <th>Height</th>
+      <th>Weight</th>
+      <th>Points</th>
       <th>Actions</th>
     </tr>
   </thead>
   <tbody>
-    {#each teamsData as team}
+    {#each playerData as player}
       <tr>
-        <td>{team.id}</td>
-        <td>{team.name}</td>
-        <td>{team.city}</td>
-        <td>{team.wins}</td>
-        <td>{team.losses}</td>
+        <td>{player.pid}</td>
+        <td>{player.tid}</td>
+        <td>{player.name}</td>
+        <td>{player.age}</td>
+        <td>{player.height}</td>
+        <td>{player.weight}</td>
+        <td>{player.pointsScored}</td>
         <td>
-          <!--  <button on:click={() => {
-            // Redirect to team update page (Replace with your routing logic)
-            // Example: window.location.href = `/teamupdate/${team.id}`;
-            console.log(`Redirect to team update for ID: ${team.id}`);
-          }}>Update</button> -->
-          <button on:click={() => handleUpdate(team)}>Update</button>
-          <button on:click={() => deleteTeam(team)}>Delete</button>
+          <button on:click={() => handleUpdate(player)}>Update</button>
+          <button class="delete-button" on:click={() => deletePlayer(player)}>Delete</button>
         </td>
       </tr>
     {/each}
   </tbody>
 </table>
+
+<button class="back-button" on:click={() => navigate("/secretary")}>Go Back</button>
 
 <style>
   table {
@@ -156,4 +175,18 @@
     /* border: none; */
     border-radius: 4px;
   }
+
+   /* Style the back button */
+   .back-button {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    padding: 10px;
+    background-color: #ff4000;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
 </style>
