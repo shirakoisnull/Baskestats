@@ -5,6 +5,7 @@
   import TeamManagement from './routes/TeamManagement.svelte';
   import PlayerManagement from './routes/PlayerManagement.svelte';
   import ChampManagement from './routes/ChampManagement.svelte';
+  import TeamCreate from './routes/TeamCreate.svelte';
 </script>
 
 <Router>
@@ -21,6 +22,7 @@
   <Route path="/teams" component={TeamManagement} />
   <Route path="/players" component={PlayerManagement} />
   <Route path="/champ" component={ChampManagement} />
+  <Route path="/teamcreate" component={TeamCreate} />
 </Router>
 
 

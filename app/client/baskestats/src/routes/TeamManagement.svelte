@@ -1,6 +1,13 @@
 <script>
   import { onMount } from 'svelte';
-  
+  import { navigate } from 'svelte-routing';
+
+  // Assuming teamsData contains your team entries, fetched from somewhere
+  let teamsData = [
+    { id: 1, name: "Team A", city: "City A", wins: 5, losses: 2 },
+    { id: 2, name: "Team B", city: "City B", wins: 3, losses: 4 },
+    // Add more entries as needed
+  ];
   // Initialize teams as an empty array
   let teams = [];
 
@@ -33,9 +40,22 @@ async function fetchTeams() {
 
   // Fetch teams data on component mount
   onMount(fetchTeams);
+
   function handleClick(event) {
     // Handle the click event here
     console.log('Button clicked!');
+    // window.location.href = "/teamcreate";
+    navigate("/teamcreate");
+    
+  }
+
+  // Function to handle delete confirmation
+  function confirmDelete(id) {
+    const confirmation = confirm("Are you sure you want to delete this entry?");
+    if (confirmation) {
+      // Implement logic to delete the entry with the given ID
+      teamsData = teamsData.filter(team => team.id !== id);
+    }
   }
 </script>
 
@@ -44,8 +64,7 @@ async function fetchTeams() {
 <div>
 <button on:click={handleClick}>Create New Team</button>
 </div>
-<div>
-<!-- Table w/ available teams -->
+
 <table>
   <thead>
     <tr>
@@ -54,20 +73,26 @@ async function fetchTeams() {
       <th>City</th>
       <th>Wins</th>
       <th>Losses</th>
-      <!-- Add more table headers if needed -->
+      <th>Actions</th>
     </tr>
   </thead>
   <tbody>
-    {#each teams as team}
+    {#each teamsData as team}
       <tr>
         <td>{team.id}</td>
         <td>{team.name}</td>
         <td>{team.city}</td>
         <td>{team.wins}</td>
         <td>{team.losses}</td>
-        <!-- Render more table cells with team details -->
+        <td>
+          <button on:click={() => {
+            // Redirect to team update page (Replace with your routing logic)
+            // Example: window.location.href = `/teamupdate/${team.id}`;
+            console.log(`Redirect to team update for ID: ${team.id}`);
+          }}>Update</button>
+          <button on:click={() => confirmDelete(team.id)}>Delete</button>
+        </td>
       </tr>
     {/each}
   </tbody>
 </table>
-</div>
