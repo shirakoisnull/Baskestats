@@ -88,12 +88,16 @@
   />
 {/if} -->
 
-<h1>Championship Management</h1>
 
-<div>
+<div class="card">
+<h1>Championship Management</h1>
   <button on:click={handleClick}>Create New Championship</button>
+  <button>Draw Championship</button>
 </div>
 
+{#if champData.length === 0}
+  <p>No championships found.</p>
+{:else}
 <table>
   <thead>
     <tr>
@@ -115,21 +119,21 @@
     {/each}
   </tbody>
 </table>
-
+{/if}
 <button class="back-button" on:click={() => navigate("/secretary")}>Go Back</button>
 
 <style>
   table {
-    width: 100%;
+    width: 50%;
     border-collapse: collapse;
-    margin: auto; /* Center the table horizontally */
+    margin: auto; 
   }
 
   th,
   td {
     padding: 10px;
     border: 1px solid #ccc;
-    text-align: left;
+    text-align: center;
   }
 
   th {

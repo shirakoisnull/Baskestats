@@ -78,6 +78,6 @@
   } */
 
   h1:hover {
-    filter: drop-shadow(0 0 2em #ff4000cf);
+    filter: drop-shadow(0 0 1em #ff4000cf);
   }
 </style>

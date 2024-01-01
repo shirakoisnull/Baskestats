@@ -24,7 +24,7 @@
 <form on:submit|preventDefault={handleSubmit}>
   <label>
     Championship Year:
-    <input type="number" bind:value={champYear} />
+    <input type="number" min="1800" bind:value={champYear} />
   </label>
   <button type="submit" class="submit-button">Submit</button>
   <button type="button" on:click={handleCancel}>Cancel</button>

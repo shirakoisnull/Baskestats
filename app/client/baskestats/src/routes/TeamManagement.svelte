@@ -84,7 +84,7 @@
 
 <h1>Team Management</h1>
 
-<div>
+<div class="card">
   <button on:click={handleClick}>Create New Team</button>
 </div>
 
@@ -152,5 +152,17 @@
     color: white;
     /* border: none; */
     border-radius: 4px;
+  }
+/* Style the back button */
+   .back-button {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    padding: 10px;
+    background-color: #ff4000;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
   }
 </style>

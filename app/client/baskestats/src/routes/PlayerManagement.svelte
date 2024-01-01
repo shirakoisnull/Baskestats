@@ -105,7 +105,7 @@
 
 <h1>Player Management</h1>
 
-<div>
+<div class="card">
   <button on:click={handleClick}>Create New Player</button>
 </div>
 
