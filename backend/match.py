@@ -136,7 +136,7 @@ def getMatches(cId):
                         matchresult.score
                       
                         FROM matches
-                        LEFT JOIN matchresult ON matches.MID = matchresult.MID
+                        JOIN matchresult ON matches.MID = matchresult.MID
                         WHERE matches.CID = %s;
                        """,
             (cId,),

@@ -76,14 +76,14 @@ def createTeam():
 
 # Update selected team
 @app.route("/teams/<int:tId>", methods=["PUT"])
-def updateTeam():
+def updateTeam(tId):
     try:
         # Requesting variables
         tName = request.json.get("tName")
         tCity = request.json.get("tCity")
         tWins = request.json.get("tWins")
         tLosses = request.json.get("tLosses")
-        tId = request.json.get("tId")
+     
 
         if sqlInj(tName, tCity, tWins, tLosses, tId):
             return (
@@ -108,9 +108,9 @@ def updateTeam():
 
 # View team's page
 @app.route("/teams/<int:tId>", methods=["GET"])
-def viewTeam():
+def viewTeam(tId):
     try:
-        tId = request.json.get("tId")
+    
 
         if sqlInj(tId):
             return (

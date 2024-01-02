@@ -33,22 +33,16 @@ def getPlayers():
     try:
         cursor = db.cursor()
         cursor.execute(
-            """
-                        SELECT player.*, team.name
-                        FROM player
-                        LEFT JOIN team ON player.TID = team.TID
-                        WHERE player.TID IS NOT NULL OR team.TID IS NULL;
-                    """
+                    """SELECT * FROM player"""
         )
         results = cursor.fetchall()
-
-        cursor.close
+        cursor.close()
 
     except Exception as e:
         return jsonify({"error": f"Error viewing players: {str(e)}"}), 500
 
-    finally:
-        cursor.close()
+ 
+       
     return jsonify(results), 200
 
 
@@ -67,7 +61,7 @@ def createPlayer():
 
 
         # Checking for @ and ! symbols for SQL injection
-        if sqlInj(pName, pAge, pHeight, pWeight, pPoints):
+        if sqlInj(pName, pAge, pHeight, pWeight, pPoints, teamId):
             return (
                 jsonify(
                     {"error": "Invalid input detected. SQL injection attempt detected."}
@@ -77,21 +71,27 @@ def createPlayer():
 
         cursor = db.cursor()
         function = "CreatePlayer(%s, %s, %s, %s, %s)"
-        cursor.execute(f"SELECT {function}", (pName, pAge, pHeight, pWeight, pPoints))
+        
+        cursor.execute(f"SELECT {function} AS player_id", (pName, pAge, pHeight, pWeight, pPoints))
+        result = cursor.fetchone()
+
         db.commit()
+       
+        print('PId:',result[0])
+         
+
         if teamId is not None:
-            cursor.execute("SELECT LAST_INSERT_ID()")
-            pId = cursor.fetchone()[0]
-            cursor = db.cursor()
+            
+
             function = "AssociatePlayerTeam(%s, %s)"
-            cursor.execute(f"SELECT {function}", (pId, teamId))
+            cursor.execute(f"SELECT {function}", (result[0], teamId))
             db.commit()
+        cursor.close()
 
     except Exception as e:
         return jsonify({"error": f"Error creating player: {str(e)}"}), 500
-
-    finally:
-        cursor.close()
+ 
+        
     return "Success\n", 201
 
   
@@ -100,7 +100,7 @@ def createPlayer():
 
 # Update selected player
 @app.route("/players/<int:pId>", methods=["PUT"])
-def updatePlayer():
+def updatePlayer(pId):
     try:
         # Requesting variables
         pName = request.json.get("pName")
@@ -108,7 +108,6 @@ def updatePlayer():
         pHeight = request.json.get("pHeight")
         pWeight = request.json.get("pWeight")
         pPoints = request.json.get("pPoints")
-        pId = request.json.get("pId")              
         teamId = request.json.get("teamId")
         # Checking for @ and ! symbols for SQL injection
         if sqlInj(pName, pAge, pHeight, pWeight, pPoints, pId, teamId):
@@ -118,26 +117,26 @@ def updatePlayer():
                 ),
                 400,
             )       
-
-        if teamId is not None:
-                    
-            cursor = db.cursor()
+        cursor = db.cursor()
+        if teamId is isinstance(teamId, int):
+        
             function = "AssociatePlayerTeam(%s, %s)"
             cursor.execute(f"SELECT {function}", (pId, teamId))
             db.commit()
 
-        cursor = db.cursor()
-        function = "UpdatePlayer(%s, %s, %s, %s, %s)"
+        
+        function = "UpdatePlayer(%s, %s, %s, %s, %s, %s)"
         cursor.execute(
             f"CALL {function}", (pId, pName, pAge, pHeight, pWeight, pPoints)
         )
         db.commit()
+        cursor.close()
 
     except Exception as e:
         return jsonify({"error": f"Error updating player: {str(e)}"}), 500
 
-    finally:
-        cursor.close()
+  
+        
     return "Success\n", 200
 
 
@@ -156,23 +155,24 @@ def viewPlayer():
 
         cursor = db.cursor()
         cursor.execute('''SELECT * FROM players 
-                          LEFT JOIN AssociatePlayerTeam ON AssociatePlayerTeam.pId=players.pId
+                          
                           WHERE PID = %s ''', (pId))
         result = cursor.fetchone()
+        cursor.close()
 
     except Exception as e:
         return jsonify({"error": f"Error viewing player: {str(e)}"}), 500
 
-    finally:
-        cursor.close()
+ 
+        
     return jsonify(result), 200
 
 
 # Delete selected player
 @app.route("/players/<int:pId>", methods=["DELETE"])
-def deletePlayer():
+def deletePlayer(pId):
     try:
-        pId = request.json.get("pId")
+ 
         if sqlInj(pId):
             return (
                 jsonify(
@@ -185,12 +185,13 @@ def deletePlayer():
         function = "DeletePlayer(%s)"
         cursor.execute(f"SELECT {function}", ({pId}))
         db.commit()
+        cursor.close()
 
     except Exception as e:
         return jsonify({"error": f"Error deleting player: {str(e)}"}), 500
 
-    finally:
-        cursor.close()
+    
+        
     return "Success\n", 200
 
 
