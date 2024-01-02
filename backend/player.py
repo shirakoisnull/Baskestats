@@ -117,10 +117,9 @@ def updatePlayer(pId):
                 400,
             )       
         with db.cursor() as cursor:
-            if teamId is isinstance(teamId, int):
-            
+            if teamId is not None:
                 function = "AssociatePlayerTeam(%s, %s)"
-                cursor.execute(f"SELECT {function}", (pId, teamId))
+                cursor.execute(f"SELECT {function}", (result[0], teamId))
                 db.commit()
 
             
