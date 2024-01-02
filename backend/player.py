@@ -62,6 +62,9 @@ def createPlayer():
         pHeight = request.json.get("pHeight")
         pWeight = request.json.get("pWeight")
         pPoints = request.json.get("pPoints")
+        teamId = request.json.get("teamId")
+ 
+
 
         # Checking for @ and ! symbols for SQL injection
         if sqlInj(pName, pAge, pHeight, pWeight, pPoints):
@@ -76,6 +79,13 @@ def createPlayer():
         function = "CreatePlayer(%s, %s, %s, %s, %s)"
         cursor.execute(f"SELECT {function}", (pName, pAge, pHeight, pWeight, pPoints))
         db.commit()
+        if teamId is not None:
+            cursor.execute("SELECT LAST_INSERT_ID()")
+            pId = cursor.fetchone()[0]
+            cursor = db.cursor()
+            function = "AssociatePlayerTeam(%s, %s)"
+            cursor.execute(f"SELECT {function}", (pId, teamId))
+            db.commit()
 
     except Exception as e:
         return jsonify({"error": f"Error creating player: {str(e)}"}), 500
@@ -84,35 +94,9 @@ def createPlayer():
         cursor.close()
     return "Success\n", 201
 
-
-# Associate player with team
-@app.route("/associate", methods=["POST"])
-def associatePlayerTeam():
-    try:
-        # Requesting variables
-        pId = request.json.get("pId")
-        teamId = request.json.get("teamId")
-        # Checking for @ and ! symbols for SQL injection
-        if sqlInj(pId, teamId):
-            return (
-                jsonify(
-                    {"error": "Invalid input detected. SQL injection attempt detected."}
-                ),
-                400,
-            )
-
-        cursor = db.cursor()
-        function = "AssociatePlayerTeam(%s, %s)"
-        cursor.execute(f"SELECT {function}", (pId, teamId))
-        db.commit()
-
-    except Exception as e:
-        return jsonify({"error": f"Error associating player: {str(e)}"}), 500
-
-    finally:
-        cursor.close()
-    return "Success\n", 201
-
+  
+ 
+ 
 
 # Update selected player
 @app.route("/players/<int:pId>", methods=["PUT"])
@@ -124,15 +108,23 @@ def updatePlayer():
         pHeight = request.json.get("pHeight")
         pWeight = request.json.get("pWeight")
         pPoints = request.json.get("pPoints")
-        pId = request.json.get("pId")
+        pId = request.json.get("pId")              
+        teamId = request.json.get("teamId")
         # Checking for @ and ! symbols for SQL injection
-        if sqlInj(pName, pAge, pHeight, pWeight, pPoints, pId):
+        if sqlInj(pName, pAge, pHeight, pWeight, pPoints, pId, teamId):
             return (
                 jsonify(
                     {"error": "Invalid input detected. SQL injection attempt detected."}
                 ),
                 400,
-            )
+            )       
+
+        if teamId is not None:
+                    
+            cursor = db.cursor()
+            function = "AssociatePlayerTeam(%s, %s)"
+            cursor.execute(f"SELECT {function}", (pId, teamId))
+            db.commit()
 
         cursor = db.cursor()
         function = "UpdatePlayer(%s, %s, %s, %s, %s)"
@@ -149,7 +141,7 @@ def updatePlayer():
     return "Success\n", 200
 
 
-# View player's page
+#Get player
 @app.route("/players/<int:pId>", methods=["GET"])
 def viewPlayer():
     try:
@@ -163,7 +155,9 @@ def viewPlayer():
             )
 
         cursor = db.cursor()
-        cursor.execute("SELECT * FROM players WHERE PID = %s", (pId))
+        cursor.execute('''SELECT * FROM players 
+                          LEFT JOIN AssociatePlayerTeam ON AssociatePlayerTeam.pId=players.pId
+                          WHERE PID = %s ''', (pId))
         result = cursor.fetchone()
 
     except Exception as e:
