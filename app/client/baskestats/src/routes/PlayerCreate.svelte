@@ -2,6 +2,7 @@
 <script>
   import { navigate } from "svelte-routing";
   
+  let teamid = '';
   let playerName = "";
   let playerAge = '';
   let playerHeight = '';
@@ -33,19 +34,23 @@
   </label>
   <label>
     Age:
-    <input type="number" bind:value={playerAge} />
+    <input type="number" min="0" bind:value={playerAge} />
   </label>
   <label>
     Height:
-    <input type="number" bind:value={playerHeight} />
+    <input type="number" min="0" bind:value={playerHeight} />
   </label>
   <label>
     Weight:
-    <input type="number" bind:value={playerWeight} />
+    <input type="number" min="0" bind:value={playerWeight} />
   </label>
   <label>
     Points Scored:
-    <input type="number" bind:value={playerPoints} />
+    <input type="number" min="0" bind:value={playerPoints} />
+  </label>
+  <label>
+    Team ID (optional):
+    <input type="number" min="0" bind:value={teamid} />
   </label>
   <button class="submit-button" type="submit">Submit</button>
   <button type="button" on:click={handleCancel}>Cancel</button>
@@ -71,6 +76,7 @@
 
   input,
   button {
+    text-align: center;
     padding: 8px;
     margin-top: 6px;
     font-size: 1em;

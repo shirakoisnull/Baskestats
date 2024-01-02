@@ -16,15 +16,17 @@
       height: 1.85,
       weight: 69,
       pointsScored: 200,
+      playsOn: "Olympiakos",
     },
     {
       pid: 2,
-      tid: 1,
+      tid: 5,
       name: "Giorgos Kabines",
       age: 19,
       height: 1.86,
       weight: 69,
       pointsScored: 150,
+      playsOn: "PAOK",
     },
     // Add more entries as needed
   ];
@@ -47,6 +49,7 @@
           height: player[4],
           weight: player[5],
           pointsScored: player[6],
+          playsOn: player[7],
         }));
 
         // teams array assumed to be an array of objects with specific properties for each team
@@ -119,6 +122,7 @@
       <th>Height</th>
       <th>Weight</th>
       <th>Points</th>
+      <th>Plays on</th>
       <th>Actions</th>
     </tr>
   </thead>
@@ -132,6 +136,7 @@
         <td>{player.height}</td>
         <td>{player.weight}</td>
         <td>{player.pointsScored}</td>
+        <td>{player.playsOn}</td>
         <td>
           <button on:click={() => handleUpdate(player)}>Update</button>
           <button class="delete-button" on:click={() => deletePlayer(player)}>Delete</button>

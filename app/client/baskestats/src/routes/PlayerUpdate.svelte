@@ -4,7 +4,7 @@
   import { onMount } from 'svelte';
 
   let player = {
-    teamId: -1,
+    tid: 0,
     name: '',
     age: '',
     height: 0,
@@ -37,6 +37,38 @@
   }
 </script>
 
+
+<h1>Update Player</h1>
+
+<form on:submit|preventDefault={handleSubmit}>
+  <label>
+    Player Name:
+    <input type="text" bind:value={player.name} />
+  </label>
+  <label>
+    Player Age:
+    <input type="number" min="0" bind:value={player.age} />
+  </label>
+  <label>
+    Player Height:
+    <input type="number" min="0" bind:value={player.height} />
+  </label>
+  <label>
+    Player Weight:
+    <input type="number" min="0" bind:value={player.weight} />
+  </label>
+  <label>
+    Points Scored:
+    <input type="number" min="0" bind:value={player.pointsScored} />
+  </label>
+  <label>
+    Plays On (Team ID):
+    <input type="number" min="0" bind:value={player.tid} />
+  </label>
+  <button class="submit-button" type="submit">Update</button>
+  <button type="button" on:click={handleCancel}>Cancel</button>
+</form>
+
 <style>
   /* Style for vertical alignment and centering */
   form {
@@ -57,6 +89,7 @@
 
   input,
   button {
+    text-align: center;
     padding: 8px;
     margin-top: 6px;
     font-size: 1em;
@@ -70,30 +103,3 @@
     margin-top: 5px; /* Adjust top margin of the buttons */
   }
 </style>
-
-<h1>Update Player</h1>
-
-<form on:submit|preventDefault={handleSubmit}>
-  <label>
-    Player Name:
-    <input type="text" bind:value={player.name} />
-  </label>
-  <label>
-    Player Age:
-    <input type="number" bind:value={player.age} />
-  </label>
-  <label>
-    Player Height:
-    <input type="number" bind:value={player.height} />
-  </label>
-  <label>
-    Player Weight:
-    <input type="number" bind:value={player.weight} />
-  </label>
-  <label>
-    Points Scored:
-    <input type="number" bind:value={player.pointsScored} />
-  </label>
-  <button type="submit">Update</button>
-  <button type="button" on:click={handleCancel}>Cancel</button>
-</form>
