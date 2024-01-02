@@ -1,21 +1,46 @@
-<!-- TeamCreate.svelte -->
 <script>
   import { navigate } from "svelte-routing";
 
-  let teamName = "";
-  let teamCity = "";
-  let teamWins = 0; // Assuming this is a number input
-  let teamLosses = 0;
+ let team = {
+    tName: '',
+    tCity: '',
+    tWins: 0,
+    tLosses: 0
+  };
 
-  function handleSubmit() {
+ async function handleSubmit() {
     // Logic for handling form submission (to be implemented)
     // Example: Send data to API, perform validation, etc.
-    console.log("Submitted!", { teamName, teamCity, teamWins });
+ try {
+      const response = await fetch('http://127.0.0.1:5003/teams', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          tName: team.tName,
+          tCity: team.tCity,
+          tWins: team.tWins,
+          tLosses: team.tLosses
+        })
+      });
+
+      if (response.ok) {
+        console.log('Team created successfully!');
+        // Perform any necessary actions upon successful creation
+      } else {
+        console.error('Failed to create team:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error creating team:', error);
+    }
+    navigate("/teams");
+  }
+    // console.log("Submitted!", { teamName, teamCity, teamWins });
     // You can add logic to save or send data here
 
     // For demonstration purposes, navigate back to TeamManagement
-    navigate("/teams");
-  }
+  
 
   function handleCancel() {
     // Redirect back to TeamManagement page on cancel
@@ -28,19 +53,19 @@
 <form on:submit|preventDefault={handleSubmit}>
   <label>
     Team Name:
-    <input type="text" bind:value={teamName} />
+    <input type="text" bind:value={team.tName} />
   </label>
   <label>
     Team City:
-    <input type="text" bind:value={teamCity} />
+    <input type="text" bind:value={team.tCity} />
   </label>
   <label>
     Team Wins:
-    <input type="number" bind:value={teamWins} />
+    <input type="number" bind:value={team.tWins} />
   </label>
   <label>
     Team Losses:
-    <input type="number" bind:value={teamLosses} />
+    <input type="number" bind:value={team.tLosses} />
   </label>
   <button type="submit" class="submit-button">Submit</button>
   <button type="button" on:click={handleCancel}>Cancel</button>
@@ -78,5 +103,4 @@
   button {
     margin-top: 5px; /* Adjust top margin of the buttons */
   }
- 
 </style>

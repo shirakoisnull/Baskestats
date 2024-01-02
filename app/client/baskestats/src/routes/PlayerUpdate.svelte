@@ -1,42 +1,74 @@
-<!-- TeamUpdate.svelte -->
 <script>
-  import { navigate } from 'svelte-routing';
-  import { onMount } from 'svelte';
-
+  import { navigate } from "svelte-routing";
+  import { onMount } from "svelte";
+  import { fetchTeams } from '../api.js'; 
+  
   let player = {
-    tid: 0,
+    pid: 0,
+    tid: '',
     name: '',
-    age: '',
+    age: 0,
     height: 0,
     weight: 0,
     pointsScored: 0,
   };
 
-  onMount(() => {
-    // Get the team data passed through the route
-    const { player: routePlayer} = history.state;
+  let teams = [];
 
-    // If routeTeam exists (coming from TeamManagement), update the team data
-    if (routePlayer) {
-      player = { ...routePlayer};
+  onMount(() => {
+    
+    // Get the player data passed through the route
+    const { player: routePlayers } = history.state;
+
+    if (routePlayers) {
+      player = { ...routePlayers };
     }
   });
 
-  function handleSubmit() {
-    // Logic for handling form submission (to be implemented)
-    console.log('Updated Player Details:', player);
-    // You can add logic to save or send updated data here
+ onMount(async () => {
+    teams = await fetchTeams();
+  });
 
-    // For demonstration purposes, navigate back to TeamManagement
-    navigate('/player');
+  async function handleSubmit() {
+    // Logic for handling form submission (to be implemented)
+    try {
+      console.log("Sending Player Data:", player); // Log the player object before sending the request
+
+      const response = await fetch(
+        `http://127.0.0.1:5002/players/${player.pid}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            pName: player.name,
+            pAge: player.age,
+            pHeight: player.height,
+            pWeight: player.weight,
+            pPoints: player.pointsScored,
+            teamId: player.tid
+          }),
+        }
+      );
+
+      if (response.ok) {
+        // Perform any necessary actions upon successful creation
+        console.log("Updated Player Details:", player);
+        navigate("/players");
+      } else {
+        console.error("Failed to update player:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error updating player:", error);
+    }
   }
 
   function handleCancel() {
     // Redirect back to TeamManagement page on cancel
-    navigate('/players');
+    navigate("/players");
   }
 </script>
-
 
 <h1>Update Player</h1>
 
@@ -61,9 +93,17 @@
     Points Scored:
     <input type="number" min="0" bind:value={player.pointsScored} />
   </label>
-  <label>
+  <!-- <label>
     Plays On (Team ID):
     <input type="number" min="0" bind:value={player.tid} />
+  </label> -->
+ <label>
+    Team (optional):
+    <select bind:value={player.tid}>
+      {#each teams as team, index}
+        <option value={team[0]}>{team[0]} - {team[1]}</option>
+      {/each}
+    </select>
   </label>
   <button class="submit-button" type="submit">Update</button>
   <button type="button" on:click={handleCancel}>Cancel</button>
@@ -76,7 +116,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 65vh;
+    height: 75vh;
     gap: 12px; /* Adjust vertical gap between form elements */
   }
 

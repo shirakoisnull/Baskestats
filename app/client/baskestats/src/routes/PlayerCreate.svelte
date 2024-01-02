@@ -1,21 +1,42 @@
-<!-- TeamCreate.svelte -->
 <script>
   import { navigate } from "svelte-routing";
   
-  let teamid = '';
-  let playerName = "";
-  let playerAge = '';
-  let playerHeight = '';
-  let playerWeight = '';
-  let playerPoints = ''; 
+  let player = {
+    pId: '',
+    tId: '',
+    pName: '',
+    pAge: '',
+    pHeight: '',
+    pWeight: '',
+    pScore: ''
+  };
 
-  function handleSubmit() {
-    // Logic for handling form submission (to be implemented)
-    // Example: Send data to API, perform validation, etc.
-    console.log("Submitted!", { playerName, playerAge, playerHeight, playerWeight, playerPoints });
-    // You can add logic to save or send data here
+  async function handleSubmit() {
+ try {
+      const response = await fetch('http://127.0.0.1:5002/players', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          pName: player.pName,
+          pAge: player.pAge,
+          pHeight: player.pHeight,
+          pWeight: player.pWeight,
+          pPoints: player.pScore,
+          teamId: player.tId
+        })
+      });
 
-    // For demonstration purposes, navigate back to TeamManagement
+      if (response.ok) {
+        console.log('Player created successfully!');
+        // Perform any necessary actions upon successful creation
+      } else {
+        console.error('Failed to create player:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error creating player:', error);
+    }
     navigate("/players");
   }
 
@@ -30,27 +51,27 @@
 <form on:submit|preventDefault={handleSubmit}>
   <label>
     Name:
-    <input type="text" bind:value={playerName} />
+    <input type="text" bind:value={player.pName} />
   </label>
   <label>
     Age:
-    <input type="number" min="0" bind:value={playerAge} />
+    <input type="number" min="0" bind:value={player.pAge} />
   </label>
   <label>
     Height:
-    <input type="number" min="0" bind:value={playerHeight} />
+    <input type="number" min="0" bind:value={player.pHeight} />
   </label>
   <label>
     Weight:
-    <input type="number" min="0" bind:value={playerWeight} />
+    <input type="number" min="0" bind:value={player.pWeight} />
   </label>
   <label>
     Points Scored:
-    <input type="number" min="0" bind:value={playerPoints} />
+    <input type="number" min="0" bind:value={player.pScore} />
   </label>
   <label>
     Team ID (optional):
-    <input type="number" min="0" bind:value={teamid} />
+    <input type="number" min="0" bind:value={player.tId} />
   </label>
   <button class="submit-button" type="submit">Submit</button>
   <button type="button" on:click={handleCancel}>Cancel</button>
@@ -63,7 +84,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 65vh;
+    height: 75vh;
     gap: 12px; /* Adjust vertical gap between form elements */
   }
 
