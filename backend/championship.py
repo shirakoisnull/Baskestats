@@ -31,16 +31,14 @@ def sqlInj(*values):
 @app.route("/championships", methods=["GET"])
 def getChamps():
     try:
-        cursor = db.cursor()
+        with db.cursor() as cursor:
 
-        cursor.execute("SELECT * FROM championship")
-        results = cursor.fetchall()
+            cursor.execute("SELECT * FROM championship")
+            results = cursor.fetchall()
 
     except Exception as e:
         return jsonify({"error": f"Error get championships: {str(e)}"}), 500
-
-    finally:
-        cursor.close()
+ 
     return jsonify(results)
 
 
@@ -58,26 +56,25 @@ def createChamp():
                 400,
             )
 
-        cursor = db.cursor()
-        function = "CreateChampionship(%s)"
-        cursor.execute(f"SELECT {function}", (cYear))
-        db.commit()
+        with db.cursor() as cursor:
+            function = "CreateChampionship(%s)"
+            cursor.execute(f"SELECT {function}", (cYear))
+            db.commit()
 
     except Exception as e:
         return jsonify({"error": f"Error creating championship: {str(e)}"}), 500
 
-    finally:
-        cursor.close()
+ 
     return "Success\n",201
 
 
 # Update selected championship
 @app.route("/championships/<int:cId>", methods=["PUT"])
-def updateChampionship():
+def updateChampionship(cId):
     try:
         # Requesting variables
         cYear = request.json.get("cYear")
-        cId = request.json.get("cId")
+     
         if sqlInj(cYear):
             return (
                 jsonify(
@@ -86,25 +83,23 @@ def updateChampionship():
                 400,
             )
 
-        cursor = db.cursor()
-        function = "UpdateChampionship(%s, %s)"
-        cursor.execute(f"SELECT {function}", (cId, cYear))
-        db.commit()
+        with db.cursor() as cursor:
+            function = "UpdateChampionship(%s, %s)"
+            cursor.execute(f"SELECT {function}", (cId, cYear))
+            db.commit()
 
     except Exception as e:
         return jsonify({"error": f"Error updating championship: {str(e)}"}), 500
-
-    finally:
-        cursor.close()
+ 
     return "Success\n", 200
 
 
 # View championship's page
 @app.route("/championships/<int:cId>", methods=["GET"])
-def viewChampionsip():
+def viewChampionsip(cId):
     try:
         # Requesting variables
-        cId = request.json.get("cId")
+ 
         if sqlInj(cId):
             return (
                 jsonify(
@@ -113,15 +108,13 @@ def viewChampionsip():
                 400,
             )
 
-        cursor = db.cursor()
-        cursor.execute("SELECT * FROM championship WHERE CID = %s", (cId))
-        result = cursor.fetchone()
+        with db.cursor() as cursor:
+            cursor.execute("SELECT * FROM championship WHERE CID = %s", (cId))
+            result = cursor.fetchone()
 
     except Exception as e:
         return jsonify({"error": f"Error viewing championship: {str(e)}"}), 500
-
-    finally:
-        cursor.close()
+ 
     return jsonify(result), 200
 
 
@@ -138,13 +131,11 @@ def deleteChampionship(cId):
 
         with db.cursor() as cursor:
             cursor.execute("DELETE FROM championship WHERE CID = %s", (cId,))
-
             db.commit()
 
     except Exception as e:
         return jsonify({"error": f"Error: {str(e)}"}), 500
-    finally:
-        db.close()
+ 
     return "Success\n", 200
 
 

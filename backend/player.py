@@ -31,12 +31,12 @@ def sqlInj(*values):
 @app.route("/players", methods=["GET"])
 def getPlayers():
     try:
-        cursor = db.cursor()
-        cursor.execute(
-                    """SELECT * FROM player"""
-        )
-        results = cursor.fetchall()
-        cursor.close()
+        with db.cursor() as cursor:
+            cursor.execute(
+                        """SELECT * FROM player"""
+            )
+            results = cursor.fetchall()
+        
 
     except Exception as e:
         return jsonify({"error": f"Error viewing players: {str(e)}"}), 500
@@ -69,25 +69,24 @@ def createPlayer():
                 400,
             )
 
-        cursor = db.cursor()
-        function = "CreatePlayer(%s, %s, %s, %s, %s)"
+        with db.cursor() as cursor:
+            function = "CreatePlayer(%s, %s, %s, %s, %s)"
+            
+            cursor.execute(f"SELECT {function} AS player_id", (pName, pAge, pHeight, pWeight, pPoints))
+            result = cursor.fetchone()
+
+            db.commit()
         
-        cursor.execute(f"SELECT {function} AS player_id", (pName, pAge, pHeight, pWeight, pPoints))
-        result = cursor.fetchone()
-
-        db.commit()
-       
-        print('PId:',result[0])
-         
-
-        if teamId is not None:
+    
             
 
-            function = "AssociatePlayerTeam(%s, %s)"
-            cursor.execute(f"SELECT {function}", (result[0], teamId))
-            db.commit()
-        cursor.close()
+            if teamId is not None:
+                
 
+                function = "AssociatePlayerTeam(%s, %s)"
+                cursor.execute(f"SELECT {function}", (result[0], teamId))
+                db.commit()
+ 
     except Exception as e:
         return jsonify({"error": f"Error creating player: {str(e)}"}), 500
  
@@ -117,20 +116,20 @@ def updatePlayer(pId):
                 ),
                 400,
             )       
-        cursor = db.cursor()
-        if teamId is isinstance(teamId, int):
-        
-            function = "AssociatePlayerTeam(%s, %s)"
-            cursor.execute(f"SELECT {function}", (pId, teamId))
-            db.commit()
+        with db.cursor() as cursor:
+            if teamId is isinstance(teamId, int):
+            
+                function = "AssociatePlayerTeam(%s, %s)"
+                cursor.execute(f"SELECT {function}", (pId, teamId))
+                db.commit()
 
-        
-        function = "UpdatePlayer(%s, %s, %s, %s, %s, %s)"
-        cursor.execute(
-            f"CALL {function}", (pId, pName, pAge, pHeight, pWeight, pPoints)
-        )
-        db.commit()
-        cursor.close()
+            
+            function = "UpdatePlayer(%s, %s, %s, %s, %s, %s)"
+            cursor.execute(
+                f"CALL {function}", (pId, pName, pAge, pHeight, pWeight, pPoints)
+            )
+            db.commit()
+     
 
     except Exception as e:
         return jsonify({"error": f"Error updating player: {str(e)}"}), 500
@@ -153,12 +152,12 @@ def viewPlayer():
                 400,
             )
 
-        cursor = db.cursor()
-        cursor.execute('''SELECT * FROM players 
-                          
-                          WHERE PID = %s ''', (pId))
-        result = cursor.fetchone()
-        cursor.close()
+        with db.cursor() as cursor:
+            cursor.execute('''SELECT * FROM players 
+                            
+                            WHERE PID = %s ''', (pId))
+            result = cursor.fetchone()
+       
 
     except Exception as e:
         return jsonify({"error": f"Error viewing player: {str(e)}"}), 500
@@ -181,11 +180,11 @@ def deletePlayer(pId):
                 400,
             )
 
-        cursor = db.cursor()
-        function = "DeletePlayer(%s)"
-        cursor.execute(f"SELECT {function}", ({pId}))
-        db.commit()
-        cursor.close()
+        with db.cursor() as cursor:
+            function = "DeletePlayer(%s)"
+            cursor.execute(f"SELECT {function}", ({pId}))
+            db.commit()
+      
 
     except Exception as e:
         return jsonify({"error": f"Error deleting player: {str(e)}"}), 500

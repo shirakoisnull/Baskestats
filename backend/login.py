@@ -53,12 +53,12 @@ def login():
         )
 
     # Making a cursor/pointer object for interacting with the database
-    cursor = db.cursor()
-    # Executing the query using parametirised variables using the %s placeholder for preventing SQL injections
-    cursor.execute("SELECT password FROM secretary WHERE username = %s", (username,))
-    # Fetching one instance
-    result = cursor.fetchone()
-    cursor.close()
+    with db.cursor() as cursor:
+        # Executing the query using parametirised variables using the %s placeholder for preventing SQL injections
+        cursor.execute("SELECT password FROM secretary WHERE username = %s", (username,))
+        # Fetching one instance
+        result = cursor.fetchone()
+  
 
     # Checking if result exists and is equal to my password
     if result and result[0] == password:

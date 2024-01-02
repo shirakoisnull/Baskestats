@@ -27,19 +27,21 @@ def sqlInj(*values):
     return False
 
 
+
 # Get list of all teams
 @app.route("/teams", methods=["GET"])
 def getTeams():
     try:
-        cursor = db.cursor()
-        cursor.execute("SELECT * FROM team")
-        results = cursor.fetchall()
+        with db.cursor() as cursor:
+            cursor.execute("SELECT * FROM team")
+            results = cursor.fetchall()
+        
 
     except Exception as e:
         return jsonify({"error": f"Error getting teams: {str(e)}"}), 500
 
-    finally:
-        cursor.close()
+  
+        
     return jsonify(results), 200
 
 
@@ -61,16 +63,15 @@ def createTeam():
                 400,
             )
 
-        cursor = db.cursor()
-        function = "CreateTeam(%s, %s, %s, %s)"
-        cursor.execute(f"SELECT {function}", (tName, tCity, tWins, tLosses))
-        db.commit()
-
+        with db.cursor() as cursor:
+            function = "CreateTeam(%s, %s, %s, %s)"
+            cursor.execute(f"SELECT {function}", (tName, tCity, tWins, tLosses))
+            db.commit()
+       
     except Exception as e:
         return jsonify({"error": f"Error creating team: {str(e)}"}), 500
-
-    finally:
-        cursor.close()
+ 
+        
     return "Success\n", 201
 
 
@@ -93,16 +94,17 @@ def updateTeam(tId):
                 400,
             )
 
-        cursor = db.cursor()
-        function = "UpdateTeam(%s, %s, %s, %s, %s)"
-        cursor.execute(f"SELECT {function}", (tId, tName, tCity, tWins, tLosses))
-        db.commit()
+        with db.cursor() as cursor:
+            function = "UpdateTeam(%s, %s, %s, %s, %s)"
+            cursor.execute(f"SELECT {function}", (tId, tName, tCity, tWins, tLosses))
+            db.commit()
+        
 
     except Exception as e:
         return jsonify({"error": f"Error updating team: {str(e)}"}), 500
 
-    finally:
-        cursor.close()
+ 
+        
     return "Success\n", 200
 
 
@@ -120,15 +122,16 @@ def viewTeam(tId):
                 400,
             )
 
-        cursor = db.cursor()
-        cursor.execute("SELECT * FROM teams WHERE TID = %s", (tId))
-        result = cursor.fetchone()
+        with db.cursor() as cursor:
+            cursor.execute("SELECT * FROM teams WHERE TID = %s", (tId))
+            result = cursor.fetchone()
+        
 
     except Exception as e:
         return jsonify({"error": f"Error viewing team: {str(e)}"}), 500
 
-    finally:
-        cursor.close()
+  
+       
     return jsonify(result), 200
 
 
@@ -149,12 +152,13 @@ def deleteTeam(tId):
             function = "DeleteTeam(%s)"
             cursor.execute(f"SELECT {function}", (tId,))
             db.commit()
+   
 
     except Exception as e:
         return jsonify({"error": f"Error deleting team: {str(e)}"}), 500
 
-    finally:
-        db.close()
+ 
+        
     return "Success\n", 200
 
 
