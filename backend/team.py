@@ -18,7 +18,7 @@ db_name = os.environ["DB_NAME"]
 
 db = pymysql.connect(host=db_host, user=db_user, password=db_password, database=db_name)
 
-
+# Checking for SQL injections, basically if characters @ and ! in returned values
 def sqlInj(*values):
     forbidden_symbols = ["@", "!"]
     for value in values:
@@ -28,7 +28,8 @@ def sqlInj(*values):
 
 
 
-# Get list of all teams
+# Get list of all teams, returns TID, name, city, wins, losses in this order.
+ 
 @app.route("/teams", methods=["GET"])
 def getTeams():
     try:
@@ -62,7 +63,7 @@ def createTeam():
                 ),
                 400,
             )
-
+        # Calling function for creating team.
         with db.cursor() as cursor:
             function = "CreateTeam(%s, %s, %s, %s)"
             cursor.execute(f"SELECT {function}", (tName, tCity, tWins, tLosses))
@@ -93,7 +94,7 @@ def updateTeam(tId):
                 ),
                 400,
             )
-
+        # Calling function for updating team
         with db.cursor() as cursor:
             function = "UpdateTeam(%s, %s, %s, %s, %s)"
             cursor.execute(f"SELECT {function}", (tId, tName, tCity, tWins, tLosses))
@@ -108,9 +109,9 @@ def updateTeam(tId):
     return "Success\n", 200
 
 
-# View team's page
+# Get specific team based on TID
 @app.route("/teams/<int:tId>", methods=["GET"])
-def viewTeam(tId):
+def getTeam(tId):
     try:
     
 

@@ -29,7 +29,7 @@ db_name = os.environ["DB_NAME"]
 
 db = pymysql.connect(host=db_host, user=db_user, password=db_password, database=db_name)
 
-
+# Checking for SQL injections, basically if characters @ and ! in returned values
 def sqlInj(*values):
     forbidden_symbols = ["@", "!"]
     for value in values:
@@ -37,19 +37,20 @@ def sqlInj(*values):
             return True
     return False
 
-
+# Generate the match results for all matches of a championship
 def matchResult(cId, teams):
     try:
         with db.cursor() as cursor:
+            # Get all the mIds that were previously generated
             cursor.execute("SELECT MID FROM matches WHERE CID = %s", (cId,))
             mIds = cursor.fetchall()
- 
+            # Generate all possible team pairs, again, excluding duplicates
             team_pairs = [
                 (teams[i], teams[j])
                 for i in range(len(teams))
                 for j in range(i + 1, len(teams))
             ]
-
+            # For each pair, generate match results instance for each team
             for i, (team1, team2) in enumerate(team_pairs):
                 function = "CreateMatchResult(%s,%s,%s)"
                 cursor.execute(f"SELECT {function}", (mIds[i][0], team1, 0))
@@ -57,14 +58,11 @@ def matchResult(cId, teams):
                 cursor.execute(f"SELECT {function}", (mIds[i][0], team2, 0))
                 db.commit()
                 
-
-            cursor.execute("SELECT * FROM matchresult")
-            match_results = cursor.fetchall()
-            return match_results
-
     except Exception as e:
         return {"error": f"Error creating match results: {str(e)}"}
 
+
+# Drawing the latest championship, given a list of teams
 @app.route("/championships/draw", methods=["POST"])
 def drawChamp():
      
@@ -74,12 +72,14 @@ def drawChamp():
 
             if not teams:
                 return jsonify({"error": "Teams are NULL"}), 400
+            
+            # Select the ID of the latest championship
             cursor.execute("SELECT MAX(CID) FROM championship")
             cId = cursor.fetchone()[0]
-
+            # Check to see if matches already exist
             cursor.execute("SELECT COUNT(*) FROM matches WHERE CID = %s", (cId,))
             count = cursor.fetchone()[0]
-
+            # IF they exist, delete them
             if count > 0:
                 cursor.execute("DELETE FROM matches WHERE CID = %s", (cId,))
 
@@ -88,7 +88,10 @@ def drawChamp():
                     (cId,)
                 )
                 db.commit()
+
+            # Create new matches based  on current date, each match is one day apart
             current_date = datetime.now().date()
+            # Possible number of combinations without duplicates, (team1,team2) and (team2,team1) is the same.
             num_comb = math.comb(len(teams), 2)
             for _ in range(num_comb):
                 function1 = "CreateMatch(%s,%s,%s)"
@@ -101,13 +104,13 @@ def drawChamp():
 
                 db.commit()
 
-            results = matchResult(cId, teams)
+            matchResult(cId, teams)
 
     except Exception as e:
         return jsonify({"error": f"Error creating drawing champ: {str(e)}"}), 500
 
   
-    return jsonify(results), 201
+    return 'Success\n', 201
 
 
 # Get list of all matches and match results

@@ -18,7 +18,7 @@ db_name = os.environ["DB_NAME"]
 
 db = pymysql.connect(host=db_host, user=db_user, password=db_password, database=db_name)
 
-
+# Checking for SQL injections, basically if characters @ and ! in returned values
 def sqlInj(*values):
     forbidden_symbols = ["@", "!"]
     for value in values:
@@ -27,7 +27,8 @@ def sqlInj(*values):
     return False
 
 
-# Get list of all players
+# Get list of all players, returns   PID, TID, name, age, height, weight, pointsscored in this order. If team is none, null is returned.
+   
 @app.route("/players", methods=["GET"])
 def getPlayers():
     try:
@@ -68,7 +69,7 @@ def createPlayer():
                 ),
                 400,
             )
-
+        # Calling the function for creating player
         with db.cursor() as cursor:
             function = "CreatePlayer(%s, %s, %s, %s, %s)"
             
@@ -76,10 +77,7 @@ def createPlayer():
             result = cursor.fetchone()
 
             db.commit()
-        
-    
-            
-
+            # If team is inserted, call the associatelayerteam function
             if teamId is not None:
                 
 
@@ -116,6 +114,7 @@ def updatePlayer(pId):
                 ),
                 400,
             )       
+        #Calling functions for associating player with team and updating player
         with db.cursor() as cursor:
             if teamId is isinstance(teamId, int):
             
@@ -139,11 +138,11 @@ def updatePlayer(pId):
     return "Success\n", 200
 
 
-#Get player
+#Get player based on ID, returns   PID, TID, name, age, height, weight, pointsscored in this order. If team is none, null is returned.
 @app.route("/players/<int:pId>", methods=["GET"])
-def viewPlayer():
+def getPlayer(pId):
     try:
-        pId = request.json.get("pId")
+        
         if sqlInj(pId):
             return (
                 jsonify(

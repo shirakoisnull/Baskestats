@@ -28,7 +28,7 @@ jwt = JWTManager(app)
 
 db = pymysql.connect(host=db_host, user=db_user, password=db_password, database=db_name)
 
-
+# Checking for SQL injections, basically if characters @ and ! in returned values
 def sqlInj(*values):
     forbidden_symbols = ["@", "!"]
     for value in values:

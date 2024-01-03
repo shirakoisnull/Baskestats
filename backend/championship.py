@@ -18,7 +18,7 @@ db_name = os.environ["DB_NAME"]
 
 db = pymysql.connect(host=db_host, user=db_user, password=db_password, database=db_name)
 
-
+# Checking for SQL injections, basically if characters @ and ! in returned values
 def sqlInj(*values):
     forbidden_symbols = ["@", "!"]
     for value in values:
@@ -27,7 +27,7 @@ def sqlInj(*values):
     return False
 
 
-# Get list of all championship
+# Get list of all championship, returns cID and year.
 @app.route("/championships", methods=["GET"])
 def getChamps():
     try:
@@ -55,7 +55,7 @@ def createChamp():
                 ),
                 400,
             )
-
+        # Calling function for creating new championship
         with db.cursor() as cursor:
             function = "CreateChampionship(%s)"
             cursor.execute(f"SELECT {function}", (cYear))
@@ -82,7 +82,7 @@ def updateChampionship(cId):
                 ),
                 400,
             )
-
+        # Calling function for updating championship
         with db.cursor() as cursor:
             function = "UpdateChampionship(%s, %s)"
             cursor.execute(f"SELECT {function}", (cId, cYear))
@@ -94,9 +94,9 @@ def updateChampionship(cId):
     return "Success\n", 200
 
 
-# View championship's page
+# Get specific championship based on ID
 @app.route("/championships/<int:cId>", methods=["GET"])
-def viewChampionsip(cId):
+def getChampionship(cId):
     try:
         # Requesting variables
  
