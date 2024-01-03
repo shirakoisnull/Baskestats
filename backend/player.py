@@ -10,6 +10,7 @@ app = Flask(__name__)
 CORS(app)
 
 load_dotenv()
+
 db_host = os.environ["DB_HOST"]
 db_user = os.environ["DB_USER"]
 db_password = os.environ["DB_PASSWORD"]
@@ -116,7 +117,8 @@ def updatePlayer(pId):
                 400,
             )       
         with db.cursor() as cursor:
-            if teamId is not None:
+            if teamId is isinstance(teamId, int):
+            
                 function = "AssociatePlayerTeam(%s, %s)"
                 cursor.execute(f"SELECT {function}", (pId, teamId))
                 db.commit()
@@ -124,7 +126,7 @@ def updatePlayer(pId):
             
             function = "UpdatePlayer(%s, %s, %s, %s, %s, %s)"
             cursor.execute(
-                f"SELECT {function}", (pId, pName, pAge, pHeight, pWeight, pPoints)
+                f"CALL {function}", (pId, pName, pAge, pHeight, pWeight, pPoints)
             )
             db.commit()
      
