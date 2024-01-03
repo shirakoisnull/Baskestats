@@ -4,6 +4,7 @@ from flask_cors import CORS
 import pymysql
 import math
 import os
+from datetime import datetime, timedelta
 
 
 # Install requirements with pip install --upgrade -r requirements.txt
@@ -38,40 +39,34 @@ def sqlInj(*values):
 
 
 def matchResult(cId, teams):
-   
     try:
         with db.cursor() as cursor:
             cursor.execute("SELECT MID FROM matches WHERE CID = %s", (cId,))
             mIds = cursor.fetchall()
-
+ 
             team_pairs = [
                 (teams[i], teams[j])
                 for i in range(len(teams))
                 for j in range(i + 1, len(teams))
             ]
-            i = 0
 
-            for team1, team2 in team_pairs:
+            for i, (team1, team2) in enumerate(team_pairs):
                 function = "CreateMatchResult(%s,%s,%s)"
-                cursor.execute(f"SELECT {function}", (mIds[i], team1, 0))
+                cursor.execute(f"SELECT {function}", (mIds[i][0], team1, 0))
                 db.commit()
-                cursor.execute(f"SELECT {function}", (mIds[i], team2, 0))
+                cursor.execute(f"SELECT {function}", (mIds[i][0], team2, 0))
                 db.commit()
-
-                i += 1
+                
 
             cursor.execute("SELECT * FROM matchresult")
             match_results = cursor.fetchall()
             return match_results
 
     except Exception as e:
-        print(f"Error: {str(e)}")
-        return "Error"
-    
+        return {"error": f"Error creating match results: {str(e)}"}
 
-
-@app.route("/championships/<int:cId>/draw", methods=["POST"])
-def drawChamp(cId):
+@app.route("/championships/draw", methods=["POST"])
+def drawChamp():
      
     try:
         with db.cursor() as cursor:
@@ -79,6 +74,8 @@ def drawChamp(cId):
 
             if not teams:
                 return jsonify({"error": "Teams are NULL"}), 400
+            cursor.execute("SELECT MAX(CID) FROM championship")
+            cId = cursor.fetchone()[0]
 
             cursor.execute("SELECT COUNT(*) FROM matches WHERE CID = %s", (cId,))
             count = cursor.fetchone()[0]
@@ -91,14 +88,16 @@ def drawChamp(cId):
                     (cId,)
                 )
                 db.commit()
-
+            current_date = datetime.now().date()
             num_comb = math.comb(len(teams), 2)
             for _ in range(num_comb):
                 function1 = "CreateMatch(%s,%s,%s)"
-
+                 
                 cursor.execute(
-                    f"SELECT {function1}", ("2023-01-01", "00:00:00", "Location")
+                    f"SELECT {function1}", (current_date, "21:00:00", "Stadium A")
                 )
+
+                current_date+=timedelta(days=1)
 
                 db.commit()
 
@@ -116,7 +115,7 @@ def drawChamp(cId):
 def getMatches(cId):
     try:
         with db.cursor() as cursor:
-
+            
             if sqlInj(cId):
                 return (
                     jsonify(
@@ -126,17 +125,20 @@ def getMatches(cId):
                 )
 
             cursor.execute(
-                """
-                            SELECT matches.MID, location,
-                            CAST(matchdate AS CHAR) AS matchdate,
-                            CAST(matchtime AS CHAR) AS matchtime,
-                            matchresult.MRID,
-                            matchresult.TID, 
-                            matchresult.score
-                        
+                        """
+                            SELECT matches.MID,
+                                            location,
+                                            CAST(matchdate AS CHAR) AS matchdate,
+                                            CAST(matchtime AS CHAR) AS matchtime,
+                                            GROUP_CONCAT(team.name) AS team_names,
+                                            GROUP_CONCAT(matchresult.score) AS scores,
+                                            GROUP_CONCAT(matchresult.MRID) AS mrid
+                                            
                             FROM matches
                             JOIN matchresult ON matches.MID = matchresult.MID
-                            WHERE matches.CID = %s;
+                            JOIN team ON matchresult.TID = team.TID
+                            WHERE matches.CID = %s
+                            GROUP BY matches.MID, location, matchdate, matchtime;
                         """,
                 (cId,),
             )
