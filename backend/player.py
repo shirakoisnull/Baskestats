@@ -116,7 +116,7 @@ def updatePlayer(pId):
             )       
         #Calling functions for associating player with team and updating player
         with db.cursor() as cursor:
-            if teamId is isinstance(teamId, int):
+            if teamId is not None:
             
                 function = "AssociatePlayerTeam(%s, %s)"
                 cursor.execute(f"SELECT {function}", (pId, teamId))
@@ -138,7 +138,7 @@ def updatePlayer(pId):
     return "Success\n", 200
 
 
-#Get player based on ID, returns   PID, TID, name, age, height, weight, pointsscored in this order. If team is none, null is returned.
+# Get player based on ID, returns   PID, TID, name, age, height, weight, pointsscored in this order. If team is none, null is returned.
 @app.route("/players/<int:pId>", methods=["GET"])
 def getPlayer(pId):
     try:

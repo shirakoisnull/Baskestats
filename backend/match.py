@@ -219,7 +219,7 @@ def winner(cId):
                     ),
                     400,
                 )
-
+            
             cursor.execute(
                         """
                             SELECT  team.TID, team.name, COUNT(team.TID) AS wins
