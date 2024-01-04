@@ -69,12 +69,17 @@
   function handleUpdate(champ) {
     navigate(`/editchamp`, { state: { champ } });
   }
+  
+  function handleDraw() {
+    navigate('/draw');
+  }
+
 </script>
 
 <div class="card">
 <h1>Championship Management</h1>
   <button on:click={handleClick}>Create New Championship</button>
-  <button>Draw Championship</button>
+  <button on:click={handleDraw}>Draw Championship</button>
 </div>
 
 {#if championships.length === 0}

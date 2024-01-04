@@ -11,6 +11,7 @@
   import PlayerUpdate from './routes/PlayerUpdate.svelte';
   import ChampCreate from './routes/ChampCreate.svelte';
   import ChampUpdate from './routes/ChampUpdate.svelte';
+  import DrawChamp from './routes/DrawChamp.svelte';
 </script>
 
 <Router>
@@ -33,6 +34,7 @@
   <Route path="/editplayer" component={PlayerUpdate} />
   <Route path="/newchamp" component={ChampCreate} />
   <Route path="/editchamp" component={ChampUpdate} />
+  <Route path="/draw" component={DrawChamp} />
 </Router>
 
 

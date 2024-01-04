@@ -1,5 +1,7 @@
 <script>
   import { navigate } from "svelte-routing";
+  import { fetchTeams } from '../api.js'; 
+  import { onMount } from 'svelte';
   
   let player = {
     pId: '',
@@ -11,6 +13,11 @@
     pScore: ''
   };
 
+  let teams = [];
+
+ onMount(async () => {
+    teams = await fetchTeams();
+  });
   async function handleSubmit() {
  try {
       const response = await fetch('http://127.0.0.1:5002/players', {
@@ -69,9 +76,13 @@
     Points Scored:
     <input type="number" min="0" bind:value={player.pScore} />
   </label>
-  <label>
-    Team ID (optional):
-    <input type="number" min="0" bind:value={player.tId} />
+ <label>
+    Team (optional):
+    <select bind:value={player.tId}>
+      {#each teams as team, index}
+        <option value={team[0]}>{team[0]} - {team[1]}</option>
+      {/each}
+    </select>
   </label>
   <button class="submit-button" type="submit">Submit</button>
   <button type="button" on:click={handleCancel}>Cancel</button>
