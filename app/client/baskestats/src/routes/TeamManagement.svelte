@@ -6,16 +6,11 @@
   // let showModal = false;
   // let selectedTeam = null;
 
-  // Assuming teamsData contains your team entries, fetched from somewhere
-  // let teamsData = [
-  //   { id: 1, name: "Team A", city: "City A", wins: 5, losses: 2 },
-  //   { id: 2, name: "Team B", city: "City B", wins: 3, losses: 4 },
-  //   // Add more entries as needed
-  // ];
 
   // BEGIN REQUEST FROM API
   // Initialize teams as an empty array
   let teams = [];
+  let searchQuery = '';
 
   // Fetch teams data from the backend
   async function fetchTeams() {
@@ -75,7 +70,6 @@
         console.error("Error deleting team:", error);
       }
     }
-    // teamsData = teamsData.filter((t) => t.id !== team.id);
   }
 
   // THE CURSED CONFIRMATION MODAL THAT NEVER WORKS
@@ -95,6 +89,14 @@
   function handleUpdate(team) {
     navigate(`/teamupdate`, { state: { team } });
   }
+ // Filtered teams based on search query
+  $: visibleTeams = searchQuery ?
+    teams.filter(team => {
+      return (
+        team.name.toLowerCase().includes(searchQuery.toLowerCase())
+        // Replace 'team.name' with the property you want to filter/search by
+      );
+    }) : teams;
 </script>
 
 <!-- {#if showModal}
@@ -102,6 +104,8 @@
 {/if} -->
 
 <h1>Team Management</h1>
+
+<input type="text" bind:value={searchQuery} placeholder="Search teams..." />
 
 <div class="card">
   <button on:click={handleClick}>Create New Team</button>
@@ -119,7 +123,7 @@
     </tr>
   </thead>
   <tbody>
-    {#each teams as team}
+    {#each visibleTeams as team}
       <tr>
         <td>{team.id}</td>
         <td>{team.name}</td>
