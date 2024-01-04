@@ -25,11 +25,28 @@ function addTeam(selectedTeam) {
     selectedTeams = selectedTeams.filter((_, i) => i !== index);
   }
 
-  function submitSelection() {
-    // Perform action with selectedTeams data (e.g., submit to backend)
-    console.log('Selected Teams:', selectedTeams);
+  async function submitSelection() {
+    const selectedTeamIds = selectedTeams.map(team => team[0]); // Assuming team[0] holds the team ID
+    console.log('Selected Teams:', selectedTeamIds);
+
+    fetch('http://127.0.0.1:5005/championships/draw', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ teams: selectedTeamIds })
+    }).then(response => {
+        if (response.ok) {
+            console.log('Teams submitted successfully!');
+        } else {
+            console.error('Failed to submit teams:', response.statusText);
+        }
+    }).catch(error => {
+        console.error('Error submitting teams:', error);
+    });
   }
 </script>
+
 <h1>Draw Championship</h1>
 <div class="container">
   <div class="left-section">
@@ -49,7 +66,7 @@ function addTeam(selectedTeam) {
       <table>
         <thead>
           <tr>
-            <th>ID</th>
+            <!-- <th>ID</th> -->
             <th>Name</th>
             <!-- Add other headers based on team data structure -->
             <th>Action</th>
@@ -58,7 +75,7 @@ function addTeam(selectedTeam) {
         <tbody>
           {#each selectedTeams as team, index}
             <tr>
-              <td>{team[0]}</td>
+              <!-- <td>{team[0]}</td> -->
               <td>{team[1]}</td>
               <!-- Display other team data based on its structure -->
               <td><button class="remove-btn" on:click={() => removeTeam(index)}>Remove</button></td>
@@ -70,6 +87,7 @@ function addTeam(selectedTeam) {
   </div>
 </div>
 
+<button class="back-button" on:click={() => navigate("/champ")}>Go Back</button>
 <style>
   .container {
     display: flex;
