@@ -3,44 +3,33 @@
   import { onMount } from "svelte";
   import { navigate } from "svelte-routing";
 
-  // TODO: add player to team association logic
+  // TODO: add player to championship association logic
 //   let showModal = false;
 //   let selectedPlayer = null;
-  // Assuming teamsData contains your team entries, fetched from somewhere
-  let champData= [
-    {
-        cid: 1,
-        year: 2011,
-    },
-    {
-        cid: 2,
-        year: 2001,
-    },
-    // Add more entries as needed
-  ];
-  // Initialize teams as an empty array
+  // Assuming championshipsData contains your championship entries, fetched from somewhere
+  // Initialize championships as an empty array
   let championships = [];
 
-  // Fetch teams data from the backend
+  // Fetch championships data from the backend
   async function fetchChampionships() {
     try {
-      const response = await fetch("http://127.0.0.1:5002/players"); // Replace with your API endpoint
+      const response = await fetch("http://127.0.0.1:5004/championships"); // Replace with your API endpoint
       if (response.ok) {
-        const playerData = await response.json();
+        const champData = await response.json();
 
-        // Assuming the structure is [[team_id, team_name, team_city, team_wins, team_losses], ...]
+        // Assuming the structure is [[championship_id, championship_name, championship_city, championship_wins, championship_losses], ...]
         championships = champData.map((champ) => ({
           cid: champ[0],
           year: champ[1],
         }));
 
-        // teams array assumed to be an array of objects with specific properties for each team
+        // championships array assumed to be an array of objects with specific properties for each championship
       } else {
-        console.error("Failed to fetch players:", response.status);
+        console.error("Failed to fetch championships:", response.status);
         // Handle error
       }
     } catch (error) {
-      console.error("Error fetching players:", error);
+      console.error("Error fetching championships:", error);
       // Handle error
     }
   }
@@ -52,42 +41,35 @@
     navigate("/newchamp");
   }
 
-  function deleteChamp(champ) {
-    const confirmation = window.confirm(`Are you sure you want to delete championship #${champ.cid}?`);
+  async function deleteChamp(champ) {
+    const confirmation = window.confirm(
+      `Are you sure you want to delete championship #${champ.id}?`
+    );
     if (confirmation) {
-      champData = champData.filter(c => c.cid !== champ.cid);
-    }
-  }
-  // CURSED STUFF
-  // function deleteTeam(player) {
-  //   selectedPlayer = player;
-  //   showModal = true;
-  // }
+      try {
+        const response = await fetch(`http://127.0.0.1:5004/championships/${champ.id}`, {
+          method: "DELETE",
+        });
 
-  // function handleConfirmDelete(confirm) {
-  //   if (confirm) {
-  //     // Implement deletion logic
-  //     playerData = playerData.filter(player => player.id !== selectedPlayer.id);
-  //     // After deletion or on cancel, hide the modal
-  //     showModal = false;
-  //   } else {
-  //     // On cancel, hide the modal
-  //     showModal = false;
-  //   }
-  // }
+        if (response.ok) {
+          fetchChampionships();
+          console.log("Championship deleted successfully!");
+          alert(`Deleted ${champ.id}`);
+          // Perform any necessary actions upon successful deletion
+          // For example, update the UI or reload championship list
+        } else {
+          console.error("Failed to delete championship:", response.statusText);
+        }
+      } catch (error) {
+        console.error("Error deleting championship:", error);
+      }
+    }
+    // championshipsData = championshipsData.filter((t) => t.id !== championship.id);
+  }
   function handleUpdate(champ) {
     navigate(`/editchamp`, { state: { champ } });
   }
 </script>
-
-<!-- CURSED -->
-<!-- {#if showModal}
-  <ConfirmationModal
-    displayName={selectedPlayer.name}
-    on:confirm={handleConfirmDelete}
-  />
-{/if} -->
-
 
 <div class="card">
 <h1>Championship Management</h1>
@@ -95,7 +77,7 @@
   <button>Draw Championship</button>
 </div>
 
-{#if champData.length === 0}
+{#if championships.length === 0}
   <p>No championships found.</p>
 {:else}
 <table>
@@ -107,7 +89,7 @@
     </tr>
   </thead>
   <tbody>
-    {#each champData as champ}
+    {#each championships as champ}
       <tr>
         <td>{champ.cid}</td>
         <td>{champ.year}</td>

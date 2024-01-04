@@ -1,22 +1,40 @@
 <script>
   import { navigate } from "svelte-routing";
 
-    let champYear = '';
+  let champ = {
+    year: 0
+  }
 
-  function handleSubmit() {
+ async function handleSubmit() {
     // Logic for handling form submission (to be implemented)
     // Example: Send data to API, perform validation, etc.
-    console.log("Submitted!", { champYear });
-    // You can add logic to save or send data here
+ try {
+      const response = await fetch('http://127.0.0.1:5004/championships', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          cYear: champ.year
+        })
+      });
 
-    // For demonstration purposes, navigate back to TeamManagement
+      if (response.ok) {
+        console.log('championship created successfully!');
+        // Perform any necessary actions upon successful creation
+      } else {
+        console.error('Failed to create championship:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error creating championship:', error);
+    }
     navigate("/champ");
   }
 
   function handleCancel() {
-    // Redirect back to TeamManagement page on cancel
     navigate("/champ");
   }
+
 </script>
 
 <h1>New Championship</h1>
@@ -24,7 +42,7 @@
 <form on:submit|preventDefault={handleSubmit}>
   <label>
     Championship Year:
-    <input type="number" min="1800" bind:value={champYear} />
+    <input type="number" min="1800" bind:value={champ.year} />
   </label>
   <button type="submit" class="submit-button">Submit</button>
   <button type="button" on:click={handleCancel}>Cancel</button>

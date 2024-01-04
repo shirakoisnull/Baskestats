@@ -3,7 +3,7 @@
   import { onMount } from 'svelte';
 
   let champ = {
-    cid: null,
+    cid: -1,
     year: '',
   };
 
@@ -17,20 +17,53 @@
     }
   });
 
-  function handleSubmit() {
-    // Logic for handling form submission (to be implemented)
-    console.log('Updated Team Details:', champ);
-    // You can add logic to save or send updated data here
+ async function handleSubmit() {
+ try {
+      console.log('Sending Champ Data:', champ);
 
-    // For demonstration purposes, navigate back to TeamManagement
-    navigate('/champ');
+      const response = await fetch(`http://127.0.0.1:5004/championships/${champ.cid}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          cYear: champ.year
+        })
+      });
+
+      if (response.ok) {
+        // Perform any necessary actions upon successful creation
+        console.log('Updated Championship Details:', champ);
+        navigate("/champ");
+      } else {
+        console.error('Failed to update championship:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error updating championship:', error);
+    }
+
   }
+
+
 
   function handleCancel() {
     // Redirect back to TeamManagement page on cancel
     navigate('/champ');
   }
 </script>
+
+
+
+<h1>Edit Championship</h1>
+
+<form on:submit|preventDefault={handleSubmit}>
+  <label>
+    Championship Year:
+    <input type="number" min="1800" bind:value={champ.year} />
+  </label>
+  <button type="submit">Update</button>
+  <button type="button" on:click={handleCancel}>Cancel</button>
+</form>
 
 <style>
   /* Style for vertical alignment and centering */
@@ -65,14 +98,3 @@
     margin-top: 5px; /* Adjust top margin of the buttons */
   }
 </style>
-
-<h1>Edit Championship</h1>
-
-<form on:submit|preventDefault={handleSubmit}>
-  <label>
-    Championship Year:
-    <input type="number" min="1800" bind:value={champ.year} />
-  </label>
-  <button type="submit">Update</button>
-  <button type="button" on:click={handleCancel}>Cancel</button>
-</form>
