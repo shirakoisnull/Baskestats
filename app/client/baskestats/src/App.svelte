@@ -12,6 +12,7 @@
   import ChampCreate from './routes/ChampCreate.svelte';
   import ChampUpdate from './routes/ChampUpdate.svelte';
   import DrawChamp from './routes/DrawChamp.svelte';
+  import Test from './routes/Test.svelte';
 </script>
 
 <Router>
@@ -35,6 +36,7 @@
   <Route path="/newchamp" component={ChampCreate} />
   <Route path="/editchamp" component={ChampUpdate} />
   <Route path="/draw" component={DrawChamp} />
+  <Route path="/test" component={Test} />
 </Router>
 
 
