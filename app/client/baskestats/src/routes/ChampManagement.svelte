@@ -3,11 +3,6 @@
   import { onMount } from "svelte";
   import { navigate } from "svelte-routing";
 
-  // TODO: add player to championship association logic
-//   let showModal = false;
-//   let selectedPlayer = null;
-  // Assuming championshipsData contains your championship entries, fetched from somewhere
-  // Initialize championships as an empty array
   let championships = [];
 
   // Fetch championships data from the backend
@@ -17,20 +12,16 @@
       if (response.ok) {
         const champData = await response.json();
 
-        // Assuming the structure is [[championship_id, championship_name, championship_city, championship_wins, championship_losses], ...]
         championships = champData.map((champ) => ({
           cid: champ[0],
           year: champ[1],
         }));
 
-        // championships array assumed to be an array of objects with specific properties for each championship
       } else {
         console.error("Failed to fetch championships:", response.status);
-        // Handle error
       }
     } catch (error) {
       console.error("Error fetching championships:", error);
-      // Handle error
     }
   }
 
@@ -43,18 +34,18 @@
 
   async function deleteChamp(champ) {
     const confirmation = window.confirm(
-      `Are you sure you want to delete championship #${champ.id}?`
+      `Are you sure you want to delete championship #${champ.cid}?`
     );
     if (confirmation) {
       try {
-        const response = await fetch(`http://127.0.0.1:5004/championships/${champ.id}`, {
+        const response = await fetch(`http://127.0.0.1:5004/championships/${champ.cid}`, {
           method: "DELETE",
         });
 
         if (response.ok) {
           fetchChampionships();
           console.log("Championship deleted successfully!");
-          alert(`Deleted ${champ.id}`);
+          alert(`Deleted ${champ.cid}`);
           // Perform any necessary actions upon successful deletion
           // For example, update the UI or reload championship list
         } else {
@@ -73,13 +64,29 @@
   function handleDraw() {
     navigate('/draw');
   }
+  
+  import Modal from "../Modal.svelte";
+  import { fetchMatches } from "../api.js";
+  let showModal = false;
+  let fetchedResults = []; // Results fetched from backend
+  async function handleView(cId){
+    fetchedResults = await fetchMatches(cId);
+    showModal = true;
+  }
 
 </script>
 
+{#if showModal}
+  <Modal
+    {showModal}
+    results={fetchedResults}
+    closeModal={() => (showModal = false)}
+  />
+{/if}
 <div class="card">
 <h1>Championship Management</h1>
   <button on:click={handleClick}>Create New Championship</button>
-  <button on:click={handleDraw}>Draw Championship</button>
+  <button on:click={handleDraw}>Draw Latest</button>
 </div>
 
 {#if championships.length === 0}
@@ -99,6 +106,8 @@
         <td>{champ.cid}</td>
         <td>{champ.year}</td>
         <td>
+          <button on:click={() => handleView(champ.cid)}>View</button>
+          <!-- <button>View</button> -->
           <button on:click={() => handleUpdate(champ)}>Update</button>
           <button class="delete-button" on:click={() => deleteChamp(champ)}>Delete</button>
         </td>

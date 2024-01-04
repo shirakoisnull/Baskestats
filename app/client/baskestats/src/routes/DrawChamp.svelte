@@ -56,7 +56,7 @@ function addTeam(selectedTeam) {
           <option value={team[0]}>{team[1]}</option>
         {/each}
       </select>
-      <button class="add-btn" on:click={() => addTeam(teams.find(t => t[0] === parseInt(selectedTeamId)))}>+</button>
+      <button class="add-btn" on:click={() => addTeam(teams.find(t => t[0] === parseInt(selectedTeamId)))}>➕</button>
     </div>
     <button class="submit-btn" on:click={submitSelection}>Submit</button>
   </div>

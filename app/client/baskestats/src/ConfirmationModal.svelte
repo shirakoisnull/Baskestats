@@ -33,6 +33,8 @@
     z-index: 999;
   }
 </style>
+<!-- svelte-ignore a11y-click-events-have-key-events -->
+<!-- svelte-ignore a11y-no-static-element-interactions -->
 <div class="modal-overlay" on:click={() => confirmAction(false)}></div>
 <div class="modal">
   <p>Are you sure you want to delete {teamName}?</p>
