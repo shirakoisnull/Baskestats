@@ -129,13 +129,13 @@ def getMatches(cId):
 
             cursor.execute(
                         """
-                            SELECT matches.MID,
-                                            location,
-                                            CAST(matchdate AS CHAR) AS matchdate,
-                                            CAST(matchtime AS CHAR) AS matchtime,
-                                            GROUP_CONCAT(team.name) AS team_names,
-                                            GROUP_CONCAT(matchresult.score) AS scores,
-                                            GROUP_CONCAT(matchresult.MRID) AS mrid
+                            SELECT  matches.MID,
+                                    location,
+                                    CAST(matchdate AS CHAR) AS matchdate,
+                                    CAST(matchtime AS CHAR) AS matchtime,
+                                    GROUP_CONCAT(team.name) AS team_names,
+                                    GROUP_CONCAT(matchresult.score) AS scores,
+                                    GROUP_CONCAT(matchresult.MRID) AS mrid
                                             
                             FROM matches
                             JOIN matchresult ON matches.MID = matchresult.MID
@@ -202,10 +202,48 @@ def updateMR(cId, mId, mrId, tId):
             db.commit()
 
     except Exception as e:
-        return jsonify({"error": f"Error updating matches: {str(e)}"}), 500
+        return jsonify({"error": f"Error updating matche results: {str(e)}"}), 500
 
  
     return "Success\n", 200
+
+@app.route("/championships/<int:cId>/winner", methods=["GET"])
+def winner(cId):
+    try:
+        with db.cursor() as cursor:
+            
+            if sqlInj(cId):
+                return (
+                    jsonify(
+                        {"error": "Invalid input detected. SQL injection attempt detected."}
+                    ),
+                    400,
+                )
+
+            cursor.execute(
+                        """
+                            SELECT  team.TID, team.name, COUNT(team.TID) AS wins
+                                            
+                            FROM macthes
+                            JOIN matchresult As mr1 ON matches.MID = matchresult.MID
+                            JOIN matchresult As mr2 ON matches.MID = matchresult.MID AND mr1.MRID<>mr2.MRID
+
+                            JOIN team ON (mr1.score > mr2.score AND mr1.TID = team.TID) OR (mr1.score < mr2.score AND mr1.TID = team.TID)
+
+                            WHERE matches.CID = %s  
+                            GROUD BY wins DESC
+                            LIMIT 1;
+                        """,
+                (cId,),
+            )
+
+            result = cursor.fetchone()
+
+    except Exception as e:
+        return jsonify({"error": f"Error getting winner: {str(e)}"}), 500
+ 
+    return jsonify(result),200
+
 
 
 if __name__ == "__main__":

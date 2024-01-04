@@ -125,7 +125,7 @@ def updatePlayer(pId):
             
             function = "UpdatePlayer(%s, %s, %s, %s, %s, %s)"
             cursor.execute(
-                f"CALL {function}", (pId, pName, pAge, pHeight, pWeight, pPoints)
+                f"SELECT {function}", (pId, pName, pAge, pHeight, pWeight, pPoints)
             )
             db.commit()
      
