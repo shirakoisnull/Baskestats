@@ -38,6 +38,7 @@ function addTeam(selectedTeam) {
     }).then(response => {
         if (response.ok) {
             console.log('Teams submitted successfully!');
+            navigate("/champ"); 
         } else {
             console.error('Failed to submit teams:', response.statusText);
         }
