@@ -13,12 +13,24 @@
   import ChampUpdate from './routes/ChampUpdate.svelte';
   import DrawChamp from './routes/DrawChamp.svelte';
   import Test from './routes/Test.svelte';
+  import Teams from './userviews/Teams.svelte';
+  import Players from './userviews/Players.svelte';
+  import Championships from './userviews/Championships.svelte';
 </script>
 
 <Router>
   <Route path="/">
     <!-- Your main page content -->
     <h1>Welcome to BaskeStats</h1>
+    <button>
+      <Link to="/uteams" class="button-link">Teams</Link>
+    </button>
+    <button>
+      <Link to="/uplayers" class="button-link">Players</Link>
+    </button>
+    <button>
+      <Link to="/uchamps" class="button-link">Championships</Link>
+    </button>
     <button>
       <Link to="/login" class="button-link">Login</Link>
     </button>
@@ -37,6 +49,9 @@
   <Route path="/editchamp" component={ChampUpdate} />
   <Route path="/draw" component={DrawChamp} />
   <Route path="/test" component={Test} />
+  <Route path="/uteams" component={Teams} />
+  <Route path="/uplayers" component={Players} />
+  <Route path="/uchamps" component={Championships} />
 </Router>
 
 
