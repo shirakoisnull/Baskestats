@@ -65,6 +65,8 @@
           // For example, update the UI or reload team list
         } else {
           console.error("Failed to delete team:", response.statusText);
+          // alert("POU PA RE KARAMHTRO?");
+          alert("Cannot delete a team in use!")
         }
       } catch (error) {
         console.error("Error deleting team:", error);
