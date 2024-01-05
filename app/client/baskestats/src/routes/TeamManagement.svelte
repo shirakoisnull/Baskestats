@@ -91,6 +91,7 @@
   function handleUpdate(team) {
     navigate(`/teamupdate`, { state: { team } });
   }
+  // ################# SEARCH BY NAME #####################
  // Filtered teams based on search query
   $: visibleTeams = searchQuery ?
     teams.filter(team => {
