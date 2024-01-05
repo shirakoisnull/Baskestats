@@ -124,7 +124,7 @@ def getTeam(tId):
             )
 
         with db.cursor() as cursor:
-            cursor.execute("SELECT * FROM teams WHERE TID = %s", (tId))
+            cursor.execute("SELECT * FROM team WHERE TID = %s", (tId))
             result = cursor.fetchone()
         
 
