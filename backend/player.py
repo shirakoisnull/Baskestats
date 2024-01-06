@@ -152,7 +152,7 @@ def getPlayer(pId):
             )
 
         with db.cursor() as cursor:
-            cursor.execute('''SELECT * FROM players 
+            cursor.execute('''SELECT * FROM player 
                             
                             WHERE PID = %s ''', (pId))
             result = cursor.fetchone()
