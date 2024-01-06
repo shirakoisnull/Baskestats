@@ -1,6 +1,6 @@
 <script>
   import { Router, Route, Link } from 'svelte-routing';
-  import BottomNavigation from './BottomNavigation.svelte'; // Replace with the correct path to your BottomNavigation.svelte component
+  import BottomNavigation from './BottomNavigation.svelte'; 
   import Login from './Login.svelte';
   import SecretaryPanel from './SecretaryPanel.svelte';
   import TeamManagement from './routes/TeamManagement.svelte';
