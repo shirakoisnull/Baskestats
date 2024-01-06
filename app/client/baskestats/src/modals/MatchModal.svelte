@@ -9,12 +9,14 @@
   <!-- svelte-ignore a11y-click-events-have-key-events -->
   <!-- svelte-ignore a11y-no-static-element-interactions -->
   <div class="modal-overlay" on:click={closeModal}></div>
+
   <div class="modal">
     <!-- svelte-ignore a11y-no-static-element-interactions -->
 
     <div class="modal-content">
+
       <!-- svelte-ignore a11y-click-events-have-key-events -->
-      <span class="close" on:click={closeModal}>&times;</span>
+  <button class="logout-button" on:click={closeModal}>X</button>
       <table>
         <thead>
           <tr>
@@ -23,6 +25,7 @@
             <th>Time</th>
             <th>Team 1</th>
             <th>Team 2</th>
+            <th> Score </th>
           </tr>
         </thead>
         <tbody>
@@ -36,18 +39,10 @@
         <td>{value}</td>
       {/each}
     {/if}
-              <!-- {#if result[4]}
-                <td>
-                  {#each result[4].split(",") as value}
-                    {#if value !== ""}
-                      <span>{value}</span
-                      >{#if value !== result[4].split(",")[result[4].split(",").length - 1]}
-                        - 
-                      {/if}
-                    {/if}
-                  {/each}
-                </td>
-              {/if} -->
+
+{#if result[5]}
+      <td>{result[5].replace(/,/g, " - ")}</td>
+    {/if}
             </tr>
           {/each}
         </tbody>

@@ -15,7 +15,6 @@
 
     <div class="modal-content">
       <!-- svelte-ignore a11y-click-events-have-key-events -->
-      <span class="close" on:click={closeModal}>&times;</span>
       <table>
         <thead>
           <tr>

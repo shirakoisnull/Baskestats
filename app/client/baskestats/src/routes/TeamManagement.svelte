@@ -110,9 +110,9 @@
 
 <input type="text" bind:value={searchQuery} placeholder="Search teams..." />
 
-<div class="card">
+<!-- <div class="card"> -->
   <button on:click={handleClick}>Create New Team</button>
-</div>
+<!-- </div> -->
 
 <table>
   <thead>
@@ -145,9 +145,7 @@
   </tbody>
 </table>
 
-<button class="back-button" on:click={() => navigate("/secretary")}
-  >Go Back</button
->
+<button class="back-button" on:click={() => navigate("/secretary")}>Go Back</button>
 
 <style>
   table {
@@ -192,5 +190,5 @@
     border: none;
     border-radius: 4px;
     cursor: pointer;
-  }
+   }
 </style>

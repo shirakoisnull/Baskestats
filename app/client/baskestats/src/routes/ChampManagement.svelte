@@ -65,7 +65,7 @@
     navigate('/draw');
   }
   
-  import Modal from "../MatchModal.svelte";
+  import Modal from "../modals/MatchModal.svelte";
   import { fetchMatches } from "../api.js";
   let showModal = false;
   let fetchedResults = []; // Results fetched from backend
@@ -84,11 +84,11 @@
     closeModal={() => (showModal = false)}
   />
 {/if}
-<div class="card">
+<!-- <div class="card"> -->
 <h1>Championship Management</h1>
   <button on:click={handleClick}>Create New Championship</button>
   <button on:click={handleDraw}>Draw Latest</button>
-</div>
+<!-- </div> -->
 
 {#if championships.length === 0}
   <p>No championships found.</p>

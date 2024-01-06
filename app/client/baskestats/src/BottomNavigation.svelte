@@ -12,13 +12,16 @@
 <style>
   /* Style the navigation bar */
   .bottom-nav {
+  border-radius: 20px 20px 0px 0px;
     position: fixed;
     bottom: 0;
     left: 0;
     width: 100%;
     display: flex;
     justify-content: space-around;
-    background-color: #ff3e00;
+    background: rgb(131,58,180);
+background: linear-gradient(90deg, rgba(131,58,180,1) 0%, rgba(255,62,0,1) 65%);
+    /* background-color: #ff3e00; */
     /* border: 5px solid #242424; */
     padding: 10px 0;
   }
@@ -39,7 +42,7 @@
 
   /* Hover effect */
   .nav-button:hover {
-    background-color: #242424;
+    background-color: #3b373721;
     transform: scale(1.05);
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   }

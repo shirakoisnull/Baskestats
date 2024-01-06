@@ -1,16 +1,29 @@
 <script>
-  import { fetchChampionships } from "../api.js";
+  import { fetchChampionships, fetchMatches } from "../api.js";
   import { onMount } from "svelte";
   import BottomNavigation from "../BottomNavigation.svelte";
+  import MatchModal from "../modals/MatchModal.svelte";
   let championships = [];
+  let matchInfo = [];
+  let showModal = false;
 
   onMount(async () => {championships = await fetchChampionships();});
 
-    function handleView(champ){
-
-    }
+  async function handleView(cId) {
+    matchInfo = await fetchMatches(cId);
+    showModal = true;
+  }
 
 </script>
+
+{#if showModal}
+  <MatchModal
+    {showModal}
+    results={matchInfo}
+    closeModal={() => (showModal = false)}
+  />
+{/if}
+
 <BottomNavigation />
 <table>
   <thead>
@@ -25,7 +38,7 @@
       <tr>
         <td>{champ[1]}</td>
         <td>
-            <button>Info</button>
+          <button on:click={() => handleView(champ[0])}>Info</button>
         </td>
       </tr>
     {/each}

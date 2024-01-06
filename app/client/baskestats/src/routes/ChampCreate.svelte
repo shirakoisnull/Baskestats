@@ -28,7 +28,7 @@
     } catch (error) {
       console.error('Error creating championship:', error);
     }
-    navigate("/draw");
+    navigate("/champ");
   }
 
   function handleCancel() {
@@ -44,7 +44,7 @@
     Championship Year:
     <input type="number" min="1800" bind:value={champ.year} />
   </label>
-  <button type="submit" class="submit-button">Submit & Draw</button>
+  <button type="submit" class="submit-button">Submit</button>
   <button type="button" on:click={handleCancel}>Cancel</button>
 </form>
 

@@ -2,19 +2,20 @@
   import { fetchPlayers, viewPlayer } from "../api.js";
   import { onMount } from "svelte";
   import BottomNavigation from "../BottomNavigation.svelte";
-import PlayerModal from "../modals/PlayerModal.svelte";
+  import PlayerModal from "../modals/PlayerModal.svelte";
   let players = [];
   let playerInfo = [];
   let showModal = false;
-  let searchQuery = '';
+  let searchQuery = "";
 
-  onMount(async () => {players = await fetchPlayers();});
+  onMount(async () => {
+    players = await fetchPlayers();
+  });
 
-    async function handleView(pId){
-      playerInfo = await viewPlayer(pId);
-      showModal = true;
-    }
-
+  async function handleView(pId) {
+    playerInfo = await viewPlayer(pId);
+    showModal = true;
+  }
 </script>
 
 {#if showModal}
@@ -29,7 +30,7 @@ import PlayerModal from "../modals/PlayerModal.svelte";
 <table>
   <thead>
     <tr>
-        <!-- NA EXEI ICON ME FATSOULA OR SOMETHING -->
+      <!-- NA EXEI ICON ME FATSOULA OR SOMETHING -->
       <th>Name</th>
       <th>Actions</th>
     </tr>
@@ -39,7 +40,7 @@ import PlayerModal from "../modals/PlayerModal.svelte";
       <tr>
         <td>{player[2]}</td>
         <td>
-            <button on:click={() => handleView(player[0])}>Info</button>
+          <button on:click={() => handleView(player[0])}>Info</button>
         </td>
       </tr>
     {/each}

@@ -12,9 +12,15 @@
       isAuthenticated = true;
     } else {
       // Redirect to login if token is not present
-      window.location.href = "/login"; // Redirect to your login route
+      window.location.href = "/"; // Redirect to your login route
     }
   });
+  
+  function logout() {
+    localStorage.removeItem("jwtToken");
+    localStorage.removeItem("username");
+    navigate("/");
+  }
 </script>
 
 {#if isAuthenticated}
@@ -31,8 +37,4 @@
 {/if}
 
 <button class="back-button" on:click={() => navigate("/")}>Home</button>
-
-<style>
-  /* Style the links inside the buttons */
-  
-</style>
+<button class="logout-button" on:click={() => logout()}>Logout</button>
