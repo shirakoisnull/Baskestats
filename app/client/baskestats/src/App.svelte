@@ -1,5 +1,6 @@
 <script>
   import { Router, Route, Link } from 'svelte-routing';
+  import BottomNavigation from './BottomNavigation.svelte'; 
   import Login from './Login.svelte';
   import SecretaryPanel from './SecretaryPanel.svelte';
   import TeamManagement from './routes/TeamManagement.svelte';
@@ -18,10 +19,14 @@
   import Championships from './userviews/Championships.svelte';
 </script>
 
+<main>
 <Router>
   <Route path="/">
     <!-- Your main page content -->
+
     <h1 class="title">Welcome to BaskeStats</h1>
+<BottomNavigation />
+
     <button>
       <Link to="/uteams" class="button-link">Teams</Link>
     </button>
@@ -53,14 +58,8 @@
   <Route path="/uplayers" component={Players} />
   <Route path="/uchamps" component={Championships} />
 </Router>
-
-
-
-<!-- <SecretaryPanel />
-<h1>Baskestats</h1>
+</main>
 <!-- TODO: Replace with BaskeStats Logo/Splash -->
-
-<!-- <TeamManagement /> -->
 <!-- <main>
   <div class="card">
   <Login />
@@ -68,12 +67,12 @@
 </main>  -->
 
 <style>
- /*  main {
+    main {
     text-align: center;
     padding: 1em;
-    max-width: 240px;
+    /* max-width: 240px; */
     margin: 0 auto;
-  } */
+  }
 
   
   /* @media (min-width: 640px) {

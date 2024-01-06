@@ -73,3 +73,18 @@ export async function viewTeam(tId) {
     return [];
   }
 }
+
+export async function viewPlayer(pId) {
+  try {
+    const response = await fetch(`http://127.0.0.1:5002/players/${pId}`);
+    if (response.ok) {
+      return await response.json();
+    } else {
+      console.error('Failed to fetch player:', response.statusText);
+      return [];
+    }
+  } catch (error) {
+    console.error('Error fetching player:', error);
+    return [];
+  }
+}
