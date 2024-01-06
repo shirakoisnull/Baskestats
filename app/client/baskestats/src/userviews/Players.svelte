@@ -1,7 +1,7 @@
 <script>
   import { fetchPlayers } from "../api.js";
   import { onMount } from "svelte";
-
+  import BottomNavigation from "../BottomNavigation.svelte";
   let players = [];
 
   onMount(async () => {players = await fetchPlayers();});
@@ -11,7 +11,7 @@
     }
 
 </script>
-
+<BottomNavigation />
 <table>
   <thead>
     <tr>
@@ -23,7 +23,7 @@
   <tbody>
     {#each players as player}
       <tr>
-        <td>{player[1]}</td>
+        <td>{player[2]}</td>
         <td>
             <button>Info</button>
         </td>

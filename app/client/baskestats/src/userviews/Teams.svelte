@@ -1,6 +1,7 @@
 <script>
   import { fetchTeams, viewTeam } from "../api.js";
   import { onMount } from "svelte";
+  import BottomNavigation from "../BottomNavigation.svelte";
 
   let teams = [];
   let searchQuery = '';
@@ -19,15 +20,15 @@
       );
     }) : teams;
 </script>
-
+<BottomNavigation />
 <input type="text" bind:value={searchQuery} placeholder="Search teams..." />
 <table>
   <thead>
     <tr>
       <th>Name</th>
-      <th>City</th>
+      <!-- <th>City</th>
       <th>Wins</th>
-      <th>Losses</th>
+      <th>Losses</th> -->
       <th>Actions</th>
     </tr>
   </thead>
@@ -35,9 +36,9 @@
     {#each visibleTeams as team}
       <tr>
         <td>{team[1]}</td>
-        <td>{team[2]}</td>
+        <!-- <td>{team[2]}</td>
         <td>{team[3]}</td>
-        <td>{team[4]}</td>
+        <td>{team[4]}</td> -->
         <td>
             <button on:click={() => handleView(team[0])}>Info</button>
         </td>

@@ -1,5 +1,6 @@
 <script>
   import { Router, Route, Link } from 'svelte-routing';
+  import BottomNavigation from './BottomNavigation.svelte'; // Replace with the correct path to your BottomNavigation.svelte component
   import Login from './Login.svelte';
   import SecretaryPanel from './SecretaryPanel.svelte';
   import TeamManagement from './routes/TeamManagement.svelte';
@@ -18,10 +19,12 @@
   import Championships from './userviews/Championships.svelte';
 </script>
 
+<main>
 <Router>
   <Route path="/">
     <!-- Your main page content -->
     <h1>Welcome to BaskeStats</h1>
+<BottomNavigation />
     <button>
       <Link to="/uteams" class="button-link">Teams</Link>
     </button>
@@ -53,14 +56,8 @@
   <Route path="/uplayers" component={Players} />
   <Route path="/uchamps" component={Championships} />
 </Router>
-
-
-
-<!-- <SecretaryPanel />
-<h1>Baskestats</h1>
+</main>
 <!-- TODO: Replace with BaskeStats Logo/Splash -->
-
-<!-- <TeamManagement /> -->
 <!-- <main>
   <div class="card">
   <Login />

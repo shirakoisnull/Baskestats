@@ -1,7 +1,7 @@
 <script>
   import { fetchChampionships } from "../api.js";
   import { onMount } from "svelte";
-
+  import BottomNavigation from "../BottomNavigation.svelte";
   let championships = [];
 
   onMount(async () => {championships = await fetchChampionships();});
@@ -11,7 +11,7 @@
     }
 
 </script>
-
+<BottomNavigation />
 <table>
   <thead>
     <tr>
