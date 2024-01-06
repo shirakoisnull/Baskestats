@@ -19,23 +19,28 @@
     display: flex;
     justify-content: space-around;
     background-color: #ff3e00;
+    /* border: 5px solid #242424; */
     padding: 10px 0;
   }
 
   /* Style the buttons */
+ /* Style the buttons */
   .nav-button {
     color: white;
-    padding: 8px 16px;
-    border:none;
-    border-radius: 10px;
-    transition: background-color 0.3s ease-in-out;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 30px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
     cursor: pointer;
     background-color: transparent;
     outline: none;
+    font-size: 16px;
   }
 
   /* Hover effect */
   .nav-button:hover {
     background-color: #242424;
+    transform: scale(1.05);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   }
 </style>

@@ -2,14 +2,18 @@
   import { fetchTeams, viewTeam } from "../api.js";
   import { onMount } from "svelte";
   import BottomNavigation from "../BottomNavigation.svelte";
+  import TeamModal from "../modals/TeamModal.svelte";
 
   let teams = [];
   let searchQuery = '';
+  let showModal = false;
+  let teamInfo = [];
 
   onMount(async () => {teams = await fetchTeams();});
 
-  async function handleView(tId){
-    let selTeam = await viewTeam();
+async function handleView(tId){
+  teamInfo = await viewTeam(tId);
+   showModal = true;
   }
 
   $: visibleTeams = searchQuery ?
@@ -19,7 +23,17 @@
         // Replace 'team.name' with the property you want to filter/search by
       );
     }) : teams;
+
 </script>
+
+{#if showModal}
+  <TeamModal
+    {showModal}
+    results={teamInfo}
+    closeModal={() => (showModal = false)}
+  />
+{/if}
+
 <BottomNavigation />
 <input type="text" bind:value={searchQuery} placeholder="Search teams..." />
 <table>

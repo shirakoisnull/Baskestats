@@ -64,7 +64,7 @@
     transform: translate(-50%, -50%);
     background-color: rgba(19, 19, 19, 0.901);
     padding: 20px;
-    border: 1px solid #ff3e00aa;
+    border: 1px solid #ff3e00;
     border-radius: 8px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
     z-index: 1000;

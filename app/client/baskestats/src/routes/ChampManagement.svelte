@@ -65,10 +65,11 @@
     navigate('/draw');
   }
   
-  import Modal from "../Modal.svelte";
+  import Modal from "../MatchModal.svelte";
   import { fetchMatches } from "../api.js";
   let showModal = false;
   let fetchedResults = []; // Results fetched from backend
+
   async function handleView(cId){
     fetchedResults = await fetchMatches(cId);
     showModal = true;

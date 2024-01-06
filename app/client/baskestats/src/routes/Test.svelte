@@ -1,5 +1,5 @@
 <script>
-  import Modal from "../Modal.svelte";
+  import Modal from "../MatchModal.svelte";
   import { fetchMatches } from "../api.js";
   import { onMount } from "svelte";
 
