@@ -68,13 +68,13 @@
 <!-- {:else} -->
 <!-- If not authenticated, render the login form -->
 <div class="card">
-<form on:submit|preventDefault={handleSubmit}>
+<form on:submit|preventDefault={handleSubmit} class="login">
   <label>
-    Username:
+    <p>Username:</p>
     <input type="text" bind:value={username} />
   </label>
   <label>
-    Password:
+    <p>Password:</p>
     <input type="password" bind:value={password} />
   </label>
   <button type="submit">Login</button>

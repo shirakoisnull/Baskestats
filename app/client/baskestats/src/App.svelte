@@ -23,8 +23,10 @@
 <Router>
   <Route path="/">
     <!-- Your main page content -->
-    <h1>Welcome to BaskeStats</h1>
+
+    <h1 class="title">Welcome to BaskeStats</h1>
 <BottomNavigation />
+
     <button>
       <Link to="/uteams" class="button-link">Teams</Link>
     </button>
@@ -72,15 +74,7 @@
     margin: 0 auto;
   }
 
-  h1 {
-    color: #ff3e00;
-    text-transform: uppercase;
-    font-size: 4em;
-    font-weight: 100;
-    will-change: filter;
-    transition: filter 300ms;
-  }
-
+  
   /* @media (min-width: 640px) {
     main {
       max-width: none;
@@ -93,7 +87,5 @@
     transition: filter 300ms;
   } */
 
-  h1:hover {
-    filter: drop-shadow(0 0 1em #ff4000cf);
-  }
+  
 </style>
