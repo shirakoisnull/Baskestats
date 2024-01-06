@@ -12,7 +12,7 @@
 <style>
   /* Style the navigation bar */
   .bottom-nav {
-  border-radius: 20px 20px 0px 0px;
+  border-radius: 5px 30px 5px 30px;
     position: fixed;
     bottom: 0;
     left: 0;

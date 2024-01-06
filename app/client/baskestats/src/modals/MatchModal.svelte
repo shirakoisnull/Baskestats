@@ -1,8 +1,10 @@
 <script>
   export let showModal = false;
   export let results = [];
+  export let cid = -1;
   export let closeModal = () => {};
 
+  let mid = -1;
 </script>
 
 {#if showModal}

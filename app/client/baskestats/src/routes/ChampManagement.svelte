@@ -55,7 +55,6 @@
         console.error("Error deleting championship:", error);
       }
     }
-    // championshipsData = championshipsData.filter((t) => t.id !== championship.id);
   }
   function handleUpdate(champ) {
     navigate(`/editchamp`, { state: { champ } });
@@ -69,9 +68,11 @@
   import { fetchMatches } from "../api.js";
   let showModal = false;
   let fetchedResults = []; // Results fetched from backend
+  let selCid = -1;
 
   async function handleView(cId){
     fetchedResults = await fetchMatches(cId);
+    selCid = cId;
     showModal = true;
   }
 
@@ -81,14 +82,14 @@
   <Modal
     {showModal}
     results={fetchedResults}
+    cid={selCid}
     closeModal={() => (showModal = false)}
   />
 {/if}
-<!-- <div class="card"> -->
+
 <h1>Championship Management</h1>
   <button on:click={handleClick}>Create New Championship</button>
   <button on:click={handleDraw}>Draw Latest</button>
-<!-- </div> -->
 
 {#if championships.length === 0}
   <p>No championships found.</p>

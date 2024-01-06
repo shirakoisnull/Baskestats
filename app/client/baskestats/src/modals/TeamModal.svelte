@@ -15,6 +15,8 @@
 
     <div class="modal-content">
       <!-- svelte-ignore a11y-click-events-have-key-events -->
+      <h2>{results[1]}</h2>
+      <button class="logout-button" on:click={closeModal}>X</button>
       <table>
         <thead>
           <tr>

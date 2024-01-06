@@ -16,7 +16,7 @@
   <button class="logout-button" on:click={closeModal}>X</button>
     <div class="modal-content">
       <!-- svelte-ignore a11y-click-events-have-key-events -->
-      <p>{results[2]}</p>
+      <h2>{results[2]}</h2>
       <table>
         <thead>
           <tr>
