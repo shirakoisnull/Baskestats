@@ -68,11 +68,11 @@
   import { fetchMatches } from "../api.js";
   let showModal = false;
   let fetchedResults = []; // Results fetched from backend
-  let selCid = -1;
+  let curChamp = -1;
 
   async function handleView(cId){
     fetchedResults = await fetchMatches(cId);
-    selCid = cId;
+    curChamp = cId;
     showModal = true;
   }
 
@@ -82,7 +82,7 @@
   <Modal
     {showModal}
     results={fetchedResults}
-    cid={selCid}
+    curChamp={curChamp}
     closeModal={() => (showModal = false)}
   />
 {/if}

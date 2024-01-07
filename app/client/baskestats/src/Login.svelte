@@ -90,14 +90,14 @@ console.log(response);
 
 <form on:submit|preventDefault={handleSubmit} class="login">
   <label>
-    <p>Username:</p>
-    <input type="text" bind:value={username} />
+    <p>Username</p>
+    <input type="text" placeholder="Enter your username" bind:value={username} />
   </label>
   <label>
-    <p>Password:</p>
-    <input type="password" bind:value={password} />
+    <p>Password</p>
+    <input type="password" placeholder="Enter your password" bind:value={password} />
   </label>
-  <button type="submit">Login</button>
+  <button class="submit-button"type="submit">Login</button>
 </form>
     </div>
     </div>

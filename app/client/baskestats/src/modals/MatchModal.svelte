@@ -1,10 +1,76 @@
 <script>
   export let showModal = false;
   export let results = [];
-  export let cid = -1;
+  export let curChamp;
   export let closeModal = () => {};
+  import { fetchMatches, setScore } from '../api';
+  // import { onMount, onDestroy } from 'svelte';
+  
+let modifiedScores = [];
 
-  let mid = -1;
+  $: modifiedScores = results.map(result => {
+    if (result[5]) {
+      return result[5].split(',').map(() => '');
+    }
+    return [];
+  });
+
+// // Function to fetch updated data
+//   async function fetchUpdatedData() {
+//     try {
+//       // Call your API endpoint to fetch updated data
+//       const response = await fetch(`http://127.0.0.1:5005/championships/${curChamp}/matches`);
+//       const data = await response.json();
+      
+//       // Update the results with the fetched data
+//       results = data;
+
+//       // Update modifiedScores based on the new results structure
+//       modifiedScores = results.map(result => {
+//         if (result[5]) {
+//           return result[5].split(',').map(() => '');
+//         }
+//         return [];
+//       });
+//     } catch (error) {
+//       console.error('Error fetching updated data:', error);
+//     }
+//   }
+
+//   // Fetch data initially on component mount
+//   onMount(fetchUpdatedData);
+
+//   // Fetch updated data every 10 seconds (adjust time interval as needed)
+//   const interval = setInterval(fetchUpdatedData, 10000);
+
+//   // Clean up interval on component destroy
+//   onDestroy(() => {
+//     clearInterval(interval);
+//   });
+  function handleInput(event, rowIndex, scoreIndex) {
+    // modifiedScores[rowIndex][scoreIndex] = event.target.value;
+const inputValue = event.target.value;
+    // Ensure the input value is not undefined or null
+    const validValue = inputValue ? parseInt(inputValue) : 0;
+    // Ensure the value is not negative
+    modifiedScores[rowIndex][scoreIndex] = validValue >= 0 ? validValue : 0;
+  }
+
+  async function handleUpdate(match_id, matchresult_ids, rowIndex) {
+    const separateIds = matchresult_ids.split(',');
+
+    for (const [i, matchresult_id] of separateIds.entries()) {
+let score = modifiedScores[rowIndex][i];
+      // Ensure blank inputs are treated as 0
+      score = score === '' ? 0 : score;
+      // const score = modifiedScores[rowIndex][i];
+      // Call your API function to update score for the current matchresult_id
+      // NA SAI KALA RE GPT
+      await setScore(matchresult_id, match_id, parseInt(score));
+      results = await fetchMatches(curChamp)
+      // Handle API response or error here
+    }
+  }
 </script>
 
 {#if showModal}
@@ -31,7 +97,7 @@
           </tr>
         </thead>
         <tbody>
-          {#each results as result}
+          {#each results as result, rowIndex}
             <tr>
               <td>{result[1]}</td>
               <td>{result[2]}</td>
@@ -41,12 +107,30 @@
         <td>{value}</td>
       {/each}
     {/if}
-
 {#if result[5]}
-      <td>{result[5].replace(/,/g, " - ")}</td>
+      <td>{result[5].replace(/,/g, "-")}</td>
     {/if}
-            </tr>
-          {/each}
+<td>
+    {#if result[5]}
+      {#each result[5].split(',') as score, scoreIndex}
+        <input 
+          class="score-input"
+          type="number"
+          placeholder="Team {scoreIndex+1}"
+          value={modifiedScores[rowIndex][scoreIndex]}
+          on:input={(event) => handleInput(event, rowIndex, scoreIndex)}
+        />
+      {/each}
+    {/if}
+  </td>
+
+  <td>
+    <button on:click={() => handleUpdate(result[0], result[6], rowIndex)}>
+      Update
+    </button>
+  </td>
+
+{/each}
         </tbody>
       </table>
     </div>
@@ -54,6 +138,22 @@
 {/if}
 
 <style>
+  .score-input{
+  display:flex;
+  background-color: #2424242e;
+  height: 1.7em;
+  margin: auto;
+  border-radius: 4px;
+  border: 1px solid #ff4000;
+  padding: 0 0.5em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  /* background-color: ; */
+  cursor: pointer;
+  transition: border-color 0.25s;
+  width: 100
+  }
   .modal {
     position: fixed;
     top: 50%;
