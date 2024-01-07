@@ -67,6 +67,8 @@ console.log(response);
     const token = localStorage.getItem("jwtToken");
     if (token) {
       isAuthenticated = true;
+      closeModal();
+      navigate("/secretary");
     }
   });
 
