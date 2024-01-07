@@ -1,6 +1,7 @@
 <script>
   import { onMount } from "svelte";
   import { navigate } from "svelte-routing";
+  import { ArrowLeftIcon } from "svelte-feather-icons";
   // import ConfirmationModal from "../ConfirmationModal.svelte";
   // let showModal = false;
   // let selectedTeam = null;
@@ -148,7 +149,7 @@
   </tbody>
 </table>
 
-<button class="back-button" on:click={() => navigate("/secretary")}>Go Back</button>
+<button class="back-button" on:click={() => navigate("/secretary")}><ArrowLeftIcon/></button>
 
 <style>
   table {

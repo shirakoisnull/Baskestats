@@ -18,8 +18,7 @@
   import Teams from './userviews/Teams.svelte';
   import Players from './userviews/Players.svelte';
   import Championships from './userviews/Championships.svelte';
-  
-  // import LoginModal from './modals/LoginModal.svelte';
+
   let showLogin = false;
 </script>
 
@@ -38,7 +37,7 @@
     <h1 class="title">Welcome to BaskeStats</h1>
 <BottomNavigation />
 
-    <button on:click={() => showLogin=true} style="">
+    <button on:click={() => showLogin=true}>
     Login
       <!-- <Link to="/login" class="button-link">Login</Link> -->
     </button>

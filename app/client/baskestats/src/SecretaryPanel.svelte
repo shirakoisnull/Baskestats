@@ -2,6 +2,7 @@
   import { Link } from "svelte-routing";
   import { navigate } from "svelte-routing";
   import { onMount } from "svelte";
+  import { HomeIcon, LogOutIcon } from "svelte-feather-icons";
   let usr = localStorage.getItem("username");
   // export let url = "";
   let isAuthenticated = false;
@@ -36,5 +37,5 @@
   </button>
 {/if}
 
-<button class="back-button" on:click={() => navigate("/")}>Home</button>
-<button class="logout-button" on:click={() => logout()}>Logout</button>
+<button class="back-button" on:click={() => navigate("/")}><HomeIcon/></button>
+<button class="logout-button" on:click={() => logout()}><LogOutIcon/></button>

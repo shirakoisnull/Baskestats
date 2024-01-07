@@ -3,7 +3,7 @@
   import { onMount } from "svelte";
   import BottomNavigation from "../BottomNavigation.svelte";
   import TeamModal from "../modals/TeamModal.svelte";
-
+  import { SearchIcon, InfoIcon } from "svelte-feather-icons";
   let teams = [];
   let searchQuery = "";
   let showModal = false;
@@ -40,12 +40,15 @@ Teams
 </div>
 
 <div class="box">
+<form name="search">
+<!-- <SearchIcon/> -->
   <input
     class="search-box"
     type="text"
     bind:value={searchQuery}
-    placeholder="🔍Search team..."
+    placeholder="Search team..."
   />
+  </form>
 </div>
 
 <div class="table-container">
@@ -67,7 +70,7 @@ Teams
         <td>{team[3]}</td>
         <td>{team[4]}</td> -->
         <td>
-          <button on:click={() => handleView(team[0])}>Info</button>
+          <button style="display:flex;align-items: center;"on:click={() => handleView(team[0])}><InfoIcon/></button>
         </td>
       </tr>
     {/each}
