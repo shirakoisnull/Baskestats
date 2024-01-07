@@ -36,6 +36,10 @@
 
 <BottomNavigation />
 
+<div class="page-section-title">
+ Players 
+</div>
+
 <div class="box">
   <input
     class="search-box"
@@ -44,7 +48,7 @@
     placeholder="Search player..."
   />
 </div>
-
+<div class="table-container">
 <table>
   <thead>
     <tr>
@@ -64,3 +68,4 @@
     {/each}
   </tbody>
 </table>
+</div>

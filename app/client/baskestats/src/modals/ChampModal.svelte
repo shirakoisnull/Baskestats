@@ -11,10 +11,9 @@
   <div class="modal-overlay" on:click={closeModal}></div>
   <div class="modal">
     <!-- svelte-ignore a11y-no-static-element-interactions -->
-
+      <button class="close-button" on:click={closeModal}>Close</button>
     <div class="modal-content">
       <!-- svelte-ignore a11y-click-events-have-key-events -->
-      <button class="logout-button" on:click={closeModal}>X</button>
       <div class="table-container">
       <table>
         <thead>

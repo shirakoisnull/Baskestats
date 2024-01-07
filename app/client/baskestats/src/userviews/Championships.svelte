@@ -35,6 +35,10 @@
 
 <BottomNavigation />
 
+<div class="page-section-title">
+Championships
+</div>
+
 <div class="box">
   <input
     class="search-box"

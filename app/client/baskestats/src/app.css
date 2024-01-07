@@ -114,6 +114,25 @@ button:focus-visible {
 .logout-button:hover {
   filter: drop-shadow(0 0 1em #fc4001d2);
 }
+
+.close-button{
+  background-color: transparent;
+  /* border-radius: 50px; */
+  border: 2px solid transparent;
+  padding: 0.5em 1em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  /* background-color: ; */
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+
+.close-button:hover{
+  border-color: white;
+  background-color: crimson;
+}
+
 .back-button {
   position: absolute;
   top: 20px;
@@ -266,4 +285,10 @@ button:focus-visible {
 .box:hover i{
     opacity: 0;
     z-index: -1;
+}
+
+.page-section-title {
+  text-align: center;
+  font-size: 24px; 
+  font-weight: bold;
 }

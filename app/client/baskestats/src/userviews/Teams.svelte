@@ -35,12 +35,16 @@
 
 <BottomNavigation />
 
+<div class="page-section-title">
+Teams
+</div>
+
 <div class="box">
   <input
     class="search-box"
     type="text"
     bind:value={searchQuery}
-    placeholder="Search team..."
+    placeholder="🔍Search team..."
   />
 </div>
 
