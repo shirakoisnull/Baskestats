@@ -78,15 +78,15 @@ console.log(response);
   <div class="modal-overlay" on:click={closeModal}></div>
   <div class="modal">
     <!-- svelte-ignore a11y-no-static-element-interactions -->
+{#if wrongCredentials}
+  <h2 style="color: crimson;">Wrong credentials</h2>
+{/if}
 
   <!-- <button on:click={() => closeTest()}>CLICK</button> -->
     <div class="modal-content">
       <!-- svelte-ignore a11y-click-events-have-key-events -->
       <!-- <span class="close" on:click={closeModal}>&times;</span> -->
 
-{#if wrongCredentials}
-  <h2 style="color: crimson;">Wrong credentials</h2>
-{/if}
 
 <form on:submit|preventDefault={handleSubmit} class="login">
   <label>

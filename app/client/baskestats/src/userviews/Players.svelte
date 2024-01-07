@@ -16,6 +16,14 @@
     playerInfo = await viewPlayer(pId);
     showModal = true;
   }
+
+
+  $: visiblePlayers= searchQuery
+    ? players.filter((player) => {
+        return player[2].toLowerCase().includes(searchQuery.toLowerCase());
+      })
+    : players;
+
 </script>
 
 {#if showModal}
@@ -27,6 +35,16 @@
 {/if}
 
 <BottomNavigation />
+
+<div class="box">
+  <input
+    class="search-box"
+    type="text"
+    bind:value={searchQuery}
+    placeholder="Search player..."
+  />
+</div>
+
 <table>
   <thead>
     <tr>
@@ -36,7 +54,7 @@
     </tr>
   </thead>
   <tbody>
-    {#each players as player}
+    {#each visiblePlayers as player}
       <tr>
         <td>{player[2]}</td>
         <td>

@@ -76,6 +76,13 @@
     showModal = true;
   }
 
+  let searchQuery = "";
+   $: visibleChamps = searchQuery
+     ? championships.filter((champ) => {
+         return String(champ.year).toLowerCase().includes(searchQuery.toLowerCase());
+       })
+     : championships;
+   
 </script>
 
 {#if showModal}
@@ -88,6 +95,17 @@
 {/if}
 
 <h1>Championship Management</h1>
+
+<!-- Search Box -->
+<div class="box">
+  <input
+    class="search-box"
+    type="text"
+    bind:value={searchQuery}
+    placeholder="Search player..."
+  />
+  </div>
+
   <button on:click={handleClick}>Create New Championship</button>
   <button on:click={handleDraw}>Draw Latest</button>
 
@@ -103,7 +121,7 @@
     </tr>
   </thead>
   <tbody>
-    {#each championships as champ}
+    {#each visibleChamps as champ}
       <tr>
         <td>{champ.cid}</td>
         <td>{champ.year}</td>

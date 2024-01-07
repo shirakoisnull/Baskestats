@@ -3,7 +3,6 @@
   export let results = [];
   export let closeModal = () => {};
 
-  console.log(results);
 </script>
 
 {#if showModal}
@@ -15,30 +14,40 @@
 
     <div class="modal-content">
       <!-- svelte-ignore a11y-click-events-have-key-events -->
-      <span class="close" on:click={closeModal}>&times;</span>
-      <p>{results[2]}</p>
+      <button class="logout-button" on:click={closeModal}>X</button>
+      <div class="table-container">
       <table>
         <thead>
           <tr>
-            <th> TEAM </th>
-            <th> AGE </th>
-            <th> HEIGHT </th>
-            <th> WEIGHT </th>
-            <th> POINTS SCORED </th>
+            <th> LOCATION </th>
+            <th> DATE </th>
+            <th> TIME </th>
+            <th> TEAM 1 </th>
+            <th> TEAM 2</th>
+            <th> SCORE </th>
           </tr>
         </thead>
         <tbody>
+          {#each results as result}
             <tr>
-              <td>{results[1]}</td>
-              <td>{results[3]}</td>
-              <td>{results[4]} cm</td>
-              <td>{results[5]} kg</td>
-              <td>{results[6]}</td>
+              <td>{result[1]}</td>
+              <td>{result[2]}</td>
+              <td>{result[3]}</td>
+              {#if result[4]}
+                {#each result[4].split(",") as value}
+                  <td>{value}</td>
+                {/each}
+              {/if}
+              {#if result[5]}
+                <td>{result[5].replace(/,/g, "-")}</td>
+              {/if}
             </tr>
+            {/each}
         </tbody>
       </table>
     </div>
   </div>
+</div>
 {/if}
 
 <style>

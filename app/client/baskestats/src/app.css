@@ -14,14 +14,24 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-body {
+/* body {
   margin: 0;
   display: flex;
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+} */
+body{
+    margin: 0; 
+    padding: 0;
+    background: inherit;
+    height: 100vh;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    flex-direction: column;
+    align-content: center;
 }
-
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
@@ -168,6 +178,7 @@ button:focus-visible {
  
  .login > label > p {
    font-size: larger;
+   color:#e14917
 } 
 
 .login > label > input {
@@ -212,3 +223,47 @@ button:focus-visible {
   tr:hover {
     background-color: #e9e9e921;
   }
+
+.table-container {
+  display: grid; /* or flex */
+  grid-template-rows: auto 1fr; 
+  max-height: 500px; /* Set the desired maximum height for the table container */
+  overflow-y: auto; /* Enable vertical scroll if content overflows */
+  /* Additional styling */
+}
+/* Search Boxes--------------------------------------------------------------------------- */
+.box{
+    position: relative;
+}
+
+.search-box{
+    padding: 10px;
+    width: 40px;
+    height: 40px;
+    background: none;
+    border: 4px solid #ff4000;
+    border-radius: 50px;
+    box-sizing: border-box;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 18px;
+    outline: none;
+    transition: .5s;
+}
+.box:hover input{
+    width: 200px;
+    background: #3b3640;
+    border-radius: 10px;
+}
+.box i{
+    position: absolute;
+    top: 50%;
+    right: 15px;
+    transform: translate(-50%,-50%);
+    font-size: 26px;
+    color: #ffd52d;
+    transition: .2s;
+}
+.box:hover i{
+    opacity: 0;
+    z-index: -1;
+}

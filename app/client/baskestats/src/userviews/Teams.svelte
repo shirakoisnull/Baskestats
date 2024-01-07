@@ -5,25 +5,24 @@
   import TeamModal from "../modals/TeamModal.svelte";
 
   let teams = [];
-  let searchQuery = '';
+  let searchQuery = "";
   let showModal = false;
   let teamInfo = [];
 
-  onMount(async () => {teams = await fetchTeams();});
+  onMount(async () => {
+    teams = await fetchTeams();
+  });
 
-async function handleView(tId){
-  teamInfo = await viewTeam(tId);
-   showModal = true;
+  async function handleView(tId) {
+    teamInfo = await viewTeam(tId);
+    showModal = true;
   }
 
-  $: visibleTeams = searchQuery ?
-    teams.filter(team => {
-      return (
-        team[1].toLowerCase().includes(searchQuery.toLowerCase())
-        // Replace 'team.name' with the property you want to filter/search by
-      );
-    }) : teams;
-
+  $: visibleTeams = searchQuery
+    ? teams.filter((team) => {
+        return team[1].toLowerCase().includes(searchQuery.toLowerCase());
+      })
+    : teams;
 </script>
 
 {#if showModal}
@@ -35,7 +34,17 @@ async function handleView(tId){
 {/if}
 
 <BottomNavigation />
-<input type="text" bind:value={searchQuery} placeholder="Search teams..." />
+
+<div class="box">
+  <input
+    class="search-box"
+    type="text"
+    bind:value={searchQuery}
+    placeholder="Search team..."
+  />
+</div>
+
+<div class="table-container">
 <table>
   <thead>
     <tr>
@@ -54,9 +63,10 @@ async function handleView(tId){
         <td>{team[3]}</td>
         <td>{team[4]}</td> -->
         <td>
-            <button on:click={() => handleView(team[0])}>Info</button>
+          <button on:click={() => handleView(team[0])}>Info</button>
         </td>
       </tr>
     {/each}
   </tbody>
 </table>
+</div>

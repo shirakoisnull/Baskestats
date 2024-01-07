@@ -2,10 +2,12 @@
   import { fetchChampionships, fetchMatches } from "../api.js";
   import { onMount } from "svelte";
   import BottomNavigation from "../BottomNavigation.svelte";
-  import MatchModal from "../modals/MatchModal.svelte";
+  import ChampModal from "../modals/ChampModal.svelte";
+
   let championships = [];
   let matchInfo = [];
   let showModal = false;
+  let searchQuery = "";
 
   onMount(async () => {championships = await fetchChampionships();});
 
@@ -14,10 +16,17 @@
     showModal = true;
   }
 
+  $: visibleChamps = searchQuery
+    ? championships.filter((champ) => {
+        return String(champ[1]).toLowerCase().includes(searchQuery.toLowerCase());
+      })
+    : championships;
+
+  console.log(championships);
 </script>
 
 {#if showModal}
-  <MatchModal
+  <ChampModal
     {showModal}
     results={matchInfo}
     closeModal={() => (showModal = false)}
@@ -25,6 +34,16 @@
 {/if}
 
 <BottomNavigation />
+
+<div class="box">
+  <input
+    class="search-box"
+    type="text"
+    bind:value={searchQuery}
+    placeholder="Search year..."
+  />
+</div>
+<div class="table-container">
 <table>
   <thead>
     <tr>
@@ -34,7 +53,7 @@
     </tr>
   </thead>
   <tbody>
-    {#each championships as champ}
+    {#each visibleChamps as champ}
       <tr>
         <td>{champ[1]}</td>
         <td>
@@ -44,3 +63,4 @@
     {/each}
   </tbody>
 </table>
+</div>
