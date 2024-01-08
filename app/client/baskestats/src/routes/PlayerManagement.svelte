@@ -3,36 +3,6 @@
   import { onMount } from "svelte";
   import { navigate } from "svelte-routing";
 
-  // TODO: add player to team association logic
-  // let showModal = false;
-  // let selectedPlayer = null;
-  
-  // ####### TEST DATA ###########
-  // let playerData = [
-  //   {
-  //     pid: 1,
-  //     tid: 1,
-  //     name: "Manos Kabines",
-  //     age: 19,
-  //     height: 1.85,
-  //     weight: 69,
-  //     pointsScored: 200,
-  //     playsOn: "Olympiakos",
-  //   },
-  //   {
-  //     pid: 2,
-  //     tid: 5,
-  //     name: "Giorgos Kabines",
-  //     age: 19,
-  //     height: 1.86,
-  //     weight: 69,
-  //     pointsScored: 150,
-  //     playsOn: "PAOK",
-  //   },
-  //   // Add more entries as needed
-  // ];
-  // ################################
-
   // Initialize teams as an empty array
   let players = [];
 
@@ -96,41 +66,34 @@
       console.log("Deleted!");
     }
   }
-  // CURSED STUFF
-  // function deleteTeam(player) {
-  //   selectedPlayer = player;
-  //   showModal = true;
-  // }
 
-  // function handleConfirmDelete(confirm) {
-  //   if (confirm) {
-  //     // Implement deletion logic
-  //     playerData = playerData.filter(player => player.id !== selectedPlayer.id);
-  //     // After deletion or on cancel, hide the modal
-  //     showModal = false;
-  //   } else {
-  //     // On cancel, hide the modal
-  //     showModal = false;
-  //   }
-  // }
   function handleUpdate(player) {
     navigate(`/editplayer`, { state: { player } });
   }
-</script>
 
-<!-- CURSED -->
-<!-- {#if showModal}
-  <ConfirmationModal
-    displayName={selectedPlayer.name}
-    on:confirm={handleConfirmDelete}
-  />
-{/if} -->
+  let searchQuery = "";
+  $: visiblePlayers = searchQuery ?
+    players.filter(player=> {
+      return (
+        player.name.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }) : players;
+
+</script>
 
 <h1>Player Management</h1>
 
-<div class="card">
+<!-- Search Box -->
+<div class="box">
+  <input
+    class="search-box"
+    type="text"
+    bind:value={searchQuery}
+    placeholder="Search player..."
+  />
+  </div>
+
   <button on:click={handleClick}>Create New Player</button>
-</div>
 
 <table>
   <thead>
@@ -147,7 +110,7 @@
     </tr>
   </thead>
   <tbody>
-    {#each players as player}
+    {#each visiblePlayers as player}
       <tr>
         <td>{player.pid}</td>
         <td>{player.tid}</td>

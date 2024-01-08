@@ -1,4 +1,5 @@
 <script>
+  import ballLogo from './assets/logo.png';
   import { Router, Route, Link } from 'svelte-routing';
   import BottomNavigation from './BottomNavigation.svelte'; 
   import Login from './Login.svelte';
@@ -17,6 +18,8 @@
   import Teams from './userviews/Teams.svelte';
   import Players from './userviews/Players.svelte';
   import Championships from './userviews/Championships.svelte';
+
+  let showLogin = false;
 </script>
 
 <main>
@@ -24,20 +27,19 @@
   <Route path="/">
     <!-- Your main page content -->
 
+{#if showLogin}
+  <Login
+    {showLogin}
+    closeModal={() => (showLogin = false)}
+  />
+{/if}
+  <img src={ballLogo} alt="BaskeStats Logo" class="logo" />
     <h1 class="title">Welcome to BaskeStats</h1>
 <BottomNavigation />
 
-    <button>
-      <Link to="/uteams" class="button-link">Teams</Link>
-    </button>
-    <button>
-      <Link to="/uplayers" class="button-link">Players</Link>
-    </button>
-    <button>
-      <Link to="/uchamps" class="button-link">Championships</Link>
-    </button>
-    <button>
-      <Link to="/login" class="button-link">Login</Link>
+    <button on:click={() => showLogin=true}>
+    Login
+      <!-- <Link to="/login" class="button-link">Login</Link> -->
     </button>
     
   </Route>
@@ -80,12 +82,18 @@
       max-width: none;
     }
   } */
-  /* .logo {
-    height: 6em;
+  .logo {
+    height: 10em;
     padding: 1.5em;
     will-change: filter;
     transition: filter 300ms;
+  }
+  .logo:hover {
+    filter: drop-shadow(0 0 2em #646cffaa);
+  }
+  
+  /* .logo:hover {
+    filter: drop-shadow(0 0 2em #ff3e00aa);
   } */
-
   
 </style>

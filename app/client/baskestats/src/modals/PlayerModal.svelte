@@ -3,7 +3,17 @@
   export let results = [];
   export let closeModal = () => {};
 
-  console.log(results);
+  import { viewTeam } from '../api';
+  import { onMount } from 'svelte';
+  
+  let teamInfo = [];
+  let teamName = "";
+
+  onMount(async () => {
+    teamInfo = await viewTeam(results[1]);
+    teamName = teamInfo[1];
+  });
+
 </script>
 
 {#if showModal}
@@ -13,10 +23,10 @@
   <div class="modal">
     <!-- svelte-ignore a11y-no-static-element-interactions -->
 
+  <button class="logout-button" on:click={closeModal}>X</button>
     <div class="modal-content">
       <!-- svelte-ignore a11y-click-events-have-key-events -->
-      <span class="close" on:click={closeModal}>&times;</span>
-      <p>{results[2]}</p>
+      <h2>{results[2]}</h2>
       <table>
         <thead>
           <tr>
@@ -29,7 +39,7 @@
         </thead>
         <tbody>
             <tr>
-              <td>{results[1]}</td>
+              <td>{teamName}</td>
               <td>{results[3]}</td>
               <td>{results[4]} cm</td>
               <td>{results[5]} kg</td>

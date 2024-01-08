@@ -1,8 +1,8 @@
 <script>
-  // import ConfirmationModal from "../ConfirmationModal.svelte";
   import { onMount } from "svelte";
   import { navigate } from "svelte-routing";
-
+  import { ArrowLeftIcon } from "svelte-feather-icons";
+  // import ConfirmationModal from "../ConfirmationModal.svelte";
   // let showModal = false;
   // let selectedTeam = null;
 
@@ -97,7 +97,6 @@
     teams.filter(team => {
       return (
         team.name.toLowerCase().includes(searchQuery.toLowerCase())
-        // Replace 'team.name' with the property you want to filter/search by
       );
     }) : teams;
 </script>
@@ -108,11 +107,16 @@
 
 <h1>Team Management</h1>
 
-<input type="text" bind:value={searchQuery} placeholder="Search teams..." />
+<div class="box">
+  <input
+    class="search-box"
+    type="text"
+    bind:value={searchQuery}
+    placeholder="Search teams..."
+  />
+  </div>
 
-<div class="card">
   <button on:click={handleClick}>Create New Team</button>
-</div>
 
 <table>
   <thead>
@@ -145,9 +149,7 @@
   </tbody>
 </table>
 
-<button class="back-button" on:click={() => navigate("/secretary")}
-  >Go Back</button
->
+<button class="back-button" on:click={() => navigate("/secretary")}><ArrowLeftIcon/></button>
 
 <style>
   table {
@@ -192,5 +194,5 @@
     border: none;
     border-radius: 4px;
     cursor: pointer;
-  }
+   }
 </style>

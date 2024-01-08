@@ -2,6 +2,7 @@
   import { Link } from "svelte-routing";
   import { navigate } from "svelte-routing";
   import { onMount } from "svelte";
+  import { HomeIcon, LogOutIcon } from "svelte-feather-icons";
   let usr = localStorage.getItem("username");
   // export let url = "";
   let isAuthenticated = false;
@@ -12,9 +13,15 @@
       isAuthenticated = true;
     } else {
       // Redirect to login if token is not present
-      window.location.href = "/login"; // Redirect to your login route
+      window.location.href = "/"; // Redirect to your login route
     }
   });
+  
+  function logout() {
+    localStorage.removeItem("jwtToken");
+    localStorage.removeItem("username");
+    navigate("/");
+  }
 </script>
 
 {#if isAuthenticated}
@@ -30,9 +37,5 @@
   </button>
 {/if}
 
-<button class="back-button" on:click={() => navigate("/")}>Home</button>
-
-<style>
-  /* Style the links inside the buttons */
-  
-</style>
+<button class="back-button" on:click={() => navigate("/")}><HomeIcon/></button>
+<button class="logout-button" on:click={() => logout()}><LogOutIcon/></button>

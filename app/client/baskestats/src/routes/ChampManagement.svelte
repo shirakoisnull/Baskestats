@@ -55,7 +55,6 @@
         console.error("Error deleting championship:", error);
       }
     }
-    // championshipsData = championshipsData.filter((t) => t.id !== championship.id);
   }
   function handleUpdate(champ) {
     navigate(`/editchamp`, { state: { champ } });
@@ -65,30 +64,50 @@
     navigate('/draw');
   }
   
-  import Modal from "../MatchModal.svelte";
+  import Modal from "../modals/MatchModal.svelte";
   import { fetchMatches } from "../api.js";
   let showModal = false;
   let fetchedResults = []; // Results fetched from backend
+  let curChamp = -1;
 
   async function handleView(cId){
     fetchedResults = await fetchMatches(cId);
+    curChamp = cId;
     showModal = true;
   }
 
+  let searchQuery = "";
+   $: visibleChamps = searchQuery
+     ? championships.filter((champ) => {
+         return String(champ.year).toLowerCase().includes(searchQuery.toLowerCase());
+       })
+     : championships;
+   
 </script>
 
 {#if showModal}
   <Modal
     {showModal}
     results={fetchedResults}
+    curChamp={curChamp}
     closeModal={() => (showModal = false)}
   />
 {/if}
-<div class="card">
+
 <h1>Championship Management</h1>
+
+<!-- Search Box -->
+<div class="box">
+  <input
+    class="search-box"
+    type="text"
+    bind:value={searchQuery}
+    placeholder="Search player..."
+  />
+  </div>
+
   <button on:click={handleClick}>Create New Championship</button>
   <button on:click={handleDraw}>Draw Latest</button>
-</div>
 
 {#if championships.length === 0}
   <p>No championships found.</p>
@@ -102,7 +121,7 @@
     </tr>
   </thead>
   <tbody>
-    {#each championships as champ}
+    {#each visibleChamps as champ}
       <tr>
         <td>{champ.cid}</td>
         <td>{champ.year}</td>

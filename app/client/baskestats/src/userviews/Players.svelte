@@ -2,18 +2,27 @@
   import { fetchPlayers, viewPlayer } from "../api.js";
   import { onMount } from "svelte";
   import BottomNavigation from "../BottomNavigation.svelte";
-import PlayerModal from "../modals/PlayerModal.svelte";
+  import PlayerModal from "../modals/PlayerModal.svelte";
   let players = [];
   let playerInfo = [];
   let showModal = false;
-  let searchQuery = '';
+  let searchQuery = "";
 
-  onMount(async () => {players = await fetchPlayers();});
+  onMount(async () => {
+    players = await fetchPlayers();
+  });
 
-    async function handleView(pId){
-      playerInfo = await viewPlayer(pId);
-      showModal = true;
-    }
+  async function handleView(pId) {
+    playerInfo = await viewPlayer(pId);
+    showModal = true;
+  }
+
+
+  $: visiblePlayers= searchQuery
+    ? players.filter((player) => {
+        return player[2].toLowerCase().includes(searchQuery.toLowerCase());
+      })
+    : players;
 
 </script>
 
@@ -26,22 +35,37 @@ import PlayerModal from "../modals/PlayerModal.svelte";
 {/if}
 
 <BottomNavigation />
+
+<div class="page-section-title">
+ Players 
+</div>
+
+<div class="box">
+  <input
+    class="search-box"
+    type="text"
+    bind:value={searchQuery}
+    placeholder="Search player..."
+  />
+</div>
+<div class="table-container">
 <table>
   <thead>
     <tr>
-        <!-- NA EXEI ICON ME FATSOULA OR SOMETHING -->
+      <!-- NA EXEI ICON ME FATSOULA OR SOMETHING -->
       <th>Name</th>
       <th>Actions</th>
     </tr>
   </thead>
   <tbody>
-    {#each players as player}
+    {#each visiblePlayers as player}
       <tr>
         <td>{player[2]}</td>
         <td>
-            <button on:click={() => handleView(player[0])}>Info</button>
+          <button on:click={() => handleView(player[0])}>Info</button>
         </td>
       </tr>
     {/each}
   </tbody>
 </table>
+</div>

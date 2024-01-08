@@ -88,3 +88,27 @@ export async function viewPlayer(pId) {
     return [];
   }
 }
+  export async function setScore(mrId, mId, score) {
+    try {
+      const response = await fetch(
+        `http://127.0.0.1:5005/matches/${mId}/matchresults/${mrId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            mrScore: score
+          }),
+        }
+      );
+
+      if (response.ok) {
+        console.log("Score Set!");
+      } else {
+        console.error("Failed to set score:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error setting score:", error);
+    }
+  }
