@@ -244,7 +244,32 @@ def winner(cId):
  
     return jsonify(result),200
 
+@app.route(
+    "/matches/<int:mId>/matchresults/<int:mrId>",
+    methods=["PUT"],
+)
+def updateScore(mId, mrId):
+    try:
+        mrScore = request.json.get("mrScore")
 
+        if sqlInj(mrId, mId, mrScore):
+            return (
+                jsonify(
+                    {"error": "Invalid input detected. SQL injection attempt detected."}
+                ),
+                400,
+            )
+
+        with db.cursor() as cursor:
+            function = "UpdateScore(%s,%s,%s)"
+            cursor.execute(f"SELECT {function}", (mrId, mId, mrScore))
+            db.commit()
+
+    except Exception as e:
+        return jsonify({"error": f"Error updating score: {str(e)}"}), 500
+
+ 
+    return "Success\n", 200
 
 if __name__ == "__main__":
     app.run(port=5005)
