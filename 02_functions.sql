@@ -246,7 +246,35 @@ BEGIN
     END IF;
 END //
 
+CREATE DEFINER = `it185381` @`%` FUNCTION `UpdateScore` (
+  mr_id INT,
+  match_id INT,
+  mr_score INT
+) RETURNS tinyint(1) BEGIN DECLARE rows_affected INT;
 
+UPDATE
+  matchresult
+SET
+  score = mr_score
+WHERE
+  MRID = mr_id AND MID = match_id;
+
+SET
+  rows_affected = ROW_COUNT();
+
+IF rows_affected > 0 THEN
+RETURN
+  TRUE;
+
+ -- Update successful
+ELSE
+RETURN
+  FALSE;
+
+END IF;
+
+END
+	
 CREATE FUNCTION DeleteTeam(row_id INT)
 RETURNS INT
 BEGIN
