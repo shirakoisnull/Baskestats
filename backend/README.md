@@ -1,59 +1,9 @@
 # Baskestats Backend API
 
 > [!IMPORTANT]
->
 > - You need a running instance of the [baskestats database](../database/README.md) to run this project. Please follow the instructions in the [baskestats database](../database/README.md) to setup the database.
 > - You must also have python3 installed to run this project as this is a flask project.
 
-# Table of Contents
-
-- [Baskestats Backend API](#baskestats-backend-api)
-- [Table of Contents](#table-of-contents)
-  - [Setup](#setup)
-    - [Install dependencies](#install-dependencies)
-    - [Run the server](#run-the-server)
-    - [OR](#or)
-  - [API Endpoints](#api-endpoints)
-    - [:5001/login](#5001login)
-      - [POST](#post)
-        - [Request](#request)
-    - [:5002/player](#5002player)
-      - [GET](#get)
-      - [POST](#post-1)
-        - [Request](#request-1)
-    - [:5002/player/](#5002player-1)
-      - [PUT](#put)
-    - [:5002/player/](#5002player-2)
-      - [GET](#get-1)
-    - [:5002/player/](#5002player-3)
-      - [DELETE](#delete)
-    - [:5003/team](#5003team)
-      - [GET](#get-2)
-      - [POST](#post-2)
-        - [Request](#request-2)
-    - [:5003/team/](#5003team-1)
-      - [PUT](#put-1)
-      - [GET](#get-3)
-      - [DELETE](#delete-1)
-    - [:5004/championships](#5004championships)
-      - [GET](#get-4)
-      - [POST](#post-3)
-        - [Request](#request-3)
-    - [:5004/championships/](#5004championships-1)
-      - [PUT](#put-2)
-      - [GET](#get-5)
-      - [DELETE](#delete-2)
-    - [:5005/championships/draw](#5005championshipsdraw)
-      - [POST](#post-4)
-        - [Request](#request-4)
-    - [:5005/championships//matches](#5005championshipsmatches)
-      - [GET](#get-6)
-    - [:5005/championships//matches/](#5005championshipsmatches-1)
-      - [PUT](#put-3)
-    - [:5005/championships//winner](#5005championshipswinner)
-      - [GET](#get-7)
-    - [:5005/matches//matchresults/](#5005matchesmatchresults)
-      - [PUT](#put-4)
 
 ## Setup
 
