@@ -12,6 +12,14 @@
 ```bash
 pip install -r requirements.txt
 ```
+### Create .env file containing your DB credentials
+```
+DB_HOST = <your DB hostname>
+DB_USER = <your DB username>
+DB_PASSWORD = <your DB password>
+DB_NAME = <your DB name>
+JWT_SECRET_KEY = <your jwt authentication secret key>
+```
 
 ### Run the server
 
