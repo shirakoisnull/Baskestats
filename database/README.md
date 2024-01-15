@@ -3,7 +3,7 @@
 This directory contains the database files for the project.
 
 ## Pre-requisites
-- MySQL Server running
+- [MySQL Server](https://dev.mysql.com/downloads/mysql/) running.
 
 ## Setup
 1. Run the `01_schema.sql` script to create the tables and insert the data into your mysql database.
