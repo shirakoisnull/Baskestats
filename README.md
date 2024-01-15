@@ -6,7 +6,7 @@
 - Το API είναι υπεύθυνο για την επικοινωνία του backend με το frontend. Το API είναι υλοποιημένο σε Python με την χρήση του `Flask` framework. 
 
 ## Οδηγίες εγκατάστασης
-> [!TIP] Για να τρέξετε την εφαρμογή θα πρέπει να έχετε εγκατεστημένα τα παρακάτω:
+> Για να τρέξετε την εφαρμογή θα πρέπει να έχετε εγκατεστημένα τα παρακάτω:
 > - [Python 3.9](https://www.python.org/downloads/)
 > - [Node.js](https://nodejs.org/en/download/)
 > - [MySQL Server](https://dev.mysql.com/downloads/mysql/)
