@@ -244,6 +244,7 @@ def winner(cId):
  
     return jsonify(result),200
 
+# Update the score (only) of a single team in a match
 @app.route(
     "/matches/<int:mId>/matchresults/<int:mrId>",
     methods=["PUT"],
