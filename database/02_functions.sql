@@ -246,7 +246,7 @@ BEGIN
     END IF;
 END //
 
-CREATE DEFINER = `it185381` @`%` FUNCTION `UpdateScore` (
+CREATE FUNCTION UpdateScore (
   mr_id INT,
   match_id INT,
   mr_score INT
