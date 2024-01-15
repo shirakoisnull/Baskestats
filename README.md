@@ -10,11 +10,22 @@
 > - [Python 3.9](https://www.python.org/downloads/)
 > - [Node.js](https://nodejs.org/en/download/)
 > - [MySQL Server](https://dev.mysql.com/downloads/mysql/)
+> Επιπλέον, θα πρέπει να έχει ρυθμιστεί μια MySQL βάση σύμφωνα με τις [οδηγίες εδώ.](database/README.md)
 
 ## 🚀 Συνοπτικές οδηγίες
-Θα πρέπει να εγκαταστήσετε τις απαραίτητες βιβλιοθήκες για το backend και το frontend. Ανοίξτε ένα τερματικό στον φάκελο `backend`, εκτελέστε την εντολή 
+Θα πρέπει να εγκαταστήσετε τις απαραίτητες βιβλιοθήκες για το [backend](backend/README.md) και το [frontend](app/README.md). 
+
+Ανοίξτε ένα τερματικό στον φάκελο `backend`, εκτελέστε την εντολή 
 ```bash
 pip install -r requirements.txt
+```
+κατόπιν, δημιουργήστε ένα `.env` αρχείο που περιλαμβάνει τα στοιχεία σύνδεσης στη βάση σας:
+```
+DB_HOST = <your DB hostname>
+DB_USER = <your DB username>
+DB_PASSWORD = <your DB password>
+DB_NAME = <your DB name>
+JWT_SECRET_KEY = <your jwt authentication secret key>
 ```
 και έπειτα:
 ```bash
