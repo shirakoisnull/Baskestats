@@ -20,6 +20,11 @@ DB_PASSWORD = <your DB password>
 DB_NAME = <your DB name>
 JWT_SECRET_KEY = <your jwt authentication secret key>
 ```
+Linux *oneliner*
+```bash
+echo "DB_HOST = <your DB hostname>\nDB_USER = <your DB username>\nDB_PASSWORD = <your DB password>\nDB_NAME = <your DB name>\nJWT_SECRET_KEY = <your jwt authentication secret key>" > .env
+&& vim .env
+```
 
 ### Run the server
 
