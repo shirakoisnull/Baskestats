@@ -7,10 +7,9 @@
 
 ## ⚙️ Προαπαιτούμενα
 > Για να τρέξετε την εφαρμογή θα πρέπει να έχετε εγκατεστημένα τα παρακάτω:
-> - [Python 3.9](https://www.python.org/downloads/)
+> - [Python](https://www.python.org/downloads/)
 > - [Node.js](https://nodejs.org/en/download/)
-> - [MySQL Server](https://dev.mysql.com/downloads/mysql/)
-> Επιπλέον, θα πρέπει να έχει ρυθμιστεί μια MySQL βάση σύμφωνα με τις [οδηγίες εδώ.](database/README.md)
+> - Επιπλέον, θα πρέπει να έχει ρυθμιστεί μια MySQL βάση σύμφωνα με τις [οδηγίες εδώ.](database/README.md)
 
 ## 🚀 Συνοπτικές οδηγίες
 Θα πρέπει να εγκαταστήσετε τις απαραίτητες βιβλιοθήκες για το [backend](backend/README.md) και το [frontend](app/README.md). 
