@@ -44,3 +44,10 @@ npm run dev
 * [Οδηγίες frontend](app/README.md)
 
 * [Οδηγίες database](database/README.md)
+
+## 📃 Credits:
+- Νικόλαος Παπαδόπουλος (Project Manager, Frontend)
+- Κυριάκος Στεργίου (Backend-API)
+- Κωνσταντίνα Λιόγκα (Backend-API)
+- Άγγελος Θεολόγου (Backend-Database)
+- Φώτης Αρβανιτίδης (Frontend, :trollface: of Github)
