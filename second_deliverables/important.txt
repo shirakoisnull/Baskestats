@@ -1,0 +1,5 @@
+Το link για το GitHub Repository με τα αρχεία του project μας:
+https://github.com/shirakoisnull/SE_Assignment
+
+Το link για το YouTube Tutorial που εξηγεί πως λειτουργεί ή εφαρμογή μας:
+https://youtu.be/1u_jqo92xCo
