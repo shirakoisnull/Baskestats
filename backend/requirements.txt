@@ -1,5 +1,5 @@
 Flask==3.0.0
 Flask_Cors==4.0.0
 Flask_JWT_Extended==4.5.3
-PyMySQL==1.1.0
+PyMySQL==1.1.1
 python-dotenv==1.0.0
